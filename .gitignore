@@ -1,0 +1,87 @@
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# fabric
+
+run/
+
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# fabric
+
+run/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+
+# Zenith Archives (Mandatory Storage)
+!/Archive/
+!/Archive/builds/
+!/Archive/builds/*.jar
+
+# Logging and archives (Standard)
+*.log
+*.log.gz
+*.log.zip
+build_log*.txt
+
+# Exclude broad log ignore to prevent unintentional documentation loss
+# *log*
