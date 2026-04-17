@@ -19,8 +19,8 @@
 
 ### 1. The Continuum (Offline Persistence)
 In vanilla Minecraft, crops only grow in loaded chunks. **Agrarian Reform** introduces **The Continuum**, a high-precision simulation engine that bridges the gap between gameplay sessions.
-- **Persistent Growth**: When a chunk is unloaded, the mod timestamps the state of every crop.
-- **Time Delta Simulation**: Upon your return, the mod calculates exactly how much real-time has passed and simulates the random ticks that *would* have occurred.
+- **Persistent Growth**: When a chunk is unloaded, the mod timestamps the state of every crop, including underground and indoor vertical farms.
+- **Time Delta Simulation**: Upon your return, the mod calculates exactly how much real-time has passed and simulates the random ticks that *would* have occurred, respecting polyculture bonuses.
 - **Throttled Updates**: To prevent lag spikes upon loading a massive farm, updates are applied via a smooth, throttled queue (O(1) calculation with O(n) distributed application).
 
 ### 2. Soil Resilience (Trample Logic)
@@ -51,25 +51,27 @@ Monocultures are discouraged in favor of beautiful, varied garden patches.
 ---
 
 ## ⚙️ Configuration (GameRules)
-Admins can fine-tune the experience using native Minecraft GameRules:
+Admins can fine-tune the experience using native Minecraft GameRules (Category: **Agrarian Reform**):
 
 | GameRule | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `hydroSourceRange` | Integer | 8 | The irrigation radius of water source blocks. |
-| `hydroFlowingRange` | Integer | 4 | The irrigation radius of flowing water. |
-| `hydroRainGrowthSpurt`| Integer | 1 | Growth stages jumped during rain events. |
-| `hydroPolycultureBoost`| Boolean | true | Whether mixed crops receive a growth bonus. |
-| `totalTrampleImmunity` | Boolean | false | Absolute immunity to all trampling (IG Mode). |
-| `hydroCropRustle` | Boolean | true | Enables sound effects when walking through crops. |
-| `hydroCropParticles` | Boolean | true | Enables 'happy villager' particles on growth. |
+| `agrarian_reform:hydration_source_range` | Integer | 8 | The irrigation radius of water source blocks. |
+| `agrarian_reform:hydration_flowing_range` | Integer | 4 | The irrigation radius of flowing water. |
+| `agrarian_reform:rain_growth_acceleration`| Integer | 1 | Growth stages jumped during rain events. |
+| `agrarian_reform:growth_biodiversity_bonus`| Boolean | true | Whether mixed crops receive a growth bonus. |
+| `agrarian_reform:total_trample_immunity` | Boolean | false | Absolute immunity to all trampling (IG Mode). |
+| `agrarian_reform:always_wet_farmland` | Boolean | false | Forces farmland to remain hydrated regardless of water proximity. |
+| `agrarian_reform:ambient_crop_rustle` | Boolean | true | Enables sound effects when walking through crops. |
+| `agrarian_reform:ambient_vitality_particles` | Boolean | true | Enables vitality particles on growth events. |
 
 ---
 
 ## 🛠️ Technical Specs
-- **Target**: Minecraft 26.1 (Snapshot 8/10)
+- **Target**: Minecraft 26.1.2 (Snapshot 11)
 - **Loader**: Fabric
-- **Dependencies**: Fabric API, DasikLibrary (Standalone)
+- **Dependencies**: Fabric API, DasikLibrary (v1.6.9+build.15)
 - **Java**: Version 25 (Strict)
+- **Build**: 1.2.0+build.2
 
 ---
 

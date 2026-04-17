@@ -1,0 +1,17 @@
+{
+    "gamerule.hydration_source_range": "Hydration Source Range",
+    "gamerule.hydration_source_range.description": "The distance (in blocks) a water source block provides basic hydration to nearby farmland. Standard Minecraft uses 4, but this allows for expansive irrigation networks.",
+    "gamerule.hydration_flowing_range": "Hydration Flowing Range",
+    "gamerule.hydration_flowing_range.description": "The distance (in blocks) that flowing water provides hydration. Usually 0 in vanilla, this allows for dynamic irrigation using canals.",
+    "gamerule.total_trample_immunity": "Total Trample Immunity",
+    "gamerule.total_trample_immunity.description": "When enabled, crops and farmland are completely immune to trample damage from players and entities. Immersive protection for delicate fields.",
+    "gamerule.growth_biodiversity_bonus": "Biodiversity Growth Bonus",
+    "gamerule.growth_biodiversity_bonus.description": "When enabled, crops get a growth speed bonus when planted near different crop types. Promotes agricultural diversity.",
+    "gamerule.rain_growth_acceleration": "Rain Growth Acceleration",
+    "gamerule.rain_growth_acceleration.description": "The number of extra growth stages a crop receives per random tick during rain. Simulates a natural hydration surge.",
+    "gamerule.ambient_vitality_particles": "Ambient Vitality Particles",
+    "gamerule.ambient_vitality_particles.description": "When enabled, healthy growing crops emit subtle 'vitality' particles. A visual indicator of a thriving agricultural ecosystem.",
+    "gamerule.ambient_crop_rustle": "Ambient Crop Rustle",
+    "gamerule.ambient_crop_rustle.description": "When enabled, crops produce ambient rustling sounds when they grow or are interacted with. Enhances the organic atmosphere of the farm.",
+    "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform"
+}

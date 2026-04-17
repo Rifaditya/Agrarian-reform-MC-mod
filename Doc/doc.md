@@ -1,7 +1,7 @@
 # Agrarian Reform: Technical Documentation
 
 ## Overview
-**Agrarian Reform** is a specialized Minecraft mod for the Fabric loader (Snapshot 26.1). It focuses on high-fidelity agricultural simulation, ensuring that environment interactions (growth, hydration, trampling) are both realistic and respectful of the player's time.
+**Agrarian Reform** is a specialized Minecraft mod for the Fabric loader (Snapshot 26.1.2). It focuses on high-fidelity agricultural simulation, ensuring that environment interactions (growth, hydration, trampling) are both realistic and respectful of the player's time.
 
 ---
 
@@ -9,8 +9,8 @@
 
 ### 1. The Continuum (Offline Growth)
 The core of the mod's simulation logic. It allows crops to "catch up" on missed random ticks while the chunk was unloaded.
-- **Data Persistence**: Uses `ContinuumData` (World State) to store a `Long2LongOpenHashMap` mapping `ChunkPos` to `GameTime` (the moment of unload).
-- **Calculation Engine**: Upon `CHUNK_LOAD`, the `ContinuumManager` calculates the time delta. `CropScanner` then iterates through the chunk's `SectionStorage`.
+- **Data Persistence**: Uses `ContinuumData` (World State) to store a `Map<Long, Long>` mapping packed `ChunkPos` to `GameTime` (the moment of unload).
+- **Calculation Engine**: Upon `CHUNK_LOAD`, the `ContinuumManager` calculates the time delta. `CropScanner` then iterates through the chunk's blocks.
 - **Growth Algorithm**:
   - Instead of expensive iterative loops, we use a single-pass O(1) mathematical simulation per crop block.
   - Calculated as: `AgeDelta = (TimeDelta / (AverageGrowthPeriod * 20))`.
@@ -32,17 +32,18 @@ Uses the `BlockTags.CROPS` tag to identify neighbors.
 ---
 
 ## 🛠️ Configuration & Toggles
-All features are exposed via the native `GameRules` system, requiring no external configuration libraries.
-- `totalTrampleImmunity`: When enabled, bypasses all trample checks for an "Instant Gratification" experience.
-- `hydroPolycultureBoost`: Allows server admins to disable the biodiversity bonus.
-- `hydroRainGrowthSpurt`: Defines how many age stages a crop can jump during a rain tick.
+All features are exposed via the native `GameRules` system using DasikLibrary's `DynamicGameRuleManager` for namespaced UI support.
+- `agrarian_reform:total_trample_immunity`: When enabled, bypasses all trample checks for an "Instant Gratification" experience.
+- `agrarian_reform:growth_biodiversity_bonus`: Allows server admins to disable the biodiversity bonus.
+- `agrarian_reform:rain_growth_acceleration`: Defines how many age stages a crop can jump during a rain tick.
 
 ---
 
 ## ⚠️ Known Constraints & Maintenance
-- **Snapshot 26.1 Compatibility**: The mod heavily relies on the native `GameRule<T>` registry introduced in Snapshot 10.
+- **Snapshot 26.1.2 Compatibility**: The mod strictly targets Snapshot 11 API.
 - **Loom/Gradle**: Requires Java 25.
 - **Memory**: The `ContinuumData` map is purged on chunk load, keeping memory usage constant and preventing map bloating.
+- **Thread Safety**: Uses `ConcurrentLinkedQueue` for throttled updates to ensure safe cross-thread event handling.
 
 ---
 

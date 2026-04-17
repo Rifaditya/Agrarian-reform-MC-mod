@@ -6,6 +6,9 @@
         "FarmlandBlockMixin",
         "CropBlockMixin"
     ],
+    "client": [
+        "BlockColorsMixin"
+    ],
     "injectors": {
         "defaultRequire": 1
     }

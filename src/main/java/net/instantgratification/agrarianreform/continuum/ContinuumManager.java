@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.saveddata.SavedData;
 
-import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * ContinuumManager: The Offline Simulator
@@ -31,7 +31,7 @@ public class ContinuumManager {
     // Throttling config: Update only 5 crop blocks per tick globally.
     private static final int CROPS_PER_TICK = 5;
 
-    public static final Queue<CropUpdateTask> UPDATE_QUEUE = new ArrayDeque<>();
+    public static final Queue<CropUpdateTask> UPDATE_QUEUE = new ConcurrentLinkedQueue<>();
 
     public static void initialize() {
         ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> {

@@ -1,6 +1,7 @@
 package net.instantgratification.agrarianreform.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,7 +52,7 @@ public abstract class CropBlockMixin {
 
         // Phase 4: Polyculture (Biodiversity)
         if (level instanceof ServerLevel serverLevel) {
-            if (serverLevel.getGameRules().get(AgrarianGameRules.HYDRO_POLYCULTURE_BOOST)) {
+            if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.BIODIVERSITY_BONUS)) {
                 // Check N/S/E/W neighbors.
                 boolean hasDifferentCrop = false;
                 Direction[] directions = { Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST };
@@ -73,13 +74,13 @@ public abstract class CropBlockMixin {
     }
 
     // Phase 3 & 5: Rain Growth Jump & Particle Feedback
-    @Inject(method = "randomTick", at = @At("HEAD"))
+    @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
     private void agrarianreform$preRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random,
             CallbackInfo ci) {
         if (!this.isMaxAge(state)) {
             // Check Rain Growth Spurt before the standard random tick logic executes
             if (level.isRainingAt(pos.above()) && level.canSeeSky(pos.above())) {
-                int spurtAmount = level.getGameRules().get(AgrarianGameRules.HYDRO_RAIN_GROWTH_SPURT);
+                int spurtAmount = DynamicGameRuleManager.getInt(level, AgrarianGameRules.RAIN_GROWTH_ACCELERATION);
                 if (spurtAmount > 0) {
                     CropBlock self = (CropBlock) (Object) this;
                     int currentAge = self.getAge(state);
@@ -89,10 +90,12 @@ public abstract class CropBlockMixin {
                     if (newAge > currentAge) {
                         level.setBlock(pos, self.getStateForAge(newAge), Block.UPDATE_ALL);
                         // Send particle feedback manually since we jumped the age here
-                        if (level.getGameRules().get(AgrarianGameRules.HYDRO_CROP_PARTICLES)) {
+                        if (DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.AMBIENT_VITALITY_PARTICLES)) {
                             level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 0.5D,
                                     pos.getZ() + 0.5D, 3, 0.25D, 0.25D, 0.25D, 0.0D);
                         }
+                        // CANCEL the rest of the tick to prevent vanilla from overwriting our boost!
+                        ci.cancel();
                     }
                 }
             }
@@ -105,7 +108,7 @@ public abstract class CropBlockMixin {
         // Did the block state change due to standard random ticking?
         BlockState newState = level.getBlockState(pos);
         if (newState.getBlock() == (Object) this && !newState.equals(state)) {
-            if (level.getGameRules().get(AgrarianGameRules.HYDRO_CROP_PARTICLES)) {
+            if (DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.AMBIENT_VITALITY_PARTICLES)) {
                 level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 0.5D,
                         pos.getZ() + 0.5D, 3, 0.25D, 0.25D, 0.25D, 0.0D);
             }
@@ -118,7 +121,7 @@ public abstract class CropBlockMixin {
             InsideBlockEffectApplier effectApplier, boolean isPrecise, CallbackInfo ci) {
         if (!(level instanceof ServerLevel serverLevel))
             return;
-        if (this.isMaxAge(state) && serverLevel.getGameRules().get(AgrarianGameRules.HYDRO_CROP_RUSTLE)) {
+        if (this.isMaxAge(state) && DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.AMBIENT_CROP_RUSTLE)) {
             long time = serverLevel.getGameTime();
             // 10 tick cooldown to prevent audio spam
             if (time - this.agrarianreform$lastRustleTime > 10L) {

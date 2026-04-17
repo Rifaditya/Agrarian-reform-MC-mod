@@ -31,7 +31,7 @@ Water should feel like a resource that permeates the soil, not a binary toggle.
 ### 4. Polyculture (Biodiversity)
 Monocultures are visually repetitive and ecologically weak. This mechanic subtly encourages the "aesthetic" chaotic farm.
 - **The Mechanic**: A crop block checks its neighbors (North/South/East/West).
-- **The Boost**: If a neighbor is a *different* crop type (e.g., Wheat next to Carrots), both receive a small growth probability boost (~10%). This is toggleable via `hydroPolycultureBoost`.
+- **The Boost**: If a neighbor is a *different* crop type (e.g., Wheat next to Carrots), both receive a small growth probability boost (~10%). This is toggleable via `growth_biodiversity_bonus`.
 - **The Result**: Players are rewarded for creating "strip farms" or mixed garden patches, which look more organic and beautiful than $500\times500$ fields of wheat.
 
 ## III. Aesthetic & Feedback
@@ -50,12 +50,12 @@ We use a two-stage approach to eliminate lag entirely:
 
 2.  **Stage 2: The Throttled Update (Lag Prevention)**
     - Even if the math is instant, *applying* the result (updating 1000 blocks, sending network packets, rebuilding chunk meshes) will freeze the game.
-    - **Solution**: We queue these valid updates and apply them slowly (**5 per second**).
+    - **Solution**: We queue these valid updates and apply them slowly (**5 per tick / 100 per second**).
 
 ### Summary
 - **Math**: O(1) (Instant)
 - **Block Updates**: Throttled (Smooth)
 
-## V. Technical Scope
-- **Compatibility**: Must work with modded crops (Fabric `BlockTags.CROPS`).
-- **Efficiency**: The offline growth calculation itself must be lightweight, but the application of growth stages is throttled.
+## VI. Future Expansion / TODO
+- [x] **Feature Expansion**:
+  - [x] Implement `alwaysWetFarmland` GameRule/Toggle logic (Hydrate regardless of water proximity).

@@ -2,6 +2,7 @@ package net.instantgratification.agrarianreform.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,7 @@ public abstract class FarmlandBlockMixin {
             return;
 
         // 1. Total Immunity (IG Toggle)
-        if (serverLevel.getGameRules().get(AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY)) {
+        if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY)) {
             ci.cancel();
             return;
         }
@@ -56,11 +57,6 @@ public abstract class FarmlandBlockMixin {
         }
     }
 
-    // A better way to completely rewrite the trampling criteria block is via
-    // WrapOperation on the turnToDirt method call,
-    // or replacing the entire if-statement. Since mixins on if-statements are
-    // tricky, let's just
-    // replace `turnToDirt` inside `fallOn`.
     @WrapOperation(method = "fallOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/FarmlandBlock;turnToDirt(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V"))
     private void agrarianreform$wrapTurnToDirt(Entity sourceEntity, BlockState state, Level level, BlockPos pos,
             Operation<Void> original) {
@@ -73,36 +69,9 @@ public abstract class FarmlandBlockMixin {
             if (agrarianreform$hasSoftStep(living)) {
                 return; // Soft step protects the soil
             }
-
-            // If we fall > 0.6m, force trample (ignore the random chance vanilla has).
-            // Actually, vanilla random chance is `random.nextFloat() < fallDistance -
-            // 0.5F`.
-            // Wait, we are already inside the turnToDirt call, meaning vanilla's random
-            // check already passed!
-            // If we want to guarantee it above 0.6, we need to bypass vanilla's check
-            // entirely.
-            // Let's stick to the concept: "Walking on crops is safe. Jumping (> 0.6m
-            // height) without protection causes trample."
         }
 
         original.call(sourceEntity, state, level, pos);
-    }
-
-    @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true)
-    private void agrarianreform$forceTrample(Level level, BlockState state, BlockPos pos, Entity entity,
-            double fallDistance, CallbackInfo ci) {
-        // Vanilla handles the basic fallOn. If fallDistance > 0.6f and no soft step,
-        // guarantee turnToDirt!
-        if (level instanceof ServerLevel serverLevel) {
-            if (fallDistance > 0.6f) {
-                if (entity instanceof LivingEntity living && !agrarianreform$hasSoftStep(living)) {
-                    // Force trample
-                    FarmlandBlock.turnToDirt(entity, state, level, pos);
-                    entity.causeFallDamage(fallDistance, 1.0F, level.damageSources().fall());
-                    ci.cancel();
-                }
-            }
-        }
     }
 
     @Unique
@@ -128,15 +97,29 @@ public abstract class FarmlandBlockMixin {
     private static void agrarianreform$customWaterRange(LevelReader level, BlockPos pos,
             CallbackInfoReturnable<Boolean> cir) {
         if (level instanceof ServerLevel serverLevel) {
-            int sourceRange = serverLevel.getGameRules().get(AgrarianGameRules.HYDRO_SOURCE_RANGE);
-            int flowingRange = serverLevel.getGameRules().get(AgrarianGameRules.HYDRO_FLOWING_RANGE);
+            if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.ALWAYS_WET_FARMLAND)) {
+                cir.setReturnValue(true);
+                return;
+            }
+
+            int sourceRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_SOURCE_RANGE);
+            int flowingRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_FLOWING_RANGE);
+
+            if (sourceRange <= 4 && flowingRange <= 0)
+                return; // Let vanilla handle default/smaller ranges
 
             int maxRange = Math.max(sourceRange, flowingRange);
 
+            // Optimization: Fast-fail if no water in the general vicinity using block
+            // polling is still O(N^2),
+            // but we only check the Y layer of the farmland and one above.
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-maxRange, 0, -maxRange),
                     pos.offset(maxRange, 1, maxRange))) {
                 if (level.getFluidState(blockPos).is(FluidTags.WATER)) {
-                    int dist = Math.max(Math.abs(blockPos.getX() - pos.getX()), Math.abs(blockPos.getZ() - pos.getZ()));
+                    int dx = Math.abs(blockPos.getX() - pos.getX());
+                    int dz = Math.abs(blockPos.getZ() - pos.getZ());
+                    int dist = Math.max(dx, dz);
+
                     if (level.getFluidState(blockPos).isSource()) {
                         if (dist <= sourceRange) {
                             cir.setReturnValue(true);

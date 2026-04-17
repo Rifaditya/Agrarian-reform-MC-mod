@@ -1,8 +1,6 @@
 package net.instantgratification.agrarianreform.continuum;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.ChunkPos;
@@ -25,9 +23,23 @@ public class ContinuumData extends SavedData {
     public static final SavedDataType<ContinuumData> TYPE = new SavedDataType<>(
             Identifier.fromNamespaceAndPath(AgrarianReformFabric.MOD_ID, "continuum_data"),
             ContinuumData::create,
-            Codec.unboundedMap(Codec.LONG, Codec.LONG).xmap(
-                    ContinuumData::new,
-                    ContinuumData::getChunkUnloadTimes),
+            Codec.unboundedMap(Codec.STRING, Codec.LONG).xmap(
+                    encodedMap -> {
+                        Map<Long, Long> times = new HashMap<>();
+                        encodedMap.forEach((k, v) -> {
+                            try {
+                                times.put(Long.parseLong(k), v);
+                            } catch (NumberFormatException e) {
+                                // Skip invalid keys
+                            }
+                        });
+                        return new ContinuumData(times);
+                    },
+                    data -> {
+                        Map<String, Long> encodedMap = new HashMap<>();
+                        data.getChunkUnloadTimes().forEach((k, v) -> encodedMap.put(k.toString(), v));
+                        return encodedMap;
+                    }),
             DataFixTypes.SAVED_DATA_MAP_DATA // Use an existing data fix type to avoid crashes if we don't have a custom
                                              // one
     );

@@ -1,5 +1,6 @@
 package net.instantgratification.agrarianreform.continuum;
 
+import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -28,21 +29,25 @@ public class CropScanner {
                 int worldX = chunkPos.getMinBlockX() + x;
                 int worldZ = chunkPos.getMinBlockZ() + z;
 
-                // We use WORLD_SURFACE to find the highest block
-                int y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
-
-                // The block *at* WORLD_SURFACE is usually air or the non-solid block itself.
-                // We will check downwards until we hit something solid or we're confident no
-                // crops exist.
-                // A quick check 3 blocks down from the surface is usually sufficient for crops.
-                for (int dy = y; dy > y - 3 && dy >= level.getMinY(); dy--) {
+                // Better scanning: Iterate the entire vertical column for the chunk,
+                // but only in sections that contain blocks (skip air).
+                // Or use a more specific scan if WORLD_SURFACE fails to detect greenhouse
+                // levels.
+                // For performance, we'll check from the heights recorded down to min height,
+                // but we only really care about layers that have farmland.
+                int yMax = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
+                for (int dy = yMax; dy >= level.getMinY(); dy--) {
                     BlockPos pos = new BlockPos(worldX, dy, worldZ);
                     BlockState state = chunk.getBlockState(pos);
 
                     if (state.getBlock() instanceof CropBlock) {
                         // Found a crop! Queue it for update.
                         ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos, timeDelta));
-                        break; // Move to next X/Z column
+                        // If it's a standard crop, it's likely on farmland.
+                        // We check further down in case it's a vertical farm.
+                    } else if (dy < yMax - 64 && state.isAir()) {
+                        // Optimization: if we're deep and hit air, we might skip sections.
+                        // In a real mod, we'd check if the chunk section has crops at all.
                     }
                 }
             }
@@ -98,6 +103,23 @@ public class CropScanner {
                     || level.getBlockState(west.south()).is(cropBlock);
             if (diagonal) {
                 speed /= 2.0F;
+            }
+        }
+
+        // --- Agrarian Reform Feature Catch-up ---
+        // 1. Biodiversity Bonus
+        if (DynamicGameRuleManager.getBoolean(level, net.instantgratification.agrarianreform.AgrarianGameRules.BIODIVERSITY_BONUS)) {
+            boolean hasDifferentCrop = false;
+            net.minecraft.core.Direction[] directions = { net.minecraft.core.Direction.NORTH, net.minecraft.core.Direction.SOUTH, net.minecraft.core.Direction.EAST, net.minecraft.core.Direction.WEST };
+            for (net.minecraft.core.Direction dir : directions) {
+                BlockState neighborState = level.getBlockState(pos.relative(dir));
+                if (neighborState.is(net.minecraft.tags.BlockTags.CROPS) && !neighborState.is(cropBlock)) {
+                    hasDifferentCrop = true;
+                    break;
+                }
+            }
+            if (hasDifferentCrop) {
+                speed += 0.10f;
             }
         }
 

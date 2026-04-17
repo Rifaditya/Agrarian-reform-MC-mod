@@ -12,7 +12,7 @@ Farmland is now much more durable, provided you treat it with respect.
 - **Leather Boots**: Wearing any kind of Leather Boots grants you 100% trample immunity.
 - **Feather Falling**: The Feather Falling enchantment (any level) on your boots prevents you from trampling crops.
 - **Soft Step**: Walking and sprinting on crops is safe. Only jumping from height or falling onto them without protection will turn them back to dirt.
-- **Ravangers**: Be careful! Ravagers and other heavy mobs will still crush your crops.
+- **Ravagers**: Be careful! Ravagers and heavy entities (like Iron Golems) will still crush your crops unless the `total_trample_immunity` GameRule is enabled.
 
 ## 3. Hydro-Dynamics (Better Watering)
 Water reaches further and works better.

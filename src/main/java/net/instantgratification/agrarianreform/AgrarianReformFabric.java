@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Part of the Vanilla Outsider and Instant Gratification collections.
  */
 public class AgrarianReformFabric implements ModInitializer {
-    public static final String MOD_ID = "agrarian-reform";
+    public static final String MOD_ID = "agrarian_reform";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override

@@ -11,19 +11,23 @@ base {
 }
 
 repositories {
-    mavenLocal()
     maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://jitpack.io" }
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-
-    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     
-    // Standalone Library (No JiJ)
+    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:0.142.1+26.1"
+    
     implementation "net.dasik.social:dasik-library:${project.dasik_library_version}"
+
+    // MixinExtras for advanced injectors
+    implementation "io.github.llamalad7:mixinextras-fabric:0.4.1"
+    annotationProcessor "io.github.llamalad7:mixinextras-fabric:0.4.1"
 }
 
 processResources {
@@ -37,10 +41,9 @@ processResources {
     }
 }
 
+// Loom configuration
 loom {
-    mixin {
-        defaultRefmapName = "agrarian-reform-refmap.json"
-    }
+    // No longer using legacy mixin block as per Loom 1.14+ requirements
 }
 
 java {
@@ -55,6 +58,6 @@ tasks.withType(JavaCompile).configureEach {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName}" }
+        rename { "${it}_${project.base.archivesName.get()}" }
     }
 }
