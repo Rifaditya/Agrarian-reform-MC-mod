@@ -61,17 +61,19 @@ Admins can fine-tune the experience using native Minecraft GameRules (Category: 
 | `agrarian_reform:growth_biodiversity_bonus`| Boolean | true | Whether mixed crops receive a growth bonus. |
 | `agrarian_reform:total_trample_immunity` | Boolean | false | Absolute immunity to all trampling (IG Mode). |
 | `agrarian_reform:always_wet_farmland` | Boolean | false | Forces farmland to remain hydrated regardless of water proximity. |
+| `agrarian_reform:seeds_grow_grass` | Boolean | true | Allows seeds to grow grass on dirt blocks. |
+| `agrarian_reform:right_click_harvest` | Boolean | true | Allows right-clicking mature crops to harvest and replant them. |
 | `agrarian_reform:ambient_crop_rustle` | Boolean | true | Enables sound effects when walking through crops. |
 | `agrarian_reform:ambient_vitality_particles` | Boolean | true | Enables vitality particles on growth events. |
 
 ---
 
 ## 🛠️ Technical Specs
-- **Target**: Minecraft 26.1.2 (Snapshot 11)
+- **Target**: Minecraft 26.1.2
 - **Loader**: Fabric
-- **Dependencies**: Fabric API, DasikLibrary (v1.6.9+build.15)
+- **Dependencies**: Fabric API, DasikLibrary (v1.6.9+build.24)
 - **Java**: Version 25 (Strict)
-- **Build**: 1.2.0+build.2
+- **Build**: 1.2.7+A-26.1.2
 
 ---
 

@@ -57,6 +57,12 @@ public class AgrarianGameRules {
         public static final GameRule<Boolean> ALWAYS_WET_FARMLAND = DynamicGameRuleManager.registerBoolean(
                         "always_wet_farmland", AGRARIAN_REFORM, false);
 
+        public static final GameRule<Boolean> SEEDS_GROW_GRASS = DynamicGameRuleManager.registerBoolean(
+                        "seeds_grow_grass", AGRARIAN_REFORM, true);
+
+        public static final GameRule<Boolean> RIGHT_CLICK_HARVEST = DynamicGameRuleManager.registerBoolean(
+                        "right_click_harvest", AGRARIAN_REFORM, true);
+
         public static void register() {
                 AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
         }

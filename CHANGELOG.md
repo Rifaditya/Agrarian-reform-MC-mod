@@ -1,5 +1,25 @@
 # Changelog - Agrarian Reform
 
+## [1.2.7+A-26.1.2] - 2026-06-12
+### Added
+- **Right-Click Harvest**: Capability to right-click fully grown crops to harvest and automatically replant them. Gated by `right_click_harvest` GameRule.
+- **Modded Crops Compatibility**: Supports all vanilla and modded crops dynamically using block state property queries.
+- **Soil Restoration**: Ability to grow grass on Dirt blocks by right-clicking them with seed items. Gated by `seeds_grow_grass` GameRule.
+
+### Changed
+- **Dependencies**: Updated DasikLibrary dependency to `1.6.9+build.24`.
+
+## [1.2.0+build.3] - 2026-06-12
+### Added
+- **Localization**: Added missing translation keys and description tooltips for the `always_wet_farmland` GameRule.
+
+### Fixed
+- **Logic**: Fixed rustle sound cooldown being shared across ALL blocks of the same crop type (singleton bug). Cooldown is now tracked per-entity via static map.
+- **Dependencies**: Upgraded Fabric API from `0.142.1+26.1` to `0.145.4+26.1.2` (fixes `GlobalAttachmentsProvider` missing class build failure).
+
+### Changed
+- **Cleanup**: Removed unused imports from client class.
+
 ## [1.2.0+build.2] - 2026-04-17
 ### Fixed
 - **CRITICAL**: Moved `BlockColorsMixin` to client-only mixin array — previously in shared array, causing `ClassNotFoundException` crash on dedicated servers.
