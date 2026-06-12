@@ -1,6 +1,6 @@
 # Changelog - Agrarian Reform
 
-## [2.0.0+A-26.2] - 2026-06-12
+## [2.0.0+R-26.2] - 2026-06-12
 ### Changed
 - **Platform Upgrade**: Ported the entire mod to target **Minecraft 26.2-rc-1**.
 - **Dependencies**: Upgraded Fabric Loader to `0.19.1`, Fabric API to `0.150.1+26.2`, Fabric Loom to `1.15.5`, and DasikLibrary to `1.8.2`.
