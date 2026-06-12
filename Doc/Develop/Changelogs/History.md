@@ -1,6 +1,6 @@
 # Changelog History
 
-## [1.2.7+A-26.1.2] - 2026-06-12
+## [1.2.7+R-26.1.2] - 2026-06-12
 - **Backport**: Backported all Phase 5 capabilities to Minecraft 26.1.2.
 - **Right-Click Harvest**: Fully grown crops can be right-clicked to harvest and automatically replanted. Supports all vanilla and modded crops. Gated by `right_click_harvest` GameRule (Boolean, default `true`).
 - **Soil Restoration**: Right-clicking dirt blocks with seeds converts them to grass. Gated by `seeds_grow_grass` GameRule (Boolean, default `true`).

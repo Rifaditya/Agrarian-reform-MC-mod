@@ -1,6 +1,6 @@
 # Changelog - Agrarian Reform
 
-## [1.2.7+A-26.1.2] - 2026-06-12
+## [1.2.7+R-26.1.2] - 2026-06-12
 ### Added
 - **Right-Click Harvest**: Capability to right-click fully grown crops to harvest and automatically replant them. Gated by `right_click_harvest` GameRule.
 - **Modded Crops Compatibility**: Supports all vanilla and modded crops dynamically using block state property queries.

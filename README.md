@@ -73,7 +73,7 @@ Admins can fine-tune the experience using native Minecraft GameRules (Category: 
 - **Loader**: Fabric
 - **Dependencies**: Fabric API, DasikLibrary (v1.6.9+build.24)
 - **Java**: Version 25 (Strict)
-- **Build**: 1.2.7+A-26.1.2
+- **Build**: 1.2.7+R-26.1.2
 
 ---
 
