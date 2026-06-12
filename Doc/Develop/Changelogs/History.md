@@ -1,5 +1,31 @@
 # Changelog History
 
+## [2.0.0+A-26.2] - 2026-06-12
+- **Platform Upgrade**: Ported the entire mod to target **Minecraft 26.2-rc-1**.
+- **Dependencies**: Upgraded Fabric Loader to `0.19.1`, Fabric API to `0.150.1+26.2`, Fabric Loom to `1.15.5`, and DasikLibrary to `1.8.2`.
+- **Versioning**: Major version bump to reflect the platform migration.
+
+## [1.2.6+A-26.1.2] - 2026-06-12
+- **Right-Click Harvest**: Added capability to right-click fully grown crops to harvest and automatically replant them.
+- **Modded Crops Compatibility**: Leveraged dynamic block state properties to support all vanilla and modded crops (e.g. Farmer's Delight, Croptopia).
+- **Configuration**: Added `right_click_harvest` GameRule (Boolean, default `true`) to toggle the right-click harvest feature.
+
+## [1.2.5+A-26.1.2] - 2026-06-12
+- **Soil Restoration**: Added capability to grow grass on Dirt blocks by right-clicking them with seed items (supports wheat, melon, pumpkin, beetroot, etc. via `#minecraft:chicken_food` tag).
+- **Configuration**: Added `seeds_grow_grass` GameRule (Boolean, default `true`) to toggle the seed-to-grass growth feature.
+
+## [1.2.4+A-26.1.2] - 2026-06-12
+- **Versioning**: Migrated from legacy `Major.Minor.Patch+build.N` to standard `Major.Minor.Patch+Stage-MC_Version` format.
+
+## [1.2.0+build.3] - 2026-06-12
+- **Localization**: Added missing `always_wet_farmland` GameRule translation key and description in `en_us.json`.
+- **Logic**: Fixed rustle sound cooldown being shared across ALL blocks of the same crop type (singleton bug). Cooldown is now tracked per-entity via static map.
+- **Cleanup**: Removed 5 unused imports from `AgrarianReformClient.java`.
+- **Dependencies**: Upgraded Fabric API from `0.142.1+26.1` to `0.145.4+26.1.2` (fixes `GlobalAttachmentsProvider` missing class build failure).
+- **Infrastructure**: Replaced hardcoded Fabric API version in `build.gradle` with `gradle.properties` variable reference.
+- **Infrastructure**: Enabled `org.gradle.java.home` in `gradle.properties` pointing to JDK 25.0.3.
+- **Documentation**: Corrected DasikLibrary version in README (`build.15` → `build.24`).
+
 ## [1.2.0+build.2] - 2026-04-17
 - **Critical Fix**: Resolved server crash by moving `BlockColorsMixin` to client-only array.
 - **Logic Fix**: Corrected trample criteria to respect vanilla mob_griefing and entity size.

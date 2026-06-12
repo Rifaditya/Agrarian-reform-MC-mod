@@ -1,7 +1,5 @@
 package net.instantgratification.agrarianreform.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.minecraft.core.BlockPos;
@@ -10,7 +8,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -27,10 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * FarmlandBlockMixin: Soil Resilience & Hydro-Dynamics
  * 
- * This mixin interdicts the core hydration and trample logic of FarmlandBlocks.
- * - Hydration: Extends irrigation range to 8 blocks for source water.
- * - Trampling: Implements the 'Soft Step' logic (Leather Boots/Feather Falling)
- * and respects the 'totalTrampleImmunity' GameRule for IG mode.
+ * This mixin handles hydration and trample logic for FarmlandBlocks.
+ * - Hydration: Extends irrigation range based on GameRules.
+ * - Trampling: Implements 'Soft Step' (Leather Boots/Feather Falling) and
+ * 'Total Trample Immunity'.
  */
 @Mixin(FarmlandBlock.class)
 public abstract class FarmlandBlockMixin {
@@ -41,37 +38,18 @@ public abstract class FarmlandBlockMixin {
         if (!(level instanceof ServerLevel serverLevel))
             return;
 
-        // 1. Total Immunity (IG Toggle)
-        if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY)) {
+        boolean immunity = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY);
+        boolean softStep = false;
+
+        if (entity instanceof LivingEntity living) {
+            softStep = agrarianreform$hasSoftStep(living);
+        }
+
+        if (immunity || softStep) {
+            // Cancel trampling logic but ensure fall damage is still applied
+            entity.causeFallDamage((float) fallDistance, 1.0F, level.damageSources().fall());
             ci.cancel();
-            return;
         }
-
-        // 2. Nuanced Logic (VO Phase 2) - Soft Step
-        if (entity instanceof LivingEntity livingEntity) {
-            if (agrarianreform$hasSoftStep(livingEntity)) {
-                // Soft step: cancel trampling but still apply fall damage manually
-                entity.causeFallDamage((float) fallDistance, 1.0F, level.damageSources().fall());
-                ci.cancel();
-            }
-        }
-    }
-
-    @WrapOperation(method = "fallOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/FarmlandBlock;turnToDirt(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V"))
-    private void agrarianreform$wrapTurnToDirt(Entity sourceEntity, BlockState state, Level level, BlockPos pos,
-            Operation<Void> original) {
-        if (sourceEntity instanceof Ravager) {
-            original.call(sourceEntity, state, level, pos);
-            return;
-        }
-
-        if (sourceEntity instanceof LivingEntity living) {
-            if (agrarianreform$hasSoftStep(living)) {
-                return; // Soft step protects the soil
-            }
-        }
-
-        original.call(sourceEntity, state, level, pos);
     }
 
     @Unique
@@ -81,8 +59,6 @@ public abstract class FarmlandBlockMixin {
             return true;
         }
         // Feather falling
-        // In 26.1, enchantments are data-driven, so we check using EnchantmentHelper
-        // and RegistryAccess
         var enchantmentRegistry = entity.level().registryAccess()
                 .lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
         var featherFallingOpt = enchantmentRegistry
@@ -105,14 +81,12 @@ public abstract class FarmlandBlockMixin {
             int sourceRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_SOURCE_RANGE);
             int flowingRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_FLOWING_RANGE);
 
+            // If using default or smaller ranges, let vanilla handle it
             if (sourceRange <= 4 && flowingRange <= 0)
-                return; // Let vanilla handle default/smaller ranges
+                return;
 
             int maxRange = Math.max(sourceRange, flowingRange);
 
-            // Optimization: Fast-fail if no water in the general vicinity using block
-            // polling is still O(N^2),
-            // but we only check the Y layer of the farmland and one above.
             for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-maxRange, 0, -maxRange),
                     pos.offset(maxRange, 1, maxRange))) {
                 if (level.getFluidState(blockPos).is(FluidTags.WATER)) {
@@ -133,7 +107,7 @@ public abstract class FarmlandBlockMixin {
                     }
                 }
             }
-            cir.setReturnValue(false);
+            // Do NOT setReturnValue(false) here to allow vanilla fallback
         }
     }
 }

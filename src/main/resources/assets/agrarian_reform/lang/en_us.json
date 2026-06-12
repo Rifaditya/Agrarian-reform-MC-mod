@@ -13,5 +13,11 @@
     "gamerule.ambient_vitality_particles.description": "When enabled, healthy growing crops emit subtle 'vitality' particles. A visual indicator of a thriving agricultural ecosystem.",
     "gamerule.ambient_crop_rustle": "Ambient Crop Rustle",
     "gamerule.ambient_crop_rustle.description": "When enabled, crops produce ambient rustling sounds when they grow or are interacted with. Enhances the organic atmosphere of the farm.",
+    "gamerule.always_wet_farmland": "Always Wet Farmland",
+    "gamerule.always_wet_farmland.description": "When enabled, farmland remains hydrated regardless of water proximity. Ideal for desert builds or decoration-focused farms. Default: false.",
+    "gamerule.seeds_grow_grass": "Seeds Grow Grass",
+    "gamerule.seeds_grow_grass.description": "When enabled, right-clicking a dirt block with agricultural seeds will consume the seed and convert the block to grass. Default: true.",
+    "gamerule.right_click_harvest": "Right Click Harvest",
+    "gamerule.right_click_harvest.description": "When enabled, right-clicking a mature crop will harvest its drops, replant it at age 0, and drop the surplus items. Supports all vanilla and modded crops. Default: true.",
     "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform"
 }

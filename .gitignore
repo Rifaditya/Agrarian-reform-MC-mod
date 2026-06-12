@@ -85,3 +85,7 @@ build_log*.txt
 
 # Exclude broad log ignore to prevent unintentional documentation loss
 # *log*
+
+# Hype & Marketing Exclusion Policy
+Doc/Marketing/
+

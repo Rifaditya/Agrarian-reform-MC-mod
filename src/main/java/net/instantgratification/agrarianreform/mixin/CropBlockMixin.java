@@ -25,6 +25,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * CropBlockMixin: Growth & Biodiversity
  * 
@@ -34,6 +37,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * - Visual Feedback: Injects particles (happy villager) and sounds (rustle)
  * upon growth
  * or player interaction (brushing against stalks).
+ * 
+ * Verified against: CropBlock.java (Snapshot 26.1)
  */
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin {
@@ -41,8 +46,13 @@ public abstract class CropBlockMixin {
     @Shadow
     public abstract boolean isMaxAge(BlockState state);
 
+    /**
+     * Tracks rustle cooldown per-entity (keyed by entity ID).
+     * CropBlock is a singleton per type, so an instance field would share
+     * cooldown across ALL blocks of the same crop type globally.
+     */
     @Unique
-    private long agrarianreform$lastRustleTime = 0;
+    private static final Map<Integer, Long> agrarianreform$rustleCooldowns = new HashMap<>();
 
     // Phase 4: Polyculture & Phase 3: Rain Boost
     @ModifyReturnValue(method = "getGrowthSpeed", at = @At("RETURN"))
@@ -123,12 +133,14 @@ public abstract class CropBlockMixin {
             return;
         if (this.isMaxAge(state) && DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.AMBIENT_CROP_RUSTLE)) {
             long time = serverLevel.getGameTime();
+            int entityId = entity.getId();
+            Long lastRustle = agrarianreform$rustleCooldowns.get(entityId);
             // 10 tick cooldown to prevent audio spam
-            if (time - this.agrarianreform$lastRustleTime > 10L) {
+            if (lastRustle == null || time - lastRustle > 10L) {
                 // Determine if entity is moving sufficiently
                 double motion = entity.getDeltaMovement().horizontalDistance();
                 if (motion > 0.01D) {
-                    this.agrarianreform$lastRustleTime = time;
+                    agrarianreform$rustleCooldowns.put(entityId, time);
 
                     // Randomize pitch
                     float pitch = 0.8F + serverLevel.getRandom().nextFloat() * 0.4F; // 0.8 to 1.2

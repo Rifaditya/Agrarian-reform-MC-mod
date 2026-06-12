@@ -63,15 +63,17 @@ Admins can fine-tune the experience using native Minecraft GameRules (Category: 
 | `agrarian_reform:always_wet_farmland` | Boolean | false | Forces farmland to remain hydrated regardless of water proximity. |
 | `agrarian_reform:ambient_crop_rustle` | Boolean | true | Enables sound effects when walking through crops. |
 | `agrarian_reform:ambient_vitality_particles` | Boolean | true | Enables vitality particles on growth events. |
+| `agrarian_reform:seeds_grow_grass` | Boolean | true | Allows right-clicking a dirt block with agricultural seeds to grow grass. |
+| `agrarian_reform:right_click_harvest` | Boolean | true | Allows right-clicking fully grown crops to harvest and automatically replant them. |
 
 ---
 
 ## 🛠️ Technical Specs
-- **Target**: Minecraft 26.1.2 (Snapshot 11)
+- **Target**: Minecraft 26.2-rc-1 (Release Candidate 1)
 - **Loader**: Fabric
-- **Dependencies**: Fabric API, DasikLibrary (v1.6.9+build.15)
+- **Dependencies**: Fabric API, DasikLibrary (v1.8.2)
 - **Java**: Version 25 (Strict)
-- **Build**: 1.2.0+build.2
+- **Build**: 2.0.0+A-26.2
 
 ---
 
