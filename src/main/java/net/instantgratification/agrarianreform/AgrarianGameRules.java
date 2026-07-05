@@ -63,6 +63,9 @@ public class AgrarianGameRules {
         public static final GameRule<Boolean> RIGHT_CLICK_HARVEST = DynamicGameRuleManager.registerBoolean(
                         "right_click_harvest", AGRARIAN_REFORM, true);
 
+        public static final GameRule<Boolean> UNIVERSAL_BONEMEAL = DynamicGameRuleManager.registerBoolean(
+                        "universal_bonemeal", AGRARIAN_REFORM, true);
+
         public static void register() {
                 AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
         }

@@ -19,5 +19,7 @@
     "gamerule.seeds_grow_grass.description": "When enabled, right-clicking a dirt block with agricultural seeds will consume the seed and convert the block to grass. Default: true.",
     "gamerule.right_click_harvest": "Right Click Harvest",
     "gamerule.right_click_harvest.description": "When enabled, right-clicking a mature crop will harvest its drops, replant it at age 0, and drop the surplus items. Supports all vanilla and modded crops. Default: true.",
+    "gamerule.universal_bonemeal": "Universal Bone Meal",
+    "gamerule.universal_bonemeal.description": "When enabled, bone meal can be used to accelerate the growth of non-natively bonemealable plants (Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines). Default: true.",
     "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform"
 }

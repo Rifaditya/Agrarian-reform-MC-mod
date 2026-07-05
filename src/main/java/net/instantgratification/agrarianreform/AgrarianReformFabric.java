@@ -11,6 +11,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Block;
@@ -182,6 +183,125 @@ public class AgrarianReformFabric implements ModInitializer {
             }
 
             return InteractionResult.SUCCESS;
+        });
+
+        // Universal Bone Meal interaction
+        UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
+            if (!DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.UNIVERSAL_BONEMEAL)) {
+                return InteractionResult.PASS;
+            }
+
+            ItemStack stack = player.getItemInHand(hand);
+            if (!stack.is(Items.BONE_MEAL)) {
+                return InteractionResult.PASS;
+            }
+
+            BlockPos pos = hitResult.getBlockPos();
+            BlockState state = level.getBlockState(pos);
+            Block block = state.getBlock();
+            boolean grew = false;
+
+            if (block instanceof net.minecraft.world.level.block.SugarCaneBlock) {
+                // Find base and calculate column height
+                BlockPos basePos = pos;
+                while (level.getBlockState(basePos.below()).is(block)) {
+                    basePos = basePos.below();
+                }
+
+                // Count going up
+                int height = 1;
+                BlockPos topPos = basePos;
+                while (level.getBlockState(topPos.above()).is(block)) {
+                    topPos = topPos.above();
+                    height++;
+                }
+
+                if (height < 3 && level.isEmptyBlock(topPos.above())) {
+                    if (!level.isClientSide()) {
+                        level.setBlockAndUpdate(topPos.above(), block.defaultBlockState());
+                        level.levelEvent(1505, topPos.above(), 15);
+                    }
+                    grew = true;
+                }
+            } else if (block instanceof net.minecraft.world.level.block.CactusBlock) {
+                // Find base and calculate column height
+                BlockPos basePos = pos;
+                while (level.getBlockState(basePos.below()).is(block)) {
+                    basePos = basePos.below();
+                }
+
+                // Count going up
+                int height = 1;
+                BlockPos topPos = basePos;
+                while (level.getBlockState(topPos.above()).is(block)) {
+                    topPos = topPos.above();
+                    height++;
+                }
+
+                if (height < 3 && level.isEmptyBlock(topPos.above())) {
+                    if (!level.isClientSide()) {
+                        level.setBlockAndUpdate(topPos.above(), block.defaultBlockState());
+                        level.levelEvent(1505, topPos.above(), 15);
+                    }
+                    grew = true;
+                }
+            } else if (block instanceof net.minecraft.world.level.block.NetherWartBlock) {
+                IntegerProperty ageProp = net.minecraft.world.level.block.state.properties.BlockStateProperties.AGE_3;
+                if (state.hasProperty(ageProp)) {
+                    int age = state.getValue(ageProp);
+                    if (age < 3) {
+                        if (!level.isClientSide()) {
+                            level.setBlock(pos, state.setValue(ageProp, age + 1), 11);
+                            level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state.setValue(ageProp, age + 1)));
+                            level.levelEvent(1505, pos, 15);
+                        }
+                        grew = true;
+                    }
+                }
+            } else if (block instanceof net.minecraft.world.level.block.CocoaBlock) {
+                IntegerProperty ageProp = net.minecraft.world.level.block.state.properties.BlockStateProperties.AGE_2;
+                if (state.hasProperty(ageProp)) {
+                    int age = state.getValue(ageProp);
+                    if (age < 2) {
+                        if (!level.isClientSide()) {
+                            level.setBlock(pos, state.setValue(ageProp, age + 1), 11);
+                            level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state.setValue(ageProp, age + 1)));
+                            level.levelEvent(1505, pos, 15);
+                        }
+                        grew = true;
+                    }
+                }
+            } else if (block instanceof net.minecraft.world.level.block.VineBlock) {
+                // Find bottom vine in column
+                BlockPos bottomPos = pos;
+                while (level.getBlockState(bottomPos.below()).is(block)) {
+                    bottomPos = bottomPos.below();
+                }
+
+                BlockPos growPos = bottomPos.below();
+                if (level.isEmptyBlock(growPos)) {
+                    BlockState bottomState = level.getBlockState(bottomPos);
+                    if (bottomState.canSurvive(level, growPos)) {
+                        if (!level.isClientSide()) {
+                            level.setBlockAndUpdate(growPos, bottomState);
+                            level.levelEvent(1505, growPos, 15);
+                        }
+                        grew = true;
+                    }
+                }
+            }
+
+            if (grew) {
+                if (!level.isClientSide()) {
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
+                    player.swing(hand, true);
+                }
+                return InteractionResult.SUCCESS;
+            }
+
+            return InteractionResult.PASS;
         });
     }
 

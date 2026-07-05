@@ -1,5 +1,9 @@
 # Changelog History
 
+## [2.0.3-26.2] - 2026-07-05
+- **Universal Bone Meal**: Added support for using bone meal on non-bonemealable blocks (Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines).
+- **Configuration**: Added `universal_bonemeal` GameRule (Boolean, default `true`) to toggle this feature.
+
 ## [2.0.2-26.2] - 2026-07-05
 - **Right-Click Harvest**: Expanded harvesting support to Sugar Cane columns and modded crops.
 - **Changelog Consolidation**: Deleted root-level `CHANGELOG.md` file to centralize version tracking in `History.md`.
