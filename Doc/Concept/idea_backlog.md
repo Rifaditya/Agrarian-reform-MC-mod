@@ -10,17 +10,12 @@ This document serves as a brainstorming board and checklist for sporadic ideas t
 ## 💡 Backlog Checklist
 
 ### AI & Behavior
-- [ ] **Farming Villager Optimization**: Improve villager harvesting paths and speed to align with polyculture benefits.
 - [ ] Add your ideas here...
 
 ### Crops & Botany
-- [ ] **Greenhouse Glass**: Specialized glass that boosts crop growth beneath it during clear daylight hours.
-- [ ] **Compost Enrichment**: Dynamic compost/fertilizer items that apply a localized speed buff to crops.
 - [ ] Add your ideas here...
 
 ### Equipment & Tools
-- [ ] **Sickle Tool**: A high-durability farming tool that harvests crops in a 3x3 sweep.
-- [ ] **Irrigation Channel Block**: A waterlogged-capable stone or wood slab channel that acts as a water source for hydration.
 - [ ] Add your ideas here...
 
 ### Visuals & Audio

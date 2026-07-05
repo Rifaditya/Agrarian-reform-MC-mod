@@ -1,5 +1,10 @@
 # Changelog - Agrarian Reform
 
+## [2.0.1-26.2] - 2026-07-05
+### Changed
+- **Dependencies**: Hardened Minecraft version dependency constraint from open wildcard `*` to `>=26.2`.
+- **Versioning**: Switched to a clean, numeric-only version naming convention (removing stage-specific alphabetical markers).
+
 ## [2.0.0+R-26.2] - 2026-06-12
 ### Changed
 - **Platform Upgrade**: Ported the entire mod to target **Minecraft 26.2-rc-1**.
