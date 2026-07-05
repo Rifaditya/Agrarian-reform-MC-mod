@@ -90,18 +90,53 @@ public class AgrarianReformFabric implements ModInitializer {
             BlockPos pos = hitResult.getBlockPos();
             BlockState state = level.getBlockState(pos);
 
-            // Check if it is a crop block (vanilla tags, classes, or specific vanilla custom crops)
-            boolean isCrop = state.is(BlockTags.CROPS)
-                    || state.getBlock() instanceof CropBlock
-                    || state.getBlock() instanceof net.minecraft.world.level.block.NetherWartBlock
-                    || state.getBlock() instanceof net.minecraft.world.level.block.CocoaBlock;
+            // Sugar Cane handling
+            if (state.getBlock() instanceof net.minecraft.world.level.block.SugarCaneBlock) {
+                BlockPos basePos = pos;
+                while (level.getBlockState(basePos.below()).getBlock() instanceof net.minecraft.world.level.block.SugarCaneBlock) {
+                    basePos = basePos.below();
+                }
 
-            if (!isCrop) {
-                return InteractionResult.PASS;
+                java.util.List<BlockPos> harvestPosList = new java.util.ArrayList<>();
+                BlockPos currentPos = basePos.above();
+                while (level.getBlockState(currentPos).getBlock() instanceof net.minecraft.world.level.block.SugarCaneBlock) {
+                    harvestPosList.add(currentPos);
+                    currentPos = currentPos.above();
+                }
+
+                if (harvestPosList.isEmpty()) {
+                    return InteractionResult.PASS;
+                }
+
+                if (!level.isClientSide() && level instanceof ServerLevel serverLevel) {
+                    for (BlockPos harvestPos : harvestPosList) {
+                        BlockState harvestState = level.getBlockState(harvestPos);
+                        List<ItemStack> drops = Block.getDrops(harvestState, serverLevel, harvestPos, null, player, player.getItemInHand(hand));
+                        level.setBlock(harvestPos, Blocks.AIR.defaultBlockState(), 11);
+                        level.gameEvent(GameEvent.BLOCK_CHANGE, harvestPos, GameEvent.Context.of(player, Blocks.AIR.defaultBlockState()));
+                        for (ItemStack drop : drops) {
+                            if (!drop.isEmpty()) {
+                                Block.popResource(level, pos, drop);
+                            }
+                        }
+                    }
+
+                    SoundType soundType = state.getSoundType();
+                    level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
+                    player.swing(hand, true);
+                }
+
+                return InteractionResult.SUCCESS;
             }
 
             IntegerProperty ageProp = agrarianreform$getAgeProperty(state);
-            if (ageProp == null) {
+            boolean isCrop = state.is(BlockTags.CROPS)
+                    || state.getBlock() instanceof CropBlock
+                    || state.getBlock() instanceof net.minecraft.world.level.block.NetherWartBlock
+                    || state.getBlock() instanceof net.minecraft.world.level.block.CocoaBlock
+                    || (state.getBlock() instanceof net.minecraft.world.level.block.BushBlock && ageProp != null && !(state.getBlock() instanceof net.minecraft.world.level.block.StemBlock));
+
+            if (!isCrop || ageProp == null) {
                 return InteractionResult.PASS;
             }
 
@@ -124,7 +159,8 @@ public class AgrarianReformFabric implements ModInitializer {
                 for (ItemStack drop : drops) {
                     if (drop.is(ItemTags.CHICKEN_FOOD) 
                             || drop.is(ItemTags.VILLAGER_PLANTABLE_SEEDS) 
-                            || drop.getItem() == state.getBlock().asItem()) {
+                            || drop.getItem() == state.getBlock().asItem()
+                            || (drop.getItem() instanceof net.minecraft.world.item.BlockItem blockItem && blockItem.getBlock() == state.getBlock())) {
                         drop.shrink(1);
                         break;
                     }

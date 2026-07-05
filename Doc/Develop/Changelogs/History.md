@@ -1,5 +1,9 @@
 # Changelog History
 
+## [2.0.2-26.2] - 2026-07-05
+- **Right-Click Harvest**: Expanded harvesting support to Sugar Cane columns and modded crops.
+- **Changelog Consolidation**: Deleted root-level `CHANGELOG.md` file to centralize version tracking in `History.md`.
+
 ## [2.0.1-26.2] - 2026-07-05
 - **Dependencies**: Hardened Minecraft version dependency constraint from open wildcard `*` to `>=26.2`.
 - **Versioning**: Switched to a clean, numeric-only version naming convention (removing stage-specific alphabetical markers).
