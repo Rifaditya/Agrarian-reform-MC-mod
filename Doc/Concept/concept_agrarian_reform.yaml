@@ -1,0 +1,40 @@
+collection: Vanilla_Outsider
+mod_name: Agrarian Reform
+version: 2.0.0
+filename: concept_agrarian_reform.md
+content: |
+  # Agrarian Reform
+  ## Philosophy Fit
+  This mod adheres to the Vanilla Outsider philosophy by enhancing agricultural immersion. Instead of adding industrial farming machinery or complex tech grids, it respects the player's time and focuses on pastoral immersion. The world continues to live and grow when chunks are unloaded or the player is offline, while soil resilience, hydro-dynamics, and polyculture mechanics make farming interactive, realistic, and aesthetically pleasing.
+
+  ## Mechanics
+  ### The Continuum (Offline Persistence)
+  - **Simulation**: Calculates the difference in game ticks between chunk unload and chunk load. Approximates the exact number of random ticks that would have occurred.
+  - **Growth Calculation**: Uses an O(1) mathematical formula instead of iterative loops, resulting in zero performance impact when loading long-unloaded areas.
+  - **Throttled Updates**: Queues and applies block updates incrementally (e.g. 5 blocks per tick) to prevent server lag spikes and client rendering freezes.
+
+  ### Soil Resilience (Trample Prevention)
+  - **Protection**: Walking and running on crops is safe.
+  - **Trample Triggers**: Only jumping or falling from height onto crops causes trampling.
+  - **Implements**: Wearing Leather Boots or having the Feather Falling enchantment grants 100% trample immunity.
+  - **Heavy Entities**: Ravagers, Iron Golems, and other massive entities still trample crops.
+  - **Config Toggle**: A GameRule `agrarian_reform:total_trample_immunity` can be toggled to disable trampling completely.
+
+  ### Hydro-Dynamics (Better Irrigation)
+  - **Farmland Hydration**: Water source blocks hydrate farmland up to 8 blocks away (vanilla default is 4).
+  - **Flowing Water**: Flowing water only hydrates up to 4 blocks, rewarding neat irrigation canals.
+  - **Rainfall**: Rain automatically hydrates all exposed farmland and grants a temporary growth boost.
+
+  ### Polyculture (Biodiversity Bonus)
+  - **Synergy**: Planting different types of crops adjacent to each other (e.g., Wheat next to Carrots) gives a 10% growth speed bonus.
+  - **Config Toggle**: Toggleable via `agrarian_reform:growth_biodiversity_bonus` GameRule.
+
+  ### Aesthetic and Feedback
+  - **Rustling Sounds**: Walking through fully grown crops plays custom leaf-brushing sound events.
+  - **Morning Dew**: Farmland displays a slightly darker texture at sunrise to simulate dew moisture.
+  - **Growth Particles**: Sparkle particles occasionally appear when a crop grows.
+
+  ## Technical Requirements
+  - **Core**: Minecraft 26.2+, Java 25.
+  - **Library**: DasikLibrary 1.8.2.
+  - **Mappings**: Official Mojang (Post-Obfuscation Era).
