@@ -26,4 +26,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.0.0+R-26.2`** (2026-06-12) - - **Platform Upgrade**: Ported the entire mod to target **Minecraft 26.2-rc-1**. - - **Dependencies**: Upgraded Fabric Loader to `0.19.1`, Fabric API to `0.150.1+26.2`, Fabric Loom to `1.15.5`, and DasikLibrary to `1.8.2`.
 - [x] **`2.0.1-26.2`** (2026-07-05) - - **Dependencies**: Hardened Minecraft version dependency constraint from open wildcard `*` to `>=26.2`. - - **Versioning**: Switched to a clean, numeric-only version naming convention.
 - [x] **`2.0.2-26.2`** (2026-07-05) - - **Right-Click Harvest**: Expanded harvesting support to Sugar Cane columns and modded crops.
-- [ ] **`2.0.3-26.2`** (2026-07-05) - - **Universal Bone Meal**: Implement universal bone meal mechanics for Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines.
+- [x] **`2.0.3-26.2`** (2026-07-05) - - **Universal Bone Meal**: Implement universal bone meal mechanics for Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines.
+- [ ] **`2.1.0-26.2`** (2026-07-05) - - **Universal Growth**: Implement a global growth speed multiplier setting (GameRule) for all growing plants.

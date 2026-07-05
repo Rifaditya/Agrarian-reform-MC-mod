@@ -21,5 +21,7 @@
     "gamerule.right_click_harvest.description": "When enabled, right-clicking a mature crop will harvest its drops, replant it at age 0, and drop the surplus items. Supports all vanilla and modded crops. Default: true.",
     "gamerule.universal_bonemeal": "Universal Bone Meal",
     "gamerule.universal_bonemeal.description": "When enabled, bone meal can be used to accelerate the growth of non-natively bonemealable plants (Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines). Default: true.",
+    "gamerule.global_growth_multiplier": "Global Growth Multiplier",
+    "gamerule.global_growth_multiplier.description": "Global speed multiplier for plant growth ticks. Set to 0 to disable growth, 100 for normal, or higher for accelerated speed (e.g. 200 for 2x). Default: 100.",
     "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform"
 }

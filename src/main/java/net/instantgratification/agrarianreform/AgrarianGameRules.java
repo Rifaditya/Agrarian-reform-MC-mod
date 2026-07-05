@@ -66,6 +66,9 @@ public class AgrarianGameRules {
         public static final GameRule<Boolean> UNIVERSAL_BONEMEAL = DynamicGameRuleManager.registerBoolean(
                         "universal_bonemeal", AGRARIAN_REFORM, true);
 
+        public static final GameRule<Integer> GLOBAL_GROWTH_MULTIPLIER = DynamicGameRuleManager.registerInteger(
+                        "global_growth_multiplier", AGRARIAN_REFORM, 100);
+
         public static void register() {
                 AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
         }

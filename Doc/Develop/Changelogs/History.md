@@ -1,5 +1,9 @@
 # Changelog History
 
+## [2.1.0-26.2] - 2026-07-05
+- **Universal Growth Multiplier**: Added `global_growth_multiplier` GameRule (Integer, default `100`) to scale growth speeds of all vanilla and modded plants.
+- **Ticking Optimization**: Structured ticking logic inside a dedicated `GrowthHelper` class to satisfy Mixin isolation guidelines.
+
 ## [2.0.3-26.2] - 2026-07-05
 - **Universal Bone Meal**: Added support for using bone meal on non-bonemealable blocks (Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines).
 - **Configuration**: Added `universal_bonemeal` GameRule (Boolean, default `true`) to toggle this feature.
