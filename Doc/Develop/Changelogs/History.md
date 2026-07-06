@@ -1,16 +1,37 @@
 # Changelog History
 
 ## [2.1.0-26.2] - 2026-07-05
-- **Universal Growth Multiplier**: Added `global_growth_multiplier` GameRule (Integer, default `100`) to scale growth speeds of all vanilla and modded plants.
-- **Ticking Optimization**: Structured ticking logic inside a dedicated `GrowthHelper` class to satisfy Mixin isolation guidelines.
+- **Universal Growth Multiplier**:
+  - Implemented the `global_growth_multiplier` GameRule (Integer, default `100`), allowing server administrators and players to globally scale the growth rate of all plants.
+  - Ticks are modified proportionally without altering the actual server tick rate (TPS):
+    - `0` stops growth ticks entirely.
+    - `1-99` represents a percentage chance to let a growth tick execute (canceling ticks to slow down growth).
+    - `>100` executes the growth tick multiple times per random tick (e.g. `200` represents 2x speed by running `randomTick` twice).
+  - Broadly targets vanilla and modded crops, Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Saplings, and Sweet Berry Bushes.
+- **Ticking & Performance Optimization**:
+  - Created a dedicated utility class `GrowthHelper` to handle tick calculations and crop filtering, adhering to strict Mixin isolation standards.
+  - Mixed into `BlockBehaviour.BlockStateBase.randomTick` at `HEAD` to intercept random ticks globally and efficiently before they delegate to specific block implementations.
+  - Implemented block state identity checks between consecutive accelerated growth runs to prevent ticking blocks that have already grown, changed, or been broken.
 
 ## [2.0.3-26.2] - 2026-07-05
-- **Universal Bone Meal**: Added support for using bone meal on non-bonemealable blocks (Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines).
-- **Configuration**: Added `universal_bonemeal` GameRule (Boolean, default `true`) to toggle this feature.
+- **Universal Bone Meal**:
+  - Implemented custom Bone Meal right-click interactions for plants that are not natively bonemealable in vanilla:
+    - **Sugar Cane & Cactus**: Grows the vertical column up by 1 block (up to the vanilla height limit of 3 blocks) if the space above is empty.
+    - **Nether Wart**: Advances the age property by 1 stage per use (up to max age 3).
+    - **Cocoa**: Advances the growth stage by 1 (up to max age 2).
+    - **Vines**: Grows the vine downwards by 1 block, copying the horizontal wall attachment property state from the vine block above it.
+  - Plays the green vanilla bone meal particle and sound event (`1505`) at the growth position.
+  - Consumes exactly 1 Bone Meal item from the player's hand (bypassed in Creative mode) and swings the player's hand.
+- **Configuration**:
+  - Registered the boolean GameRule `universal_bonemeal` (default `true`) in `AgrarianGameRules.java` to toggle the feature, with full descriptions added to `en_us.json`.
 
 ## [2.0.2-26.2] - 2026-07-05
-- **Right-Click Harvest**: Expanded harvesting support to Sugar Cane columns and modded crops.
-- **Changelog Consolidation**: Deleted root-level `CHANGELOG.md` file to centralize version tracking in `History.md`.
+- **Right-Click Harvest**:
+  - Expanded Right-Click Harvest to support Sugar Cane columns: right-clicking any block in the column harvests all blocks above the base block, leaving the bottom-most block intact so it can continue to grow.
+  - Expanded crop detection to include modded plants (detecting any block inheriting from `BushBlock` that has an `"age"` property, excluding stems).
+  - Enhanced the replanting algorithm to scan for items inheriting from `BlockItem` that place the harvested block, making seed consumption fully compatible with custom modded seeds.
+- **Changelog Consolidation**:
+  - Deleted the root-level `CHANGELOG.md` file. All change records are now centralized in `Doc/Develop/Changelogs/History.md` to conform to standard collection conventions.
 
 ## [2.0.1-26.2] - 2026-07-05
 - **Dependencies**: Hardened Minecraft version dependency constraint from open wildcard `*` to `>=26.2`.
