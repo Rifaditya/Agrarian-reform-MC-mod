@@ -10,7 +10,7 @@
 ### 🎮 Version Compatibility & Parity
 
 This mod is active and fully supported across both major version streams:
-* **Minecraft 26.2+**: Current public release — **`v2.0.0`**
+* **Minecraft 26.2+**: Current public release — **`v2.0.2`**
 * **Minecraft 26.1.2**: Current public release — **`v1.2.7`**
 
 While both versions receive ongoing support and bug fixes, **Minecraft 26.2+** targets the official stable 26.2 release and is built against Java 25.
@@ -49,7 +49,7 @@ Nature thrives in variety. Planting different types of crops adjacent to each ot
 
 ### 🌾 Right-Click Harvesting & Seed-to-Grass
 Farming QoL improvements designed to fit seamlessly into the vanilla experience:
-- **Right-Click Harvest**: Right-click mature crops to harvest and automatically replant them in one smooth action.
+- **Right-Click Harvest**: Right-click mature crops to harvest and automatically replant them in one smooth action. Fully supports vanilla crops, modded crop blocks (e.g. Farmer's Delight, Croptopia), and Sugar Cane columns (harvests all blocks above the base, allowing the column to automatically regrow).
 - **Seed Planting**: Use seeds on dirt blocks to grow short grass, making landscaping and sheep grazing setups easier.
 
 ---
@@ -88,7 +88,7 @@ If you enjoy the **Vanilla Outsider** collection, consider supporting the next u
 ## 📦 Modpack Permissions
 
 <blockquote><strong>Modpack Distribution Policy:</strong><br>
-Since this mod is open-source (GPLv3), you are completely free to include it in any modpack! If you want to support my work and help fund future updates, downloading it directly through the official platform page (CurseForge) is highly appreciated.</blockquote>
+You are free to include this mod in any modpack, provided that the modpack is hosted on the same platform where you obtained this mod (e.g. CurseForge modpacks on CurseForge, Modrinth modpacks on Modrinth). Cross-platform redistribution is strictly prohibited to support the creator and ensure legitimate downloads.</blockquote>
 
 ---
 
