@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
     <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api"><img src="https://img.shields.io/badge/Requires-Fabric_API-blue?style=for-the-badge&logo=fabric" alt="Requires Fabric API"></a>
     <img src="https://img.shields.io/badge/Language-Java_25-orange?style=for-the-badge&logo=java" alt="Java 25">
     <img src="https://img.shields.io/badge/License-GPLv3-green?style=for-the-badge" alt="License">
@@ -56,6 +56,12 @@ Farming QoL improvements designed to fit seamlessly into the vanilla experience:
 
 ## ⚙️ Configuration (Native Game Rules)
 
+
+<blockquote class="warning">
+<strong>âš ï¸ Important: Config vs. In-Game GameRules</strong><br>
+The global configuration file only defines <strong>default values for new worlds</strong> at creation time.
+If you have <strong>already created/opened a world</strong>, changing the config file will have no effect. You must change the settings in-game using the <strong>Edit Game Rules</strong> UI screen or the <code>/gamerule</code> command.
+</blockquote>
 No messy config files. Everything lives in the **Edit Game Rules** screen or via standard commands.
 
 - `agrarian_reform:hydration_source_range`: How far still water hydrates farmland. (Default: 8)
