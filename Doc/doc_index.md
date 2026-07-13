@@ -8,6 +8,7 @@ Central navigation hub for all project documentation.
 
 ## 🧠 Concept & Design
 - [Current Concept (YAML)](Concept/concept_agrarian_reform.yaml): Technical design specifications.
+- [Continuum Improvements Plan](Concept/plan.md): Checklist for future offline simulation enhancements.
 - [Idea Backlog](Concept/idea_backlog.md): Brainstorming board for sporadic, future ideas.
 - [Initial Concept (Historical)](Concept/initial_concept.md): Original design document.
 - [Player Guide](Players/index.md): Player guide and agricultural mechanics.
