@@ -7,14 +7,6 @@
 
 # ⚒️ Agrarian Reform
 
-### 🎮 Version Compatibility & Parity
-
-This mod is active and fully supported across both major version streams:
-* **Minecraft 26.2+**: Current public release — **`v2.1.0`**
-* **Minecraft 26.1.2**: Current public release — **`v1.2.7`**
-
-Ongoing support is focused exclusively on the 26.2+ release.
-
 > **"The world should not wait for you to watch it."**
 
 **Agrarian Reform** is a pastoral immersion mod that transforms Minecraft's agriculture from a proximity-based machine into a living, breathing ecosystem. It ensures that your hard work persists and grows even when you aren't there to witness it, while adding depth to soil management, irrigation, and biodiversity.
