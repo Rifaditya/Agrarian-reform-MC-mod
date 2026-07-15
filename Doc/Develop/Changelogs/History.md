@@ -1,17 +1,19 @@
 # Changelog History
 
-## [2.1.0-26.2] - 2026-07-05
+## [2.1.0+R-26.2] - 2026-07-15
 - **Universal Growth Multiplier**:
   - Implemented the `global_growth_multiplier` GameRule (Integer, default `100`), allowing server administrators and players to globally scale the growth rate of all plants.
-  - Ticks are modified proportionally without altering the actual server tick rate (TPS):
-    - `0` stops growth ticks entirely.
-    - `1-99` represents a percentage chance to let a growth tick execute (canceling ticks to slow down growth).
-    - `>100` executes the growth tick multiple times per random tick (e.g. `200` represents 2x speed by running `randomTick` twice).
+  - Ticks are modified proportionally without altering the actual server tick rate (TPS).
   - Broadly targets vanilla and modded crops, Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Saplings, and Sweet Berry Bushes.
-- **Ticking & Performance Optimization**:
-  - Created a dedicated utility class `GrowthHelper` to handle tick calculations and crop filtering, adhering to strict Mixin isolation standards.
-  - Mixed into `BlockBehaviour.BlockStateBase.randomTick` at `HEAD` to intercept random ticks globally and efficiently before they delegate to specific block implementations.
-  - Implemented block state identity checks between consecutive accelerated growth runs to prevent ticking blocks that have already grown, changed, or been broken.
+- **Ticking, Recursion & Performance Optimization**:
+  - Implemented a `ThreadLocal` recursion guard in the accelerated ticking loop to prevent infinite recursion and stack overflow crashes when the multiplier is set to high rates.
+  - Extracted crop rustling cooldown logic into a primitive FastUtil map in `SoundHelper`, integrated with `ServerEntityEvents.ENTITY_UNLOAD` to prevent memory leaks.
+  - Replaced object allocations with `BlockPos.MutableBlockPos` inside `CropScanner` coordinates loops, reducing heap allocations during chunk loading by ~30k objects.
+  - Integrated namespaced dynamic GameRules registry with standard prefixing conventions.
+- **Configuration Screen (YACL & ModMenu)**:
+  - Added full configuration support with dynamic main-menu configuration GUI using YetAnotherConfigLib (YACL) and ModMenu.
+  - Implemented client-only mixin separation to prevent crashes when executing on dedicated servers.
+  - Added warning tooltips for extreme growth multipliers.
 
 ## [2.0.3-26.2] - 2026-07-05
 - **Universal Bone Meal**:
