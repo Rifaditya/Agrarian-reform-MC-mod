@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform.continuum;
 
 import com.mojang.serialization.Codec;
@@ -15,8 +32,9 @@ import java.util.Map;
  * ContinuumData: The Persistent Memory
  * 
  * Manages the serialization and deserialization of chunk unload timestamps.
- * This ensures that 'The Continuum' persists across server restarts and
- * long periods of downtime.
+ * This ensures that 'The Continuum' persists across server restarts.
+ *
+ * Verified against: SavedData.java (26.2+)
  */
 public class ContinuumData extends SavedData {
 
@@ -40,8 +58,7 @@ public class ContinuumData extends SavedData {
                         data.getChunkUnloadTimes().forEach((k, v) -> encodedMap.put(k.toString(), v));
                         return encodedMap;
                     }),
-            DataFixTypes.SAVED_DATA_MAP_DATA // Use an existing data fix type to avoid crashes if we don't have a custom
-                                             // one
+            DataFixTypes.SAVED_DATA_MAP_DATA
     );
 
     private final Map<Long, Long> chunkUnloadTimes;
@@ -51,7 +68,6 @@ public class ContinuumData extends SavedData {
     }
 
     public ContinuumData(Map<Long, Long> times) {
-        // Ensure mutable map
         this.chunkUnloadTimes = new HashMap<>(times);
     }
 

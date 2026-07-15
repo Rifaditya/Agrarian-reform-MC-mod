@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform.mixin;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
@@ -28,12 +45,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * - Hydration: Extends irrigation range based on GameRules.
  * - Trampling: Implements 'Soft Step' (Leather Boots/Feather Falling) and
  * 'Total Trample Immunity'.
+ *
+ * Verified against: FarmlandBlock.java (26.2+)
  */
 @Mixin(FarmlandBlock.class)
 public abstract class FarmlandBlockMixin {
 
+    @Unique
     @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true)
-    private void agrarianreform$handleTrample(Level level, BlockState state, BlockPos pos, Entity entity,
+    private void agrarian_reform$handleTrample(Level level, BlockState state, BlockPos pos, Entity entity,
             double fallDistance, CallbackInfo ci) {
         if (!(level instanceof ServerLevel serverLevel))
             return;
@@ -42,7 +62,7 @@ public abstract class FarmlandBlockMixin {
         boolean softStep = false;
 
         if (entity instanceof LivingEntity living) {
-            softStep = agrarianreform$hasSoftStep(living);
+            softStep = agrarian_reform$hasSoftStep(living);
         }
 
         if (immunity || softStep) {
@@ -53,7 +73,7 @@ public abstract class FarmlandBlockMixin {
     }
 
     @Unique
-    private boolean agrarianreform$hasSoftStep(LivingEntity entity) {
+    private boolean agrarian_reform$hasSoftStep(LivingEntity entity) {
         // Leather Boots
         if (entity.getItemBySlot(EquipmentSlot.FEET).is(Items.LEATHER_BOOTS)) {
             return true;
@@ -69,8 +89,9 @@ public abstract class FarmlandBlockMixin {
         return false;
     }
 
+    @Unique
     @Inject(method = "isNearWater", at = @At("HEAD"), cancellable = true)
-    private static void agrarianreform$customWaterRange(LevelReader level, BlockPos pos,
+    private static void agrarian_reform$customWaterRange(LevelReader level, BlockPos pos,
             CallbackInfoReturnable<Boolean> cir) {
         if (level instanceof ServerLevel serverLevel) {
             if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.ALWAYS_WET_FARMLAND)) {

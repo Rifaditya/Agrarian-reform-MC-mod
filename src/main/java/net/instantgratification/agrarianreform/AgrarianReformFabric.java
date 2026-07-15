@@ -1,8 +1,30 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.loader.api.FabricLoader;
+import net.instantgratification.agrarianreform.config.AgrarianConfig;
 import net.instantgratification.agrarianreform.continuum.ContinuumManager;
+import net.instantgratification.agrarianreform.util.SoundHelper;
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import org.slf4j.Logger;
@@ -34,6 +57,8 @@ import java.util.List;
  * high-fidelity agricultural simulation for Minecraft.
  * 
  * Part of the Vanilla Outsider and Instant Gratification collections.
+ *
+ * Verified against: ModInitializer.java (Fabric API)
  */
 public class AgrarianReformFabric implements ModInitializer {
     public static final String MOD_ID = "agrarian_reform";
@@ -42,8 +67,41 @@ public class AgrarianReformFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         LOGGER.info("Instant Gratification: Agrarian Reform Initialized");
+
+        // Load config baseline template first
+        AgrarianConfig.load(FabricLoader.getInstance().getConfigDir());
+
         AgrarianGameRules.register();
         ContinuumManager.initialize();
+
+        // Register entity unload listener to prevent memory leaks in SoundHelper
+        ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
+            SoundHelper.purgeEntity(entity.getId());
+        });
+
+        // Initialize/update active limits on server starting
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            // Reload config baseline template to fetch main-menu updates
+            AgrarianConfig.load(FabricLoader.getInstance().getConfigDir());
+
+            GameRules rules = server.getGameRules();
+            
+            // If the world is newly created (not initialized yet), apply the baseline config template directly to the active GameRules
+            if (!server.getWorldData().overworldData().isInitialized()) {
+                rules.set(AgrarianGameRules.HYDRATION_SOURCE_RANGE, AgrarianConfig.get().hydrationSourceRange, server);
+                rules.set(AgrarianGameRules.HYDRATION_FLOWING_RANGE, AgrarianConfig.get().hydrationFlowingRange, server);
+                rules.set(AgrarianGameRules.RAIN_GROWTH_ACCELERATION, AgrarianConfig.get().rainGrowthAcceleration, server);
+                rules.set(AgrarianGameRules.BIODIVERSITY_BONUS, AgrarianConfig.get().growthBiodiversityBonus, server);
+                rules.set(AgrarianGameRules.AMBIENT_CROP_RUSTLE, AgrarianConfig.get().ambientCropRustle, server);
+                rules.set(AgrarianGameRules.AMBIENT_VITALITY_PARTICLES, AgrarianConfig.get().ambientVitalityParticles, server);
+                rules.set(AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY, AgrarianConfig.get().totalTrampleImmunity, server);
+                rules.set(AgrarianGameRules.ALWAYS_WET_FARMLAND, AgrarianConfig.get().alwaysWetFarmland, server);
+                rules.set(AgrarianGameRules.SEEDS_GROW_GRASS, AgrarianConfig.get().seedsGrowGrass, server);
+                rules.set(AgrarianGameRules.RIGHT_CLICK_HARVEST, AgrarianConfig.get().rightClickHarvest, server);
+                rules.set(AgrarianGameRules.UNIVERSAL_BONEMEAL, AgrarianConfig.get().universalBonemeal, server);
+                rules.set(AgrarianGameRules.GLOBAL_GROWTH_MULTIPLIER, AgrarianConfig.get().globalGrowthMultiplier, server);
+            }
+        });
 
         // Seed-to-grass growth interaction
         UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {

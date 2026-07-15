@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform.continuum;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
@@ -14,14 +31,14 @@ import net.minecraft.world.level.levelgen.Heightmap;
  * 
  * Provides utility methods to scan loaded chunks for agricultural blocks and
  * perform high-precision growth speed approximations.
- * - Scan & Queue: Iterates through chunk surface columns to find crops.
- * - Mathematical Approximation: Recreates vanilla growth probability logic
- * in a static context to calculate theoretical 'ticks per stage'.
+ *
+ * Verified against: Heightmap.java (26.2+)
  */
 public class CropScanner {
 
     public static void scanAndQueue(ServerLevel level, LevelChunk chunk, long timeDelta) {
         ChunkPos chunkPos = chunk.getPos();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
         // Scan the surface of the chunk
         for (int x = 0; x < 16; x++) {
@@ -29,42 +46,22 @@ public class CropScanner {
                 int worldX = chunkPos.getMinBlockX() + x;
                 int worldZ = chunkPos.getMinBlockZ() + z;
 
-                // Better scanning: Iterate the entire vertical column for the chunk,
-                // but only in sections that contain blocks (skip air).
-                // Or use a more specific scan if WORLD_SURFACE fails to detect greenhouse
-                // levels.
-                // For performance, we'll check from the heights recorded down to min height,
-                // but we only really care about layers that have farmland.
                 int yMax = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
                 for (int dy = yMax; dy >= level.getMinY(); dy--) {
-                    BlockPos pos = new BlockPos(worldX, dy, worldZ);
+                    pos.set(worldX, dy, worldZ);
                     BlockState state = chunk.getBlockState(pos);
 
                     if (state.getBlock() instanceof CropBlock) {
-                        // Found a crop! Queue it for update.
-                        ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos, timeDelta));
-                        // If it's a standard crop, it's likely on farmland.
-                        // We check further down in case it's a vertical farm.
-                    } else if (dy < yMax - 64 && state.isAir()) {
-                        // Optimization: if we're deep and hit air, we might skip sections.
-                        // In a real mod, we'd check if the chunk section has crops at all.
+                        // Found a crop! Queue it using an immutable copy to prevent queue corruption
+                        ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta));
                     }
                 }
             }
         }
     }
 
-    // Helper to estimate growth speed without invoking the full random mixin
-    // intercept
+    // Helper to estimate growth speed without invoking the full random mixin intercept
     public static float getSpeed(CropBlock cropBlock, ServerLevel level, BlockPos pos) {
-        // Vanilla speed calc has protected access but we can invoke or recreate it
-        // carefully.
-        // It's technically protected in CropBlock. Let's create a proxy accessor via
-        // Mixin,
-        // or just recreate the logic here safely to avoid Invoker mixins for
-        // simplicity.
-        // For Zenith limits, rebuilding the mathematical probability is acceptable.
-
         float speed = 1.0F;
         BlockPos below = pos.below();
 

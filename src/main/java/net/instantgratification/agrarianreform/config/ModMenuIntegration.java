@@ -15,23 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.instantgratification.agrarianreform.client;
+package net.instantgratification.agrarianreform.config;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.instantgratification.agrarianreform.AgrarianReformFabric;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.dasik.social.api.config.GuiHelper;
 
 /**
- * AgrarianReformClient: Client-Side Initializer
+ * ModMenuIntegration: Entrypoint registration for ModMenu
  *
- * Handles client-only registrations and initializations.
+ * Dynamically binds the configuration GUI builder screen factory.
  *
- * Verified against: ClientModInitializer.java (Fabric API)
+ * Verified against: ModMenuApi.java (ModMenu 26.2+)
  */
-public class AgrarianReformClient implements ClientModInitializer {
+public class ModMenuIntegration implements ModMenuApi {
     @Override
-    public void onInitializeClient() {
-        AgrarianReformFabric.LOGGER.info("Initializing Agrarian Reform Client-Side Features");
-
-        // Color logic is handled via BlockColorsMixin
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        return GuiHelper.getOptionalFactory(
+                "agrarian_reform",
+                "net.instantgratification.agrarianreform.config.YaclScreenHelper",
+                "createScreen"
+        );
     }
 }

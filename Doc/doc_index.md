@@ -3,7 +3,6 @@
 Central navigation hub for all project documentation.
 
 ## 📜 High-Level
-- [CHANGELOG](../CHANGELOG.md): Latest release summary.
 - [README](../README.md): Project overview and features.
 
 ## 🧠 Concept & Design

@@ -1,8 +1,26 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
+import net.instantgratification.agrarianreform.util.SoundHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,20 +43,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * CropBlockMixin: Growth & Biodiversity
  * 
  * Enhances the growth logic for all blocks extending CropBlock.
- * - Polyculture: Calculates growth speed modifiers based on adjacent differing
- * crop types.
+ * - Polyculture: Calculates growth speed modifiers based on adjacent differing crop types.
  * - Visual Feedback: Injects particles (happy villager) and sounds (rustle)
- * upon growth
- * or player interaction (brushing against stalks).
+ *   upon growth or player interaction (brushing against stalks).
  * 
- * Verified against: CropBlock.java (Snapshot 26.1)
+ * Verified against: CropBlock.java (26.2+)
  */
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin {
@@ -46,18 +59,10 @@ public abstract class CropBlockMixin {
     @Shadow
     public abstract boolean isMaxAge(BlockState state);
 
-    /**
-     * Tracks rustle cooldown per-entity (keyed by entity ID).
-     * CropBlock is a singleton per type, so an instance field would share
-     * cooldown across ALL blocks of the same crop type globally.
-     */
-    @Unique
-    private static final Map<Integer, Long> agrarianreform$rustleCooldowns = new HashMap<>();
-
     // Phase 4: Polyculture & Phase 3: Rain Boost
+    @Unique
     @ModifyReturnValue(method = "getGrowthSpeed", at = @At("RETURN"))
-    private static float agrarianreform$modifyGrowthSpeed(float original, Block block, BlockGetter level,
-            BlockPos pos) {
+    private static float agrarian_reform$modifyGrowthSpeed(float original, Block block, BlockGetter level, BlockPos pos) {
         float speed = original;
 
         // Phase 4: Polyculture (Biodiversity)
@@ -84,9 +89,9 @@ public abstract class CropBlockMixin {
     }
 
     // Phase 3 & 5: Rain Growth Jump & Particle Feedback
+    @Unique
     @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
-    private void agrarianreform$preRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random,
-            CallbackInfo ci) {
+    private void agrarian_reform$preRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         if (!this.isMaxAge(state)) {
             // Check Rain Growth Spurt before the standard random tick logic executes
             if (level.isRainingAt(pos.above()) && level.canSeeSky(pos.above())) {
@@ -112,9 +117,9 @@ public abstract class CropBlockMixin {
         }
     }
 
+    @Unique
     @Inject(method = "randomTick", at = @At("RETURN"))
-    private void agrarianreform$postRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random,
-            CallbackInfo ci) {
+    private void agrarian_reform$postRandomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         // Did the block state change due to standard random ticking?
         BlockState newState = level.getBlockState(pos);
         if (newState.getBlock() == (Object) this && !newState.equals(state)) {
@@ -126,26 +131,23 @@ public abstract class CropBlockMixin {
     }
 
     // Phase 5: Aesthetic Rustling Audio
+    @Unique
     @Inject(method = "entityInside", at = @At("HEAD"))
-    private void agrarianreform$playRustleSound(BlockState state, Level level, BlockPos pos, Entity entity,
+    private void agrarian_reform$playRustleSound(BlockState state, Level level, BlockPos pos, Entity entity,
             InsideBlockEffectApplier effectApplier, boolean isPrecise, CallbackInfo ci) {
         if (!(level instanceof ServerLevel serverLevel))
             return;
         if (this.isMaxAge(state) && DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.AMBIENT_CROP_RUSTLE)) {
             long time = serverLevel.getGameTime();
             int entityId = entity.getId();
-            Long lastRustle = agrarianreform$rustleCooldowns.get(entityId);
-            // 10 tick cooldown to prevent audio spam
-            if (lastRustle == null || time - lastRustle > 10L) {
+            // Use primitive cooldown check in SoundHelper
+            if (SoundHelper.shouldPlayRustle(entityId, time)) {
                 // Determine if entity is moving sufficiently
                 double motion = entity.getDeltaMovement().horizontalDistance();
                 if (motion > 0.01D) {
-                    agrarianreform$rustleCooldowns.put(entityId, time);
-
-                    // Randomize pitch
+                    // Randomize pitch and volume
                     float pitch = 0.8F + serverLevel.getRandom().nextFloat() * 0.4F; // 0.8 to 1.2
                     float volume = 0.2F + serverLevel.getRandom().nextFloat() * 0.1F; // 0.2 to 0.3
-
                     serverLevel.playSound(null, pos, SoundEvents.GRASS_HIT, SoundSource.BLOCKS, volume, pitch);
                 }
             }

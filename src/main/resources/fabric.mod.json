@@ -20,10 +20,17 @@
         ],
         "client": [
             "net.instantgratification.agrarianreform.client.AgrarianReformClient"
+        ],
+        "modmenu": [
+            "net.instantgratification.agrarianreform.config.ModMenuIntegration"
         ]
     },
     "mixins": [
-        "agrarian_reform.mixins.json"
+        "agrarian_reform.mixins.json",
+        {
+            "config": "agrarian_reform.client.mixins.json",
+            "environment": "client"
+        }
     ],
     "depends": {
         "fabricloader": ">=0.16.9",
@@ -31,5 +38,9 @@
         "java": ">=25",
         "fabric-api": "*",
         "dasik-library": "*"
+    },
+    "suggests": {
+        "yet-another-config-lib": "*",
+        "modmenu": "*"
     }
 }

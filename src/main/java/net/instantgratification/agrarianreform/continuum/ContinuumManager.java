@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2026 Dasik (Rifaditya)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.instantgratification.agrarianreform.continuum;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
@@ -10,7 +27,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -23,8 +39,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * - Catch-up: Listens for CHUNK_LOAD to calculate time deltas and trigger
  * scans.
  * - Performance: Implements a throttled UPDATE_QUEUE that processes only a
- * small
- * number of crop blocks per tick to prevent server-side lag spikes.
+ * small number of crop blocks per tick to prevent server-side lag spikes.
+ *
+ * Verified against: ServerChunkEvents.java (Fabric API)
  */
 public class ContinuumManager {
     private static final String DATA_KEY = AgrarianReformFabric.MOD_ID + "_continuum";
@@ -103,6 +120,15 @@ public class ContinuumManager {
         }
     }
 
-    public record CropUpdateTask(ServerLevel level, BlockPos pos, long timeDelta) {
+    public static class CropUpdateTask {
+        public final ServerLevel level;
+        public final BlockPos pos;
+        public final long timeDelta;
+
+        public CropUpdateTask(ServerLevel level, BlockPos pos, long timeDelta) {
+            this.level = level;
+            this.pos = pos;
+            this.timeDelta = timeDelta;
+        }
     }
 }
