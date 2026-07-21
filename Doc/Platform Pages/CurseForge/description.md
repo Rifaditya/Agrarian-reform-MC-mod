@@ -1,19 +1,19 @@
-﻿<p align="center">
+<p align="center">
     <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api"><img src="https://img.shields.io/badge/Requires-Fabric_API-blue?style=for-the-badge&logo=fabric" alt="Requires Fabric API"></a>
     <img src="https://img.shields.io/badge/Language-Java_25-orange?style=for-the-badge&logo=java" alt="Java 25">
     <img src="https://img.shields.io/badge/License-GPLv3-green?style=for-the-badge" alt="License">
-    <img src="https://img.shields.io/badge/Minecraft-26.1.2%20%2F%2026.2+-brightgreen?style=for-the-badge" alt="Minecraft 26.1.2 / 26.2+">
+    <img src="https://img.shields.io/badge/Minecraft-26.2+-brightgreen?style=for-the-badge" alt="Minecraft 26.2+">
 </p>
 
 # ⚒️ Agrarian Reform
 
 ### 🎮 Version Compatibility & Parity
 
-This mod is active and fully supported across both major version streams:
+This mod is active and fully supported:
 * **Minecraft 26.2+**: Current public release — **`v2.0.0`**
-* **Minecraft 26.1.2**: Current public release — **`v1.2.7`**
+* **Minecraft 26.1.2**: **Discontinued** — **`v1.2.7`**
 
-While both versions receive ongoing support and bug fixes, **Minecraft 26.1.2** targets Snapshot 11 and is built against Java 25.
+Ongoing support is focused exclusively on the 26.2+ release.
 
 <blockquote><strong>"The world should not wait for you to watch it."</strong></blockquote>
 
