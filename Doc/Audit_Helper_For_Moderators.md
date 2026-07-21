@@ -2,7 +2,7 @@
 
 **Mod Name:** Vanilla Outsider: Agrarian Reform
 **Mod ID:** `agrarian_reform` (Fabric)
-**Version:** 2.1.1
+**Version:** 2.2.0
 **Creator:** Dasik (Rifaditya)
 
 ## 🛡️ Safety & Compliance Statement

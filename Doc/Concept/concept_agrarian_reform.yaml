@@ -1,6 +1,6 @@
 collection: Vanilla_Outsider
 mod_name: Agrarian Reform
-version: 2.1.1
+version: 2.2.0
 filename: concept_agrarian_reform.md
 content: |
   # Agrarian Reform
@@ -10,6 +10,7 @@ content: |
   ## Mechanics
   ### The Continuum (Offline Persistence)
   - **Simulation**: Calculates the difference in game ticks between chunk unload and chunk load. Approximates the exact number of random ticks that would have occurred, scaled dynamically in proportion to the active global growth multiplier settings.
+  - **Broad Plant Support**: Supports standard CropBlocks and non-standard plant blocks such as Sugar Cane, Cactus, Nether Wart, Cocoa pods, Vines, Sweet Berry Bushes, and Saplings (triggering tree generation upon stage completion).
   - **Growth Calculation**: Uses an O(1) mathematical formula instead of iterative loops, resulting in zero performance impact when loading long-unloaded areas.
   - **Throttled Updates**: Queues and applies block updates incrementally (e.g. 5 blocks per tick) to prevent server lag spikes and client rendering freezes.
 

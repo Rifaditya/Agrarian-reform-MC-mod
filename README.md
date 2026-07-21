@@ -19,7 +19,7 @@
 
 ### 1. The Continuum (Offline Persistence)
 In vanilla Minecraft, crops only grow in loaded chunks. **Agrarian Reform** introduces **The Continuum**, a high-precision simulation engine that bridges the gap between gameplay sessions.
-- **Persistent Growth**: When a chunk is unloaded, the mod timestamps the state of every crop, including underground and indoor vertical farms.
+- **Persistent Growth**: When a chunk is unloaded, the mod unifies persistence for both standard crops (`CropBlock`) and non-standard plant blocks (such as Sugar Cane, Cactus, Nether Wart, Cocoa pods, Vines, Sweet Berry Bushes, and Saplings).
 - **Time Delta Simulation**: Upon your return, the mod calculates exactly how much real-time has passed (scaled dynamically in proportion to the global growth multiplier GameRule) and simulates the random ticks that *would* have occurred, respecting polyculture bonuses.
 - **Throttled Updates**: To prevent lag spikes upon loading a massive farm, updates are applied via a smooth, throttled queue (O(1) calculation with O(n) distributed application).
 

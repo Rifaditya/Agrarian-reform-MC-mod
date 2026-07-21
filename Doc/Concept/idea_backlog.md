@@ -13,7 +13,6 @@ This document serves as a brainstorming board and checklist for sporadic ideas t
 - [ ] Add your ideas here...
 
 ### Crops & Botany
-- [ ] **Non-Standard Growing Plants Support**: Extend the offline simulator (unloaded chunk growth simulation) beyond standard vanilla `CropBlock` types (Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, Saplings).
 - [ ] **Farmland Hydration Decay Simulation**: Factor in dry soil conditions over long offline periods.
 
 ### Equipment & Tools

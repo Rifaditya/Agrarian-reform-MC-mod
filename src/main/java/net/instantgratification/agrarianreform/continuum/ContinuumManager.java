@@ -27,7 +27,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.CocoaBlock;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.Queue;
@@ -96,34 +104,137 @@ public class ContinuumManager {
     }
 
     private static void processCropUpdate(CropUpdateTask task) {
-        if (task.level.isLoaded(task.pos)) {
-            BlockState currentState = task.level.getBlockState(task.pos);
-            if (currentState.getBlock() instanceof CropBlock cropBlock) {
-                // Determine how many random ticks would have occurred
-                // Random tick speed default is 3 per chunk (16x16x16) per tick.
-                // A crop only grows if random tick hits it and crop growth speed allows.
-                // Simplified O(1) Math:
-                float growthSpeed = CropScanner.getSpeed(cropBlock, task.level, task.pos);
-                // The vanilla chance of growing is: random.nextInt((int)(25.0F / growthSpeed) +
-                // 1) == 0
-                float chancePerTick = 1.0f / ((25.0f / growthSpeed) + 1.0f);
+        if (!task.level.isLoaded(task.pos)) {
+            return;
+        }
 
-                // Frequency of this particular block getting hit by a random tick across a
-                // whole chunk space
-                // is extremely low. Approximated average ticks to grow 1 stage = (25 / speed) *
-                // 4096 (blocks in section) / 3 (random ticks)
-                // Actually random ticks are per section (16x16x16)
-                long averageTicksPerStage = (long) (((25.0f / growthSpeed) + 1.0f) * 4096.0f / 3.0f);
+        BlockState currentState = task.level.getBlockState(task.pos);
+        Block block = currentState.getBlock();
 
-                int stagesToGrow = (int) (task.timeDelta / averageTicksPerStage);
+        if (block instanceof CropBlock cropBlock) {
+            float growthSpeed = CropScanner.getSpeed(cropBlock, task.level, task.pos);
+            long averageTicksPerStage = (long) (((25.0f / growthSpeed) + 1.0f) * 4096.0f / 3.0f);
+            int stagesToGrow = (int) (task.timeDelta / averageTicksPerStage);
 
-                if (stagesToGrow > 0) {
-                    int currentAge = cropBlock.getAge(currentState);
-                    int maxAge = cropBlock.getMaxAge();
-                    int newAge = Math.min(maxAge, currentAge + stagesToGrow);
-                    if (newAge > currentAge) {
-                        task.level.setBlock(task.pos, cropBlock.getStateForAge(newAge), Block.UPDATE_ALL);
+            if (stagesToGrow > 0) {
+                int currentAge = cropBlock.getAge(currentState);
+                int maxAge = cropBlock.getMaxAge();
+                int newAge = Math.min(maxAge, currentAge + stagesToGrow);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, cropBlock.getStateForAge(newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof SugarCaneBlock || block instanceof CactusBlock) {
+            // Find base of the column to determine height
+            BlockPos basePos = task.pos;
+            while (task.level.getBlockState(basePos.below()).is(block)) {
+                basePos = basePos.below();
+            }
+
+            // Find current height going up
+            int currentHeight = 1;
+            BlockPos topPos = basePos;
+            while (task.level.getBlockState(topPos.above()).is(block)) {
+                topPos = topPos.above();
+                currentHeight++;
+            }
+
+            // If the pos is not the top block, do not grow it to avoid duplicate calculations in columns
+            if (!task.pos.equals(topPos)) {
+                return;
+            }
+
+            if (currentHeight >= 3) {
+                return; // Height limit reached
+            }
+
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_15);
+            // Sugar cane/cactus ticks: average 1,365 game ticks per age stage (1/16 chance per random tick)
+            int stages = (int) (task.timeDelta / 1365L);
+            if (stages > 0) {
+                int newAge = currentAge + stages;
+                int blocksToAdd = newAge / 16;
+                int finalAge = newAge % 16;
+                int finalHeight = Math.min(3, currentHeight + blocksToAdd);
+
+                if (finalHeight > currentHeight) {
+                    BlockPos buildPos = topPos;
+                    for (int i = 0; i < finalHeight - currentHeight; i++) {
+                        buildPos = buildPos.above();
+                        if (task.level.isEmptyBlock(buildPos)) {
+                            task.level.setBlockAndUpdate(buildPos, block.defaultBlockState().setValue(BlockStateProperties.AGE_15, finalAge));
+                        }
                     }
+                    // Reset the old top block's age to 0 when grown
+                    task.level.setBlockAndUpdate(topPos, currentState.setValue(BlockStateProperties.AGE_15, 0));
+                } else {
+                    task.level.setBlockAndUpdate(topPos, currentState.setValue(BlockStateProperties.AGE_15, finalAge));
+                }
+            }
+        } else if (block instanceof NetherWartBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
+            // Nether wart ticks: average 13,650 game ticks per age stage (10% chance per random tick)
+            int stages = (int) (task.timeDelta / 13650L);
+            if (stages > 0) {
+                int newAge = Math.min(3, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_3, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof CocoaBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_2);
+            // Cocoa ticks: average 6,825 game ticks per age stage (20% chance per random tick)
+            int stages = (int) (task.timeDelta / 6825L);
+            if (stages > 0) {
+                int newAge = Math.min(2, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_2, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof SweetBerryBushBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
+            // Sweet berry ticks: average 6,825 game ticks per age stage (20% chance per random tick)
+            int stages = (int) (task.timeDelta / 6825L);
+            if (stages > 0) {
+                int newAge = Math.min(3, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_3, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof VineBlock) {
+            // Vines grow downwards. Ticks: average 13,650 game ticks (10% chance)
+            if (task.timeDelta >= 13650L) {
+                BlockPos belowPos = task.pos.below();
+                if (task.level.isEmptyBlock(belowPos)) {
+                    // Place vine below, copying the direction properties of the current vine
+                    BlockState belowState = block.defaultBlockState();
+                    boolean hasSupport = false;
+                    for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+                        var prop = VineBlock.getPropertyForFace(dir);
+                        if (currentState.getValue(prop)) {
+                            // Check if there is block support below in that direction
+                            if (VineBlock.isAcceptableNeighbour(task.level, belowPos.relative(dir), dir)) {
+                                belowState = belowState.setValue(prop, true);
+                                hasSupport = true;
+                            }
+                        }
+                    }
+                    if (hasSupport) {
+                        task.level.setBlockAndUpdate(belowPos, belowState);
+                    }
+                }
+            }
+        } else if (block instanceof SaplingBlock saplingBlock) {
+            int currentStage = currentState.getValue(BlockStateProperties.STAGE);
+            // Sapling stages: average 95,550 game ticks per stage (about 1.4% chance per random tick)
+            int stages = (int) (task.timeDelta / 95550L);
+            if (stages > 0) {
+                int newStage = currentStage + stages;
+                if (newStage >= 2) {
+                    // Grow the tree structure!
+                    saplingBlock.advanceTree(task.level, task.pos, currentState, task.level.getRandom());
+                } else if (newStage == 1 && currentStage == 0) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.STAGE, 1), 260);
                 }
             }
         }

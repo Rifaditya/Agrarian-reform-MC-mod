@@ -21,6 +21,7 @@ import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -51,7 +52,17 @@ public class CropScanner {
                     pos.set(worldX, dy, worldZ);
                     BlockState state = chunk.getBlockState(pos);
 
-                    if (state.getBlock() instanceof CropBlock) {
+                    Block block = state.getBlock();
+                    boolean isContinuumPlant = block instanceof CropBlock
+                            || block instanceof net.minecraft.world.level.block.SugarCaneBlock
+                            || block instanceof net.minecraft.world.level.block.CactusBlock
+                            || block instanceof net.minecraft.world.level.block.NetherWartBlock
+                            || block instanceof net.minecraft.world.level.block.CocoaBlock
+                            || block instanceof net.minecraft.world.level.block.VineBlock
+                            || block instanceof net.minecraft.world.level.block.SaplingBlock
+                            || block instanceof net.minecraft.world.level.block.SweetBerryBushBlock;
+
+                    if (isContinuumPlant) {
                         // Found a crop! Queue it using an immutable copy to prevent queue corruption
                         ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta));
                     }

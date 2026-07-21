@@ -1,5 +1,15 @@
 # Changelog History
 
+## [2.2.0-26.2] - 2026-07-21
+- **Non-Standard Growing Plants Support**:
+  - Extended the offline simulator ("The Continuum") to detect and simulate the growth of non-standard crops when chunks reload.
+  - Added specialized O(1) growth simulation math and support for:
+    - **Sugar Cane & Cactus**: Dynamically grows vertical columns up to the limit of 3 blocks and increments their block age state properties.
+    - **Nether Wart**: Grows age stages 0 to 3.
+    - **Cocoa Pods & Sweet Berry Bushes**: Grows age stages 0 to 2 and 0 to 3.
+    - **Vines**: Simulates downward growth into empty blocks underneath.
+    - **Saplings**: Simulates stages 0 to 1 and generates tree structures when growth cycles complete.
+
 ## [2.1.1-26.2] - 2026-07-21
 - **Continuum Acceleration Synchronization**:
   - Synchronized the offline growth simulator ("The Continuum") catch-up time delta with the active `global_growth_multiplier` GameRule configuration.
