@@ -69,11 +69,11 @@ Admins can fine-tune the experience using native Minecraft GameRules (Category: 
 ---
 
 ## 🛠️ Technical Specs
-- **Target**: Minecraft 26.2-rc-1 (Release Candidate 1)
+- **Target**: Minecraft 26.2 (Stable)
 - **Loader**: Fabric
-- **Dependencies**: Fabric API, DasikLibrary (v1.8.2)
+- **Dependencies**: Fabric API, DasikLibrary
 - **Java**: Version 25 (Strict)
-- **Build**: 2.0.0+R-26.2
+- **Build**: 2.2.1-26.2
 
 ---
 

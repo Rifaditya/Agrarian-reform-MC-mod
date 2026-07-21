@@ -1,5 +1,13 @@
 # Changelog History
 
+## [2.2.1-26.2] - 2026-07-21
+- **Codebase Audit Alignment**:
+  - Simplified GPLv3 license headers to single-line in all 15 Java source files to comply with repository rules.
+  - Reformatted GSON JSON configs to 2-space indentation.
+  - Cleaned up unused and wildcard imports.
+  - Refactored `CropBlockMixin` and `FarmlandBlockMixin` to delegate all calculations to helper methods in `GrowthHelper` (complying with thin Mixin adapter policies).
+  - Fixed pre-release version reference keywords to target stable `26.2`.
+
 ## [2.2.0-26.2] - 2026-07-21
 - **Non-Standard Growing Plants Support**:
   - Extended the offline simulator ("The Continuum") to detect and simulate the growth of non-standard crops when chunks reload.

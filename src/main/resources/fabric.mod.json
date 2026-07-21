@@ -1,46 +1,46 @@
 {
-    "schemaVersion": 1,
-    "id": "agrarian_reform",
-    "version": "${version}",
-    "name": "Agrarian Reform",
-    "description": "Agrarian Reform: The Living Earth. A pastoral immersion mod featuring persistent offline crop growth (The Continuum), advanced soil resilience (Leather Boot/Feather Falling trample protection), dynamic hydro-dynamics (extended source irrigation / rain hydration), and polyculture biodiversity growth bonuses. Part of the Instant Gratification collection.",
-    "authors": [
-        "DasikIgaijin"
+  "schemaVersion": 1,
+  "id": "agrarian_reform",
+  "version": "${version}",
+  "name": "Agrarian Reform",
+  "description": "Agrarian Reform: The Living Earth. A pastoral immersion mod featuring persistent offline crop growth (The Continuum), advanced soil resilience (Leather Boot/Feather Falling trample protection), dynamic hydro-dynamics (extended source irrigation / rain hydration), and polyculture biodiversity growth bonuses. Part of the Instant Gratification collection.",
+  "authors": [
+    "DasikIgaijin"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform",
+    "sources": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform"
+  },
+  "license": "GPL-3.0-or-later",
+  "icon": "assets/agrarian_reform/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.instantgratification.agrarianreform.AgrarianReformFabric"
     ],
-    "contact": {
-        "homepage": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform",
-        "sources": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform"
-    },
-    "license": "GPL-3.0-or-later",
-    "icon": "assets/agrarian_reform/icon.png",
-    "environment": "*",
-    "entrypoints": {
-        "main": [
-            "net.instantgratification.agrarianreform.AgrarianReformFabric"
-        ],
-        "client": [
-            "net.instantgratification.agrarianreform.client.AgrarianReformClient"
-        ],
-        "modmenu": [
-            "net.instantgratification.agrarianreform.config.ModMenuIntegration"
-        ]
-    },
-    "mixins": [
-        "agrarian_reform.mixins.json",
-        {
-            "config": "agrarian_reform.client.mixins.json",
-            "environment": "client"
-        }
+    "client": [
+      "net.instantgratification.agrarianreform.client.AgrarianReformClient"
     ],
-    "depends": {
-        "fabricloader": ">=0.16.9",
-        "minecraft": ">=26.2",
-        "java": ">=25",
-        "fabric-api": "*",
-        "dasik-library": "*"
-    },
-    "suggests": {
-        "yet-another-config-lib": "*",
-        "modmenu": "*"
+    "modmenu": [
+      "net.instantgratification.agrarianreform.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "agrarian_reform.mixins.json",
+    {
+      "config": "agrarian_reform.client.mixins.json",
+      "environment": "client"
     }
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "minecraft": ">=26.2",
+    "java": ">=25",
+    "fabric-api": "*",
+    "dasik-library": "*"
+  },
+  "suggests": {
+    "yet-another-config-lib": "*",
+    "modmenu": "*"
+  }
 }

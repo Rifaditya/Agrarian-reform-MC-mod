@@ -1,34 +1,35 @@
-/*
- * Copyright (C) 2026 Dasik (Rifaditya)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
 
 package net.instantgratification.agrarianreform.util;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * GrowthHelper: Dynamic tick calculations
  *
- * Simulates growth ticks dynamically based on current game rule configurations.
+ * Simulates growth ticks dynamically based on current game rule configurations
+ * and delegates mixin calculations to keep adapters thin.
  *
  * Verified against: BlockBehaviour.java (26.2+)
  */
@@ -42,7 +43,7 @@ public class GrowthHelper {
         }
 
         // Check if the block is a plant/crop
-        boolean isPlant = block instanceof net.minecraft.world.level.block.CropBlock
+        boolean isPlant = block instanceof CropBlock
                 || block instanceof net.minecraft.world.level.block.SugarCaneBlock
                 || block instanceof net.minecraft.world.level.block.CactusBlock
                 || block instanceof net.minecraft.world.level.block.NetherWartBlock
@@ -97,5 +98,147 @@ public class GrowthHelper {
         }
 
         return false; // Let vanilla run the final randomTick
+    }
+
+    public static float modifyCropGrowthSpeed(float original, Block block, BlockGetter level, BlockPos pos) {
+        float speed = original;
+        if (level instanceof ServerLevel serverLevel) {
+            if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.BIODIVERSITY_BONUS)) {
+                boolean hasDifferentCrop = false;
+                Direction[] directions = { Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST };
+                for (Direction dir : directions) {
+                    BlockState neighborState = level.getBlockState(pos.relative(dir));
+                    if (neighborState.is(BlockTags.CROPS) && neighborState.getBlock() != block) {
+                        hasDifferentCrop = true;
+                        break;
+                    }
+                }
+                if (hasDifferentCrop) {
+                    speed += 0.10f; // 10% biodiversity bonus
+                }
+            }
+        }
+        return speed;
+    }
+
+    public static boolean preCropRandomTick(BlockState state, ServerLevel level, BlockPos pos, CropBlock cropBlock) {
+        if (!cropBlock.isMaxAge(state)) {
+            if (level.isRainingAt(pos.above()) && level.canSeeSky(pos.above())) {
+                int spurtAmount = DynamicGameRuleManager.getInt(level, AgrarianGameRules.RAIN_GROWTH_ACCELERATION);
+                if (spurtAmount > 0) {
+                    int currentAge = cropBlock.getAge(state);
+                    int maxAge = cropBlock.getMaxAge();
+                    int newAge = Math.min(maxAge, currentAge + spurtAmount);
+
+                    if (newAge > currentAge) {
+                        level.setBlock(pos, cropBlock.getStateForAge(newAge), Block.UPDATE_ALL);
+                        if (DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.AMBIENT_VITALITY_PARTICLES)) {
+                            level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 0.5D,
+                                    pos.getZ() + 0.5D, 3, 0.25D, 0.25D, 0.25D, 0.0D);
+                        }
+                        return true; // Cancel tick
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void postCropRandomTick(BlockState oldState, ServerLevel level, BlockPos pos, Block cropBlock) {
+        BlockState newState = level.getBlockState(pos);
+        if (newState.getBlock() == cropBlock && !newState.equals(oldState)) {
+            if (DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.AMBIENT_VITALITY_PARTICLES)) {
+                level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 0.5D,
+                        pos.getZ() + 0.5D, 3, 0.25D, 0.25D, 0.25D, 0.0D);
+            }
+        }
+    }
+
+    public static void playCropRustleSound(BlockState state, Level level, BlockPos pos, Entity entity, boolean isMaxAge) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        if (isMaxAge && DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.AMBIENT_CROP_RUSTLE)) {
+            long time = serverLevel.getGameTime();
+            int entityId = entity.getId();
+            if (SoundHelper.shouldPlayRustle(entityId, time)) {
+                double motion = entity.getDeltaMovement().horizontalDistance();
+                if (motion > 0.01D) {
+                    float pitch = 0.8F + serverLevel.getRandom().nextFloat() * 0.4F;
+                    float volume = 0.2F + serverLevel.getRandom().nextFloat() * 0.1F;
+                    serverLevel.playSound(null, pos, SoundEvents.GRASS_HIT, SoundSource.BLOCKS, volume, pitch);
+                }
+            }
+        }
+    }
+
+    public static boolean handleFarmlandTrample(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            return false;
+        }
+
+        boolean immunity = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY);
+        boolean softStep = false;
+
+        if (entity instanceof LivingEntity living) {
+            softStep = hasSoftStep(living);
+        }
+
+        if (immunity || softStep) {
+            entity.causeFallDamage((float) fallDistance, 1.0F, level.damageSources().fall());
+            return true; // Cancel trample
+        }
+        return false;
+    }
+
+    private static boolean hasSoftStep(LivingEntity entity) {
+        if (entity.getItemBySlot(EquipmentSlot.FEET).is(Items.LEATHER_BOOTS)) {
+            return true;
+        }
+        var enchantmentRegistry = entity.level().registryAccess()
+                .lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
+        var featherFallingOpt = enchantmentRegistry
+                .get(net.minecraft.world.item.enchantment.Enchantments.FEATHER_FALLING);
+        if (featherFallingOpt.isPresent()) {
+            return EnchantmentHelper.getEnchantmentLevel(featherFallingOpt.get(), entity) > 0;
+        }
+        return false;
+    }
+
+    public static Boolean customFarmlandWaterRange(LevelReader level, BlockPos pos) {
+        if (level instanceof ServerLevel serverLevel) {
+            if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.ALWAYS_WET_FARMLAND)) {
+                return true;
+            }
+
+            int sourceRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_SOURCE_RANGE);
+            int flowingRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_FLOWING_RANGE);
+
+            if (sourceRange <= 4 && flowingRange <= 0) {
+                return null; // Fall back to vanilla range calculation
+            }
+
+            int maxRange = Math.max(sourceRange, flowingRange);
+
+            for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-maxRange, 0, -maxRange),
+                    pos.offset(maxRange, 1, maxRange))) {
+                if (level.getFluidState(blockPos).is(FluidTags.WATER)) {
+                    int dx = Math.abs(blockPos.getX() - pos.getX());
+                    int dz = Math.abs(blockPos.getZ() - pos.getZ());
+                    int dist = Math.max(dx, dz);
+
+                    if (level.getFluidState(blockPos).isSource()) {
+                        if (dist <= sourceRange) {
+                            return true;
+                        }
+                    } else {
+                        if (dist <= flowingRange) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
