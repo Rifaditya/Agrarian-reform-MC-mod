@@ -10,10 +10,11 @@ This document serves as a brainstorming board and checklist for sporadic ideas t
 ## 💡 Backlog Checklist
 
 ### AI & Behavior
-- [ ] Add your ideas here...
+- [ ] **Global Growth Multiplier Synchronization**: Sync the offline simulator with the custom speed settings defined by players (using `global_growth_multiplier`).
 
 ### Crops & Botany
-- [ ] Add your ideas here...
+- [ ] **Non-Standard Growing Plants Support**: Extend the offline simulator (unloaded chunk growth simulation) beyond standard vanilla `CropBlock` types (Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, Saplings).
+- [ ] **Farmland Hydration Decay Simulation**: Factor in dry soil conditions over long offline periods.
 
 ### Equipment & Tools
 - [ ] Add your ideas here...
