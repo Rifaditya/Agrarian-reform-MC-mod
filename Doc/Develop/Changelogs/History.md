@@ -1,5 +1,10 @@
 # Changelog History
 
+## [2.1.1-26.2] - 2026-07-21
+- **Continuum Acceleration Synchronization**:
+  - Synchronized the offline growth simulator ("The Continuum") catch-up time delta with the active `global_growth_multiplier` GameRule configuration.
+  - Offline growth is now slowed down, accelerated, or disabled proportionally to active gameplay rules when chunks reload.
+
 ## [2.1.0+R-26.2] - 2026-07-15
 - **Universal Growth Multiplier**:
   - Implemented the `global_growth_multiplier` GameRule (Integer, default `100`), allowing server administrators and players to globally scale the growth rate of all plants.

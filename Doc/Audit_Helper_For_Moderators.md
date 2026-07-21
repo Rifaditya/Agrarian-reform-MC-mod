@@ -2,7 +2,7 @@
 
 **Mod Name:** Vanilla Outsider: Agrarian Reform
 **Mod ID:** `agrarian_reform` (Fabric)
-**Version:** 2.0.0
+**Version:** 2.1.1
 **Creator:** Dasik (Rifaditya)
 
 ## 🛡️ Safety & Compliance Statement
@@ -27,7 +27,7 @@ To assist Platform Moderators (Modrinth/CurseForge) in auditing this project, I 
 
 ## 🔍 Advanced Logic & Safety
 
-- **O(1) Growth Simulation**: Instead of ticking block updates iteratively (which would cause massive lag spikes when loading chunks unloaded for days), the mod calculates a deterministic growth delta using the chunk's unloaded time delta and crop-specific baseline speed.
+- **O(1) Growth Simulation**: Instead of ticking block updates iteratively (which would cause massive lag spikes when loading chunks unloaded for days), the mod calculates a deterministic growth delta using the chunk's unloaded time delta (scaled dynamically by the global growth multiplier) and crop-specific baseline speed.
 - **Throttled Update Queue**: Block state updates are queued and applied slowly (e.g. 5 blocks per tick) to distribute the processing load across multiple game frames, keeping client rendering and server TPS perfectly smooth.
 - **Memory Management**: Timestamps are purged from `ContinuumData` immediately upon chunk load to prevent memory leaks and coordinate map bloating.
 

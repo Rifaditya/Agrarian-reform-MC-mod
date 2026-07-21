@@ -17,8 +17,10 @@
 
 package net.instantgratification.agrarianreform.continuum;
 
+import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.instantgratification.agrarianreform.AgrarianReformFabric;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -81,7 +83,14 @@ public class ContinuumManager {
             long timeDelta = serverLevel.getGameTime() - unloadTime;
             data.remove(chunk.getPos());
             if (timeDelta > 0) {
-                CropScanner.scanAndQueue(serverLevel, chunk, timeDelta);
+                int multiplier = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.GLOBAL_GROWTH_MULTIPLIER);
+                if (multiplier <= 0) {
+                    return; // Dynamic growth is disabled, skip simulation
+                }
+                long scaledTimeDelta = (timeDelta * multiplier) / 100L;
+                if (scaledTimeDelta > 0) {
+                    CropScanner.scanAndQueue(serverLevel, chunk, scaledTimeDelta);
+                }
             }
         }
     }
