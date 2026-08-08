@@ -49,6 +49,7 @@ public class AgrarianReformFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        net.instantgratification.agrarianreform.util.ModVersionGuard.checkClass("Agrarian Reform", "net.minecraft.world.entity.EntityTypes");
         LOGGER.info("Instant Gratification: Agrarian Reform Initialized");
 
         // Load config baseline template first

@@ -27,7 +27,10 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.0.1-26.2`** (2026-07-05) - - **Dependencies**: Hardened Minecraft version dependency constraint from open wildcard `*` to `>=26.2`. - - **Versioning**: Switched to a clean, numeric-only version naming convention.
 - [x] **`2.0.2-26.2`** (2026-07-05) - - **Right-Click Harvest**: Expanded harvesting support to Sugar Cane columns and modded crops.
 - [x] **`2.0.3-26.2`** (2026-07-05) - - **Universal Bone Meal**: Implement universal bone meal mechanics for Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines.
-- [ ] **`2.1.0+R-26.2`** (2026-07-15) - - Universal Growth: Implement a global growth speed multiplier setting (GameRule) for all growing plants. - - Audit Alignment: Fixed infinite recursion, memory leaks, and GC allocations. - - GUI Config: Added YetAnotherConfigLib (YACL) and ModMenu configurations.
-- [ ] **`2.1.1-26.2`** (2026-07-21) - - Continuum: Synchronize offline simulator catch-up calculations with global growth multiplier settings.
-- [ ] **`2.2.0-26.2`** (2026-07-21) - - Continuum: Add Non-Standard Growing Plants Support to simulate Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, and Saplings.
-- [ ] **`2.2.1-26.2`** (2026-07-21) - - Maintenance: Performed codebase audit alignment, simplified GPLv3 headers, reformatted JSON files, and extracted calculations from Mixins to helper classes.
+- [x] **`2.1.0+R-26.2`** (2026-07-15) - - Universal Growth: Implement a global growth speed multiplier setting (GameRule) for all growing plants. - - Audit Alignment: Fixed infinite recursion, memory leaks, and GC allocations. - - GUI Config: Added YetAnotherConfigLib (YACL) and ModMenu configurations.
+- [x] **`2.1.1-26.2`** (2026-07-21) - - Continuum: Synchronize offline simulator catch-up calculations with global growth multiplier settings.
+- [x] **`2.2.0-26.2`** (2026-07-21) - - Continuum: Add Non-Standard Growing Plants Support to simulate Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, and Saplings.
+- [x] **`2.2.1-26.2`** (2026-07-21) - - Maintenance: Performed codebase audit alignment, simplified GPLv3 headers, reformatted JSON files, and extracted calculations from Mixins to helper classes.
+- [x] **`2.2.2+26.2`** (2026-07-22) - - Forward Compatibility: Added ModVersionGuard and open-ended `minecraft` dependency constraint (`>=26.2-`).
+- [x] **`2.2.3+26.2`** (2026-07-22) - - Fix: ModVersionGuard context classloader resolution for Knot loader stability.
+

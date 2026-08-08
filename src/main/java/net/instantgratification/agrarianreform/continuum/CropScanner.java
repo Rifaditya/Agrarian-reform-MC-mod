@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 
+import net.instantgratification.agrarianreform.util.AgrarianTags;
+
 /**
  * CropScanner: The Chunk Auditor
  * 
@@ -38,7 +40,8 @@ public class CropScanner {
                     BlockState state = chunk.getBlockState(pos);
 
                     Block block = state.getBlock();
-                    boolean isContinuumPlant = block instanceof CropBlock
+                    boolean isContinuumPlant = state.is(AgrarianTags.CONTINUUM_PLANTS)
+                            || block instanceof CropBlock
                             || block instanceof net.minecraft.world.level.block.SugarCaneBlock
                             || block instanceof net.minecraft.world.level.block.CactusBlock
                             || block instanceof net.minecraft.world.level.block.NetherWartBlock

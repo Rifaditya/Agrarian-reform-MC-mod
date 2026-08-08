@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:crops",
+    "minecraft:sugar_cane",
+    "minecraft:cactus",
+    "minecraft:nether_wart",
+    "minecraft:cocoa",
+    "minecraft:vine",
+    "minecraft:sapling",
+    "minecraft:sweet_berry_bush"
+  ]
+}

@@ -72,12 +72,10 @@ hs_err_*.log
 replay_*.log
 *.hprof
 
-# Zenith Archives (Mandatory Storage)
-!/Archive/
-!/Archive/builds/
-!/Archive/builds/*.jar
-
-# Logging and archives (Standard)
+# Binary & Archive Exclusion Policy (Git Binary Exclusion Law)
+Archive/
+Archive Jar of all versions/
+*.jar
 *.log
 *.log.gz
 *.log.zip
@@ -89,3 +87,5 @@ build_log*.txt
 # Hype & Marketing Exclusion Policy
 Doc/Marketing/
 
+
+Archive Jar of all versions/

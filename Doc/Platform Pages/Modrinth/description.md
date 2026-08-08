@@ -19,8 +19,9 @@ Part of the **Vanilla Outsider Collection** — mods that refine the vanilla exp
 
 ### 🕰️ The Continuum (Offline Persistence)
 Stop waiting for chunks to load for your crops to grow. **The Continuum** introduces true offline persistence:
-- **Timestamped State**: When a chunk unloads, the exact state of every crop is saved.
+- **Timestamped State**: When a chunk unloads, the exact state of every crop and plant is saved.
 - **Time Delta Simulation**: Upon re-entering the area, the mod calculates exactly how much time has passed and simulates growth stages accordingly.
+- **Universal Scope**: Supports standard crops (`CropBlock`), Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, and Saplings.
 - **Performance Optimized**: Uses a throttled, distributed update system to ensure no lag spikes upon returning to a large farm.
 
 ### 🧤 Soil Resilience (Smart Trample Logic)
@@ -34,7 +35,8 @@ Protect your fields without sacrificing immersion:
 Water behaves more logically, rewarding strategic placement and natural weather:
 - **Deep Reach**: Water source blocks hydrate farmland up to **8 blocks** away.
 - **Source vs Flowing**: Only **Source Blocks** reach the full 8-block range. Flowing water remains at vanilla range (4 blocks).
-- **Rainfall Celebration**: Natural rain hydrates all exposed farmland and provides a growth acceleration.
+- **Rainfall Celebration**: Natural rain hydrates all exposed farmland and provides a growth acceleration spurt.
+- **Always Wet Option**: `agrarian_reform:always_wet_farmland` forces farmland to remain hydrated regardless of water proximity.
 
 ### 🍀 Polyculture (Biodiversity Bonus)
 Nature thrives in variety. Planting different types of crops adjacent to each other (e.g., Wheat next to Carrots) provides a **Biodiversity Bonus** (+10% growth speed boost), rewarding organic farm designs over monoculture grids.
@@ -61,23 +63,25 @@ Control the growth speed of your crops globally without modifying actual server 
 
 ## ⚙️ Configuration (Native Game Rules)
 
-
 > [!IMPORTANT]
 > **Config vs. In-Game GameRules:**
 > The global configuration file only defines **default values for new worlds** at creation time.
-> If you have **already created/opened a world**, changing the config file will have no effect. You must change the settings in-game using the **Edit Game Rules** UI screen or the /gamerule command.
-No messy config files. Everything lives in the **Edit Game Rules** screen or via standard commands.
+> If you have **already created/opened a world**, changing the config file will have no effect. You must change the settings in-game using the **Edit Game Rules** UI screen or the `/gamerule` command.
+
+No messy config files. Everything lives in the **Edit Game Rules** screen or via standard commands:
 
 - `agrarian_reform:hydration_source_range`: How far still water hydrates farmland. (Default: 8)
 - `agrarian_reform:hydration_flowing_range`: How far flowing water hydrates farmland. (Default: 4)
+- `agrarian_reform:rain_growth_acceleration`: Growth stages jumped during rain events. (Default: 1)
+- `agrarian_reform:growth_biodiversity_bonus`: Toggles speed bonus from mixed crop planting. (Default: true)
+- `agrarian_reform:ambient_crop_rustle`: Enables sound effects when walking through crops. (Default: true)
+- `agrarian_reform:ambient_vitality_particles`: Enables vitality particles on growth events. (Default: true)
 - `agrarian_reform:total_trample_immunity`: Toggle whether trampling is disabled entirely. (Default: false)
-- `agrarian_reform:growth_biodiversity_bonus`: Adjust the speed bonus from mixed crop planting. (Default: true)
-- `agrarian_reform:rain_growth_acceleration`: Adjust the growth boost during rainy weather. (Default: 1)
-- `agrarian_reform:always_wet_farmland`: Forces farmland to remain hydrated regardless of water proximity. (Default: false)
-- `agrarian_reform:seeds_grow_grass`: Toggles whether chicken feed seeds grow short grass on dirt. (Default: true)
+- `agrarian_reform:always_wet_farmland`: Forces farmland to remain hydrated regardless of water. (Default: false)
+- `agrarian_reform:seeds_grow_grass`: Toggles whether seeds grow short grass on dirt. (Default: true)
 - `agrarian_reform:right_click_harvest`: Toggles right-click harvesting and automatic replanting. (Default: true)
 - `agrarian_reform:universal_bonemeal`: Enables using bone meal on non-bonemealable plants. (Default: true)
-- `agrarian_reform:global_growth_multiplier`: Scale growth speeds of all crops and plants globally (0 = disabled, 100 = default vanilla, 200 = 2x speed). (Default: 100)
+- `agrarian_reform:global_growth_multiplier`: Scale growth speeds globally (0 = disabled, 100 = vanilla, 200 = 2x speed). (Default: 100)
 
 ---
 
