@@ -1,81 +1,127 @@
 <div align="center">
 
-# ⚒️ Agrarian Reform: The Living Earth
+# 🌾 VO: Agrarian Reform: The Living Earth
 
-**"The world should not wait for you to watch it."**
+> **"The world should not freeze just because you walked away."**
 
 [![Requires Fabric API](https://img.shields.io/badge/Requires-Fabric_API-blue?style=for-the-badge&logo=fabric)](https://modrinth.com/mod/fabric-api)
-![Java 25](https://img.shields.io/badge/Language-Java_25-orange?style=for-the-badge&logo=java)
-![Minecraft 26.1+](https://img.shields.io/badge/Minecraft-26.1+-brightgreen?style=for-the-badge)
+[![Requires Dasik Library](https://img.shields.io/badge/Requires-Dasik_Library-purple?style=for-the-badge)](https://modrinth.com/mod/dasik-library)
+![Language Java 25](https://img.shields.io/badge/Language-Java_25-orange?style=for-the-badge&logo=java)
 ![License GPLv3](https://img.shields.io/badge/License-GPLv3-green?style=for-the-badge)
+![Minecraft 26.2+](https://img.shields.io/badge/Minecraft-26.2+-brightgreen?style=for-the-badge)
 
 </div>
 
-**Agrarian Reform** is a pastoral immersion mod that transforms Minecraft's agriculture from a proximity-based machine into a living, breathing ecosystem. It ensures that your hard work persists and grows even when you aren't there to witness it, while adding depth to soil management, irrigation, and biodiversity.
+**Agrarian Reform** is a pastoral immersion mod that transforms Minecraft's agriculture from a proximity-based machine into a persistent, living ecosystem. It ensures that your hard work persists and grows even when you aren't there to witness it, while adding depth to soil management, irrigation, and biodiversity.
+
+Part of the **Vanilla Outsider Collection** — mods that refine vanilla mechanics with modern engineering standards.
 
 ---
 
 ## 🌾 Core Mechanics
 
-### 1. The Continuum (Offline Persistence)
+### 1. 🕰️ The Continuum (True Offline Crop Persistence)
 In vanilla Minecraft, crops only grow in loaded chunks. **Agrarian Reform** introduces **The Continuum**, a high-precision simulation engine that bridges the gap between gameplay sessions.
-- **Persistent Growth**: When a chunk is unloaded, the mod unifies persistence for both standard crops (`CropBlock`) and non-standard plant blocks (such as Sugar Cane, Cactus, Nether Wart, Cocoa pods, Vines, Sweet Berry Bushes, and Saplings).
-- **Time Delta Simulation**: Upon your return, the mod calculates exactly how much real-time has passed (scaled dynamically in proportion to the global growth multiplier GameRule) and simulates the random ticks that *would* have occurred, respecting polyculture bonuses.
-- **Throttled Updates**: To prevent lag spikes upon loading a massive farm, updates are applied via a smooth, throttled queue (O(1) calculation with O(n) distributed application).
+- **Persistent Growth**: When a chunk is unloaded, the mod saves the exact timestamp and state of all crops and plants.
+- **Universal Scope**: Automatically simulates standard crops (`CropBlock`), Sugar Cane, Cactus, Nether Wart, Cocoa, Vines, Sweet Berry Bushes, and Saplings.
+- **Time-Delta Simulation**: Upon your return, the mod calculates elapsed real-world time (scaled dynamically with the global growth multiplier) and simulates growth stages accordingly.
+- **Throttled Updates**: To prevent lag spikes upon loading massive multi-thousand-block farms, updates are applied via a smooth, throttled background queue.
 
-### 2. Soil Resilience (Trample Logic)
+### 2. 🏷️ Data-Driven Custom Crops (`#agrarianreform:continuum_plants`)
+Modpack and datapack creators can register custom or modded plant blocks to `#agrarianreform:continuum_plants` (`data/agrarianreform/tags/block/continuum_plants.json`) to participate in the Continuum offline growth engine without writing code.
+
+### 3. 🧤 Soil Resilience (Smart Trample Logic)
 Farmland is treated as a nurtured resource rather than fragile glass.
-- **Soft Step**: Players wearing **Leather Boots** or possessing the **Feather Falling** enchantment are immune to trampling crops during normal movement.
-- **Mass & Velocity**: Walking is safe; however, high-velocity impacts (falls > 0.6m) or jumping without protection will still trample the soil.
-- **Ravager Protection**: Large beasts like Ravagers remain a threat and will always trample crops, maintaining the stakes of village raids.
-- **[IG] Total Immunity**: A GameRule `totalTrampleImmunity` allows for absolute trample prevention for players seeking a more relaxed experience.
+- **Soft-Step Movement**: Sprinting and walking across crops and farmland is 100% safe.
+- **Protective Footwear**: Wearing **Leather Boots** or having the **Feather Falling** enchantment (any level) completely prevents farmland from being trampled when falling or jumping.
+- **Heavy Mob Threat**: Large beasts (Ravagers, Iron Golems) still crush farmland underfoot, preserving the tension of village raids.
+- **Total Immunity Toggle**: Enable `agrarian_reform:total_trample_immunity` for an absolute zero-trample peaceful farming experience.
 
-### 3. Hydro-Dynamics (Advanced Irrigation)
-Water is no longer a binary toggle for hydration; its reach is influenced by its state.
-- **Capillary Range**: Water **source blocks** irrigate a massive **8-block radius** (Vanilla is 4).
-- **Flow Logic**: Flowing water maintains the vanilla **4-block radius**, encouraging the construction of proper irrigation canals and wells.
-- **Pluviophile Bonus**: During rain, all sky-exposed farmland acts as if hydrated, and crops receive a significant growth spurt celebrated with visual particles.
+### 4. 💧 Hydro-Dynamics (Advanced Irrigation)
+Water reach is influenced by its state and spatial layout.
+- **8-Block Source Reach**: Water **source blocks** irrigate a massive **8-block radius** (4x more coverage per water source than vanilla).
+- **Flowing Water**: Flowing water streams maintain the standard **4-block radius**, encouraging the construction of proper irrigation canals and wells.
+- **Rainfall Hydration**: During natural rain, all sky-exposed farmland acts as hydrated and receives active growth spurts.
+- **Always Wet Option**: Toggle `agrarian_reform:always_wet_farmland` to keep all farmland permanently hydrated regardless of water proximity.
 
-### 4. Polyculture (Biodiversity)
-Monocultures are discouraged in favor of beautiful, varied garden patches.
-- **Biodiversity Bonus**: Crops planted next to *different* species (e.g., Wheat adjacent to Carrots) receive a **10% growth probability boost**.
-- **Aesthetic Reward**: This mechanic incentivizes organic, "chaotic" farm designs that look more natural and vibrant than industrialized grids.
+### 5. 🍀 Polyculture (Biodiversity Bonus)
+Organic farming practices are naturally rewarded over repetitive monoculture grids.
+- **Biodiversity Bonus**: Crops planted adjacent to *different* species (e.g., Wheat adjacent to Carrots) receive a **+10% growth speed boost**.
+- **Aesthetic Reward**: Incentivizes vibrant, natural farm designs over industrialized monoculture grids.
+
+### 6. 🌾 Right-Click Harvesting & Seed-to-Grass Landscaping
+- **Right-Click Harvest**: Right-click fully matured crops to harvest yields and instantly replant the seed in one fluid action. Supports vanilla crops, modded crops (Farmer's Delight, Croptopia), and Sugar Cane columns (harvests upper stalks while keeping the root base alive).
+- **Seed-to-Grass**: Right-click dirt or coarse dirt with any seed item (`#minecraft:chicken_food` tag) to sprout short grass, making pasture restoration effortless.
+
+### 7. 🦴 Universal Bone Meal
+- **Sugar Cane & Cactus**: Fertilizing instantly grows the vertical column up by 1 block (up to 3 blocks max).
+- **Nether Wart & Cocoa**: Advances growth by 1 stage per application.
+- **Vines**: Grows the vine downward by 1 block, matching wall attachments.
+- **Fair Consumption**: Consumes exactly 1 bone meal item from hand (creative mode bypassed) with authentic particles and sounds.
+
+### 8. ⚡ Global Growth Multiplier
+- Scale crop growth speeds globally from `0%` (frozen) to `100%` (standard vanilla) up to `500%` (ultra-fast growth).
+- Offline Continuum catch-up calculations automatically scale proportionally with the multiplier.
 
 ---
 
-## 🎨 Aesthetics & Feedback
-- **Crop Rustling**: Walking through fully grown crops produces a satisfying brushing sound with randomized pitch.
-- **Growth Sparkles**: Successful growth stages occasionally trigger a subtle green particle effect, making a busy field feel alive.
-- **Morning Moisture**: Farmland appears slightly darker at sunrise (visual only) to simulate morning dew.
+## 🎨 Aesthetics & Sensory Feedback
+- **Crop Rustling**: Walking through fully grown crops produces subtle foliage rustling sounds with per-entity cooldowns.
+- **Vitality Particles**: Successful growth stages emit soft green vitality sparkles.
+- **HUD & Tooltip Support**: Full compatibility with **Jade** and **WTHIT** to inspect growth stages, hydration, and polyculture bonuses.
+- **GUI Settings**: In-game visual configuration via **ModMenu** and **YetAnotherConfigLib (YACL)**.
 
 ---
 
-## ⚙️ Configuration (GameRules)
-Admins can fine-tune the experience using native Minecraft GameRules (Category: **Agrarian Reform**):
+## ⚙️ Configuration (GameRules Reference)
 
-| GameRule | Type | Default | Description |
+All settings are customized in-game via the **Edit Game Rules** UI screen or standard Brigadier `/gamerule` commands:
+
+| GameRule Identifier | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `agrarian_reform:hydration_source_range` | Integer | 8 | The irrigation radius of water source blocks. |
-| `agrarian_reform:hydration_flowing_range` | Integer | 4 | The irrigation radius of flowing water. |
-| `agrarian_reform:rain_growth_acceleration`| Integer | 1 | Growth stages jumped during rain events. |
-| `agrarian_reform:growth_biodiversity_bonus`| Boolean | true | Whether mixed crops receive a growth bonus. |
-| `agrarian_reform:total_trample_immunity` | Boolean | false | Absolute immunity to all trampling (IG Mode). |
-| `agrarian_reform:always_wet_farmland` | Boolean | false | Forces farmland to remain hydrated regardless of water proximity. |
-| `agrarian_reform:ambient_crop_rustle` | Boolean | true | Enables sound effects when walking through crops. |
-| `agrarian_reform:ambient_vitality_particles` | Boolean | true | Enables vitality particles on growth events. |
-| `agrarian_reform:seeds_grow_grass` | Boolean | true | Allows right-clicking a dirt block with agricultural seeds to grow grass. |
-| `agrarian_reform:right_click_harvest` | Boolean | true | Allows right-clicking fully grown crops to harvest and automatically replant them. |
+| `agrarian_reform:hydration_source_range` | Integer | `8` | Distance in blocks that still water source blocks hydrate surrounding farmland. |
+| `agrarian_reform:hydration_flowing_range` | Integer | `4` | Distance in blocks that flowing water streams hydrate surrounding farmland. |
+| `agrarian_reform:rain_growth_acceleration` | Integer | `1` | Growth stages advanced during natural rainfall events. |
+| `agrarian_reform:growth_biodiversity_bonus` | Boolean | `true` | Enables +10% growth speed bonus when crops are planted next to different species. |
+| `agrarian_reform:ambient_crop_rustle` | Boolean | `true` | Plays ambient foliage rustling sound effects when walking through crops. |
+| `agrarian_reform:ambient_vitality_particles` | Boolean | `true` | Emits subtle green vitality sparkle particles upon successful crop growth events. |
+| `agrarian_reform:total_trample_immunity` | Boolean | `false` | When enabled, disables farmland trampling entirely for all entities. |
+| `agrarian_reform:always_wet_farmland` | Boolean | `false` | When enabled, keeps all farmland permanently hydrated regardless of water proximity. |
+| `agrarian_reform:seeds_grow_grass` | Boolean | `true` | Allows players to right-click dirt with any seed item to sprout short grass. |
+| `agrarian_reform:right_click_harvest` | Boolean | `true` | Enables right-clicking fully grown crops to harvest drops and automatically replant. |
+| `agrarian_reform:universal_bonemeal` | Boolean | `true` | Enables using bone meal on Sugar Cane, Cactus, Nether Wart, Cocoa, and Vines. |
+| `agrarian_reform:global_growth_multiplier` | Integer | `100` | Global crop growth speed scaling percentage (`0` = frozen, `100` = 1x vanilla, `200` = 2x). |
 
 ---
 
-## 🛠️ Technical Specs
-- **Target**: Minecraft 26.2 (Stable)
-- **Loader**: Fabric
-- **Dependencies**: Fabric API, DasikLibrary
+## 🛠️ Technical Specifications
+- **Target**: Minecraft 26.2+ (Forward-Compatible)
+- **Mod Version**: `2.2.4+26.2`
+- **Loader**: Fabric Loader `>=0.16.9`
+- **Dependencies**: Fabric API, DasikLibrary `>=1.8.2`
 - **Java**: Version 25 (Strict)
-- **Build**: 2.2.1-26.2
+- **Environment**: Client & Server (100% server-side compatible with vanilla clients)
 
 ---
 
-## 📜 Credits
-Developed as part of the **Vanilla Outsider** and **Instant Gratification** collections.
+## ☕ Support
+
+If you enjoy **Agrarian Reform** and the **Vanilla Outsider** philosophy, consider fueling the next update!
+
+<p align="center">
+    <a href="https://ko-fi.com/dasikigaijin/tip"><img src="https://img.shields.io/badge/Ko--fi-Support%20Me-FF5E5B?style=for-the-badge&logo=ko-fi&logoColor=white" alt="Ko-fi"></a>
+    <a href="https://sociabuzz.com/dasikigaijin/tribe"><img src="https://img.shields.io/badge/SocioBuzz-Local_Support-7BB32E?style=for-the-badge" alt="SocioBuzz"></a>
+    <a href="https://saweria.co/DasikIgaijinn"><img src="https://img.shields.io/badge/Saweria-Local_Support-FFA500?style=for-the-badge" alt="Saweria"></a>
+</p>
+
+---
+
+## 📜 Credits & License
+
+| Role | Author |
+| :--- | :--- |
+| **Creator** | **Dasik** (Rifaditya) |
+| **Collection** | Vanilla Outsider |
+| **License** | GNU GPLv3 |
+
+Developed as part of the **Vanilla Outsider Collection**. Licensed under the **GNU General Public License v3.0**.
