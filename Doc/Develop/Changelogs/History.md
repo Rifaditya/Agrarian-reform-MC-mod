@@ -1,5 +1,11 @@
 # Changelog History
 
+## [2.2.5+26.2] - 2026-08-24
+- **Configuration Schema V2 & Dirty-State Management**:
+  - Upgraded `AgrarianConfig` to version 2, adding support for tracking individual crop entries (`forcedCrops`, `forcedGrowthMultipliers`).
+  - Added helper registration methods (`recordDiscoveredCrop`, `getForcedGrowthMultiplier`, `setForcedGrowthMultiplier`).
+  - Added thread-safe dirty state management (`saveIfDirty()`) to batch disk writes during server lifecycle hooks.
+
 ## [2.2.1-26.2] - 2026-07-21
 - **Codebase Audit Alignment**:
   - Simplified GPLv3 license headers to single-line in all 15 Java source files to comply with repository rules.
