@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.6+26.2] - 2026-08-24
+
+### Added
+- **Dynamic Crop Rules & O(1) Rejection Cache (`AgrarianCropRules`)**:
+  - Implemented dedicated `AgrarianCropRules` helper with $O(1)$ fast-fail identity caching (`CROP_BLOCK_CACHE`) and server reload cache clearing (`clearCropCache()`).
+  - Added smart crop scanner detecting standard Mojang plant classes (`CropBlock`, `BushBlock`, `SugarCaneBlock`, `CactusBlock`, `NetherWartBlock`, `CocoaBlock`, `VineBlock`, `SaplingBlock`, `SweetBerryBushBlock`, `StemBlock`), custom growth properties (`age`, `growth`, `stage`, `level`), and tags (`#c:crops`, `#minecraft:crops`, `#agrarianreform:continuum_plants`).
+  - Implemented dynamic integer GameRule generator (`agrarian_reform:growth_<namespace>_<path>`) and dynamic registry discovery subscription.
+  - Implemented multiplier resolution hierarchy (`Per-Crop GameRule -> Per-Crop Config -> Global Multiplier -> 100%`).
+
 ## [2.2.5+26.2] - 2026-08-24
 
 ### Added
