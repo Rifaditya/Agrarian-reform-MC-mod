@@ -30,6 +30,9 @@ public class AgrarianGameRules {
     public static final GameRule<Integer> RAIN_GROWTH_ACCELERATION = DynamicGameRuleManager.registerInteger(
             "agrarian_reform:rain_growth_acceleration", AGRARIAN_REFORM, AgrarianConfig.get().rainGrowthAcceleration);
 
+    public static final GameRule<Boolean> PURE_WATER_HYDRATION_ONLY = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:pure_water_hydration_only", AGRARIAN_REFORM, AgrarianConfig.get().pureWaterHydrationOnly);
+
     public static final GameRule<Boolean> BIODIVERSITY_BONUS = DynamicGameRuleManager.registerBoolean(
             "agrarian_reform:growth_biodiversity_bonus", AGRARIAN_REFORM, AgrarianConfig.get().growthBiodiversityBonus);
 

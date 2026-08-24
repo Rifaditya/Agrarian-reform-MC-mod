@@ -28,6 +28,7 @@ public class AgrarianConfig {
     public int hydrationSourceRange = 8;
     public int hydrationFlowingRange = 4;
     public int rainGrowthAcceleration = 1;
+    public boolean pureWaterHydrationOnly = false;
 
     // Crop rules
     public boolean growthBiodiversityBonus = true;

@@ -78,6 +78,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 rules.set(AgrarianGameRules.HYDRATION_SOURCE_RANGE, AgrarianConfig.get().hydrationSourceRange, server);
                 rules.set(AgrarianGameRules.HYDRATION_FLOWING_RANGE, AgrarianConfig.get().hydrationFlowingRange, server);
                 rules.set(AgrarianGameRules.RAIN_GROWTH_ACCELERATION, AgrarianConfig.get().rainGrowthAcceleration, server);
+                rules.set(AgrarianGameRules.PURE_WATER_HYDRATION_ONLY, AgrarianConfig.get().pureWaterHydrationOnly, server);
                 rules.set(AgrarianGameRules.BIODIVERSITY_BONUS, AgrarianConfig.get().growthBiodiversityBonus, server);
                 rules.set(AgrarianGameRules.AMBIENT_CROP_RUSTLE, AgrarianConfig.get().ambientCropRustle, server);
                 rules.set(AgrarianGameRules.AMBIENT_VITALITY_PARTICLES, AgrarianConfig.get().ambientVitalityParticles, server);
