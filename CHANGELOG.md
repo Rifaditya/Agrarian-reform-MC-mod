@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.10+26.2] - 2026-08-24
+
+### Added
+- **Trample Immunity Entity Gating**:
+  - Registered `trample_immunity_players_only` boolean GameRule & configuration setting (default `false`).
+  - Gated farmland trample immunity in `GrowthHelper.handleFarmlandTrample` so servers can restrict immunity strictly to players and tamed pets while allowing natural mob crop griefing.
+
 ## [2.2.9+26.2] - 2026-08-24
 
 ### Added

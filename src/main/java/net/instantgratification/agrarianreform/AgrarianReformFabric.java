@@ -83,6 +83,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 rules.set(AgrarianGameRules.AMBIENT_CROP_RUSTLE, AgrarianConfig.get().ambientCropRustle, server);
                 rules.set(AgrarianGameRules.AMBIENT_VITALITY_PARTICLES, AgrarianConfig.get().ambientVitalityParticles, server);
                 rules.set(AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY, AgrarianConfig.get().totalTrampleImmunity, server);
+                rules.set(AgrarianGameRules.TRAMPLE_IMMUNITY_PLAYERS_ONLY, AgrarianConfig.get().trampleImmunityPlayersOnly, server);
                 rules.set(AgrarianGameRules.ALWAYS_WET_FARMLAND, AgrarianConfig.get().alwaysWetFarmland, server);
                 rules.set(AgrarianGameRules.SEEDS_GROW_GRASS, AgrarianConfig.get().seedsGrowGrass, server);
                 rules.set(AgrarianGameRules.RIGHT_CLICK_HARVEST, AgrarianConfig.get().rightClickHarvest, server);

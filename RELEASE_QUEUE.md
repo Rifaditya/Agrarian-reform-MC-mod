@@ -39,4 +39,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.2.7+26.2`** (2026-08-24) - - **Lifecycle Integration & Persistence**: Registered `AgrarianCropRules` in `onInitialize()`, hooked cache flush on `SERVER_STARTED`, and integrated `BEFORE_SAVE` and `SERVER_STOPPING` auto-save hooks (`saveIfDirty`).
 - [x] **`2.2.8+26.2`** (2026-08-24) - - **Real-Time Ticking Integration**: Connected `AgrarianCropRules` to random tick handler with $O(1)$ fast-fail rejection, per-crop multiplier scaling, and smart maturity early-break.
 - [x] **`2.2.9+26.2`** (2026-08-24) - - **Concentric Farmland Hydration Sweep**: Refactored `customFarmlandWaterRange` to concentric Chebyshev perimeter search with $y \in [-1, 1]$ 3D support, zero allocations, and optional `pure_water_hydration_only` GameRule.
+- [x] **`2.2.10+26.2`** (2026-08-24) - - **Trample Immunity Entity Gating**: Added `trample_immunity_players_only` GameRule & config setting, restricting farmland trample immunity strictly to players and tamed pets.
 

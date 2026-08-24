@@ -172,14 +172,25 @@ public class GrowthHelper {
             return false;
         }
 
-        boolean immunity = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY);
-        boolean softStep = false;
+        boolean totalImmunity = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TOTAL_TRAMPLE_IMMUNITY);
+        boolean playersOnly = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.TRAMPLE_IMMUNITY_PLAYERS_ONLY);
+        boolean immune = false;
 
-        if (entity instanceof LivingEntity living) {
+        if (totalImmunity) {
+            if (playersOnly) {
+                immune = entity instanceof net.minecraft.world.entity.player.Player
+                        || (entity instanceof net.minecraft.world.entity.TamableAnimal pet && pet.isTame());
+            } else {
+                immune = true;
+            }
+        }
+
+        boolean softStep = false;
+        if (!immune && entity instanceof LivingEntity living) {
             softStep = hasSoftStep(living);
         }
 
-        if (immunity || softStep) {
+        if (immune || softStep) {
             entity.causeFallDamage((float) fallDistance, 1.0F, level.damageSources().fall());
             return true; // Cancel trample
         }
