@@ -1,5 +1,11 @@
 # Changelog History
 
+## [2.2.8+26.2] - 2026-08-24
+- **Real-Time Random Tick Growth Integration**:
+  - Replaced the multi-tier `instanceof` chain in `GrowthHelper.handleRandomTick` with $O(1)$ fast-fail identity caching (`AgrarianCropRules.isCropBlock`), eliminating overhead on non-crop block ticks.
+  - Connected per-crop multiplier resolution (`AgrarianCropRules.getEffectiveGrowthMultiplier`), supporting individual custom speeds, frozen rates (0%), and global fallbacks.
+  - Implemented smart maturity early-break in the accelerated tick loop to terminate iterations as soon as crops reach maximum growth or change state.
+
 ## [2.2.7+26.2] - 2026-08-24
 - **Mod Lifecycle & Persistence Hooks**:
   - Registered `AgrarianCropRules` during mod initialization (`onInitialize()`).
