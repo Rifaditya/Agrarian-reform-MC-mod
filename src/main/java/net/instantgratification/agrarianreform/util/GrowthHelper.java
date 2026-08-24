@@ -208,32 +208,55 @@ public class GrowthHelper {
 
             int sourceRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_SOURCE_RANGE);
             int flowingRange = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.HYDRATION_FLOWING_RANGE);
+            boolean pureWaterOnly = DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.PURE_WATER_HYDRATION_ONLY);
 
-            if (sourceRange <= 4 && flowingRange <= 0) {
+            if (sourceRange <= 4 && flowingRange <= 0 && !pureWaterOnly) {
                 return null; // Fall back to vanilla range calculation
             }
 
             int maxRange = Math.max(sourceRange, flowingRange);
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            int px = pos.getX();
+            int py = pos.getY();
+            int pz = pos.getZ();
 
-            for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(-maxRange, 0, -maxRange),
-                    pos.offset(maxRange, 1, maxRange))) {
-                if (level.getFluidState(blockPos).is(FluidTags.WATER)) {
-                    int dx = Math.abs(blockPos.getX() - pos.getX());
-                    int dz = Math.abs(blockPos.getZ() - pos.getZ());
-                    int dist = Math.max(dx, dz);
-
-                    if (level.getFluidState(blockPos).isSource()) {
-                        if (dist <= sourceRange) {
+            // Concentric Chebyshev ring search: terminates in O(1) for nearby water
+            for (int r = 1; r <= maxRange; r++) {
+                for (int y = -1; y <= 1; y++) {
+                    int checkY = py + y;
+                    // Sweep North & South perimeter edges at radius r
+                    for (int dx = -r; dx <= r; dx++) {
+                        if (checkWater(level, mutable.set(px + dx, checkY, pz - r), r, sourceRange, flowingRange, pureWaterOnly)
+                                || checkWater(level, mutable.set(px + dx, checkY, pz + r), r, sourceRange, flowingRange, pureWaterOnly)) {
                             return true;
                         }
-                    } else {
-                        if (dist <= flowingRange) {
+                    }
+                    // Sweep East & West perimeter edges at radius r (excluding already checked corners)
+                    for (int dz = -r + 1; dz <= r - 1; dz++) {
+                        if (checkWater(level, mutable.set(px - r, checkY, pz + dz), r, sourceRange, flowingRange, pureWaterOnly)
+                                || checkWater(level, mutable.set(px + r, checkY, pz + dz), r, sourceRange, flowingRange, pureWaterOnly)) {
                             return true;
                         }
                     }
                 }
             }
+            return false;
         }
         return null;
+    }
+
+    private static boolean checkWater(LevelReader level, BlockPos pos, int dist, int sourceRange, int flowingRange, boolean pureWaterOnly) {
+        if (pureWaterOnly && !level.getBlockState(pos).is(net.minecraft.world.level.block.Blocks.WATER)) {
+            return false;
+        }
+        var fluid = level.getFluidState(pos);
+        if (fluid.is(FluidTags.WATER)) {
+            if (fluid.isSource()) {
+                return dist <= sourceRange;
+            } else {
+                return dist <= flowingRange;
+            }
+        }
+        return false;
     }
 }

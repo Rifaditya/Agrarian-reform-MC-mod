@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.9+26.2] - 2026-08-24
+
+### Added
+- **Concentric Chebyshev Farmland Hydration Sweep**:
+  - Replaced the 578-block cube scan in `GrowthHelper.customFarmlandWaterRange` with an outward expanding Chebyshev concentric perimeter search ($r = 1 \to \text{maxRange}$).
+  - Short-circuits immediately at $r=1$ (checking only 8 blocks instead of 578) for adjacent water sources.
+  - Added extended $y \in [-1, 1]$ vertical 3D water detection when custom range is active.
+  - Added `pure_water_hydration_only` GameRule and configuration setting (default `false`) to optionally restrict irrigation to pure `Blocks.WATER`.
+
 ## [2.2.8+26.2] - 2026-08-24
 
 ### Added
