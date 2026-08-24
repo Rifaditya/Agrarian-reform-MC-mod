@@ -35,4 +35,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.2.3+26.2`** (2026-07-22) - - Fix: ModVersionGuard context classloader resolution for Knot loader stability.
 - [x] **`2.2.4+26.2`** (2026-08-08) - - **Data-Driven Tags**: Added `#agrarianreform:continuum_plants` block tag. - - **Automated Testing**: Integrated headless JUnit 5 math test suite.
 - [x] **`2.2.4+26.3`** (2026-08-24) - - **Platform Expansion**: Scaffolded dedicated subproject for **Minecraft 26.3** targeting open-ended bounds (`>=26.3-`) and snapshot dependencies.
+- [x] **`2.2.5+26.3`** (2026-08-24) - - **Configuration Schema V2**: Upgraded AgrarianConfig with dynamic crop tracking schema (`forcedCrops`, `forcedGrowthMultipliers`), auto-population helpers, and thread-safe dirty state management (`saveIfDirty`).
 

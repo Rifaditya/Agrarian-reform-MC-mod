@@ -1,5 +1,11 @@
 # Changelog History
 
+## [2.2.5+26.3] - 2026-08-24
+- **Configuration Schema V2 & Dirty-State Management**:
+  - Upgraded `AgrarianConfig` to version 2, adding support for tracking individual crop entries (`forcedCrops`, `forcedGrowthMultipliers`).
+  - Added helper registration methods (`recordDiscoveredCrop`, `getForcedGrowthMultiplier`, `setForcedGrowthMultiplier`).
+  - Added thread-safe dirty state management (`saveIfDirty()`) to batch disk writes during server lifecycle hooks.
+
 ## [2.2.4+26.3] - 2026-08-24
 - **Platform Expansion (Minecraft 26.3)**:
   - Scaffolded dedicated subproject for **Minecraft 26.3** targeting open-ended bounds (`>=26.3-`), Fabric Loom 1.15+, and modern snapshot dependencies.

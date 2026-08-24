@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.2.5+26.3] - 2026-08-24
+
+### Added
+- **Configuration Schema V2 & Dirty-State Management**: Upgraded `AgrarianConfig` to version 2, introducing persistent tracking for auto-discovered and forced crops (`forcedCrops`, `forcedGrowthMultipliers`), discovery recording helpers, and thread-safe dirty tracking (`saveIfDirty`) to eliminate unnecessary disk I/O.
+
 ## [2.2.4+26.3] - 2026-08-24
 
 ### Added
