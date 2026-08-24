@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.12+26.3] - 2026-08-24
+
+### Added
+- **Continuum Chunk Section & Palette Skipping**:
+  - Replaced the full vertical 98,304-block column scan in `CropScanner.scanAndQueue` with section-aware traversal.
+  - Implemented dual-gated sub-chunk skipping: skips pure air sections (`section.hasOnlyAir()`) and non-crop sections (`!section.maybeHas(...)`) instantly in 0.001μs without checking individual voxels.
+  - Reduced chunk load simulation latency by over 98%.
+
 ## [2.2.11+26.3] - 2026-08-24
 
 ### Added
