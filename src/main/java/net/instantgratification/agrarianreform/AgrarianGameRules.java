@@ -47,6 +47,9 @@ public class AgrarianGameRules {
     public static final GameRule<Boolean> TOTAL_TRAMPLE_IMMUNITY = DynamicGameRuleManager.registerBoolean(
             "agrarian_reform:total_trample_immunity", AGRARIAN_REFORM, AgrarianConfig.get().totalTrampleImmunity);
 
+    public static final GameRule<Boolean> TRAMPLE_IMMUNITY_PLAYERS_ONLY = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:trample_immunity_players_only", AGRARIAN_REFORM, AgrarianConfig.get().trampleImmunityPlayersOnly);
+
     public static final GameRule<Boolean> ALWAYS_WET_FARMLAND = DynamicGameRuleManager.registerBoolean(
             "agrarian_reform:always_wet_farmland", AGRARIAN_REFORM, AgrarianConfig.get().alwaysWetFarmland);
 

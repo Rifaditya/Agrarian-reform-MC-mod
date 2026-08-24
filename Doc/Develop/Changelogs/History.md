@@ -1,5 +1,10 @@
 # Changelog History
 
+## [2.2.10+26.3] - 2026-08-24
+- **Trample Immunity Entity Gating**:
+  - Registered `trample_immunity_players_only` boolean GameRule & configuration setting (default `false`).
+  - Gated farmland trample immunity in `GrowthHelper.handleFarmlandTrample` so servers can restrict immunity strictly to players and tamed pets while allowing natural mob crop griefing.
+
 ## [2.2.9+26.3] - 2026-08-24
 - **Concentric Chebyshev Farmland Hydration Sweep**:
   - Replaced the 578-block cube scan in `GrowthHelper.customFarmlandWaterRange` with an outward expanding Chebyshev concentric perimeter search ($r = 1 \to \text{maxRange}$).

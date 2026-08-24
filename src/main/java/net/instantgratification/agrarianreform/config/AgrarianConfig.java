@@ -33,6 +33,7 @@ public class AgrarianConfig {
     // Crop rules
     public boolean growthBiodiversityBonus = true;
     public boolean totalTrampleImmunity = false;
+    public boolean trampleImmunityPlayersOnly = false;
     public boolean alwaysWetFarmland = false;
     public boolean seedsGrowGrass = true;
     public boolean rightClickHarvest = true;
