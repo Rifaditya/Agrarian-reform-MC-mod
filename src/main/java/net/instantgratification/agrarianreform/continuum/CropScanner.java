@@ -3,6 +3,7 @@
 package net.instantgratification.agrarianreform.continuum;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -10,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 
 import net.instantgratification.agrarianreform.util.AgrarianTags;
 
@@ -27,32 +28,29 @@ public class CropScanner {
     public static void scanAndQueue(ServerLevel level, LevelChunk chunk, long timeDelta) {
         ChunkPos chunkPos = chunk.getPos();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        LevelChunkSection[] sections = chunk.getSections();
 
-        // Scan the surface of the chunk
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                int worldX = chunkPos.getMinBlockX() + x;
-                int worldZ = chunkPos.getMinBlockZ() + z;
+        int minX = chunkPos.getMinBlockX();
+        int minZ = chunkPos.getMinBlockZ();
 
-                int yMax = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
-                for (int dy = yMax; dy >= level.getMinY(); dy--) {
-                    pos.set(worldX, dy, worldZ);
-                    BlockState state = chunk.getBlockState(pos);
+        for (int sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+            LevelChunkSection section = sections[sectionIndex];
+            if (section == null || section.hasOnlyAir() || !section.maybeHas(state -> AgrarianCropRules.isCropBlock(state.getBlock()))) {
+                continue; // Skip entire empty or non-crop sub-chunk via palette pre-filter
+            }
 
-                    Block block = state.getBlock();
-                    boolean isContinuumPlant = state.is(AgrarianTags.CONTINUUM_PLANTS)
-                            || block instanceof CropBlock
-                            || block instanceof net.minecraft.world.level.block.SugarCaneBlock
-                            || block instanceof net.minecraft.world.level.block.CactusBlock
-                            || block instanceof net.minecraft.world.level.block.NetherWartBlock
-                            || block instanceof net.minecraft.world.level.block.CocoaBlock
-                            || block instanceof net.minecraft.world.level.block.VineBlock
-                            || block instanceof net.minecraft.world.level.block.SaplingBlock
-                            || block instanceof net.minecraft.world.level.block.SweetBerryBushBlock;
+            int sectionBaseY = chunk.getSectionYFromSectionIndex(sectionIndex) * 16;
 
-                    if (isContinuumPlant) {
-                        // Found a crop! Queue it using an immutable copy to prevent queue corruption
-                        ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta));
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 16; y++) {
+                        BlockState state = section.getBlockState(x, y, z);
+                        if (AgrarianCropRules.isCropBlock(state.getBlock())) {
+                            pos.set(minX + x, sectionBaseY + y, minZ + z);
+                            ContinuumManager.UPDATE_QUEUE.offer(
+                                new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta)
+                            );
+                        }
                     }
                 }
             }

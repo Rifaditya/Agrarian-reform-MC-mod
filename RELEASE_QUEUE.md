@@ -41,4 +41,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [ ] **`2.2.9+26.2`** (2026-08-24) - - **Concentric Farmland Hydration Sweep**: Refactored `customFarmlandWaterRange` to concentric Chebyshev perimeter search with $y \in [-1, 1]$ 3D support, zero allocations, and optional `pure_water_hydration_only` GameRule.
 - [ ] **`2.2.10+26.2`** (2026-08-24) - - **Trample Immunity Entity Gating**: Added `trample_immunity_players_only` GameRule & config setting, restricting farmland trample immunity strictly to players and tamed pets.
 - [ ] **`2.2.11+26.2`** (2026-08-24) - - **Soft-Step Equipment & Tag Optimization**: Optimized `hasSoftStep` with bare-foot fast-fail, `#agrarian_reform:soft_step_boots` and `#c:boots/soft` data tags, and boots-specific enchantment checks.
+- [ ] **`2.2.12+26.2`** (2026-08-24) - - **Continuum Sub-Chunk & Palette Skipping**: Refactored `CropScanner.scanAndQueue` to skip pure-air and non-crop sub-chunks via palette pre-filter (`maybeHas`), eliminating 98%+ of block queries on chunk load.
 
