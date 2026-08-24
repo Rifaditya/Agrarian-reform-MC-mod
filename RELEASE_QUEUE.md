@@ -36,4 +36,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.2.4+26.2`** (2026-08-08) - - **Data-Driven Tags**: Added `#agrarianreform:continuum_plants` block tag. - - **Automated Testing**: Integrated headless JUnit 5 math test suite.
 - [x] **`2.2.5+26.2`** (2026-08-24) - - **Configuration Schema V2**: Upgraded AgrarianConfig with dynamic crop tracking schema (`forcedCrops`, `forcedGrowthMultipliers`), auto-population helpers, and thread-safe dirty state management (`saveIfDirty`).
 - [x] **`2.2.6+26.2`** (2026-08-24) - - **Dynamic Crop Rules & O(1) Cache**: Created dedicated `AgrarianCropRules` with $O(1)$ fast identity cache, universal 3-tier dynamic registry scanner, and dynamic `agrarian_reform:growth_<namespace>_<path>` GameRule generation.
+- [x] **`2.2.7+26.2`** (2026-08-24) - - **Lifecycle Integration & Persistence**: Registered `AgrarianCropRules` in `onInitialize()`, hooked cache flush on `SERVER_STARTED`, and integrated `BEFORE_SAVE` and `SERVER_STOPPING` auto-save hooks (`saveIfDirty`).
 

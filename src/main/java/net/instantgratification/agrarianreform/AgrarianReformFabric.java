@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.instantgratification.agrarianreform.config.AgrarianConfig;
 import net.instantgratification.agrarianreform.continuum.ContinuumManager;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.instantgratification.agrarianreform.util.SoundHelper;
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.minecraft.core.BlockPos;
@@ -56,6 +57,7 @@ public class AgrarianReformFabric implements ModInitializer {
         AgrarianConfig.load(FabricLoader.getInstance().getConfigDir());
 
         AgrarianGameRules.register();
+        AgrarianCropRules.register();
         ContinuumManager.initialize();
 
         // Register entity unload listener to prevent memory leaks in SoundHelper
@@ -67,6 +69,7 @@ public class AgrarianReformFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             // Reload config baseline template to fetch main-menu updates
             AgrarianConfig.load(FabricLoader.getInstance().getConfigDir());
+            AgrarianCropRules.clearCropCache();
 
             GameRules rules = server.getGameRules();
             
@@ -84,7 +87,28 @@ public class AgrarianReformFabric implements ModInitializer {
                 rules.set(AgrarianGameRules.RIGHT_CLICK_HARVEST, AgrarianConfig.get().rightClickHarvest, server);
                 rules.set(AgrarianGameRules.UNIVERSAL_BONEMEAL, AgrarianConfig.get().universalBonemeal, server);
                 rules.set(AgrarianGameRules.GLOBAL_GROWTH_MULTIPLIER, AgrarianConfig.get().globalGrowthMultiplier, server);
+
+                for (net.minecraft.resources.Identifier cropId : AgrarianCropRules.DYNAMIC_CROPS) {
+                    String growthRuleName = "agrarian_reform:growth_" + cropId.getNamespace() + "_" + cropId.getPath();
+                    int forced = AgrarianConfig.get().getForcedGrowthMultiplier(cropId.toString());
+                    if (forced != 0) {
+                        @SuppressWarnings("unchecked")
+                        net.minecraft.world.level.gamerules.GameRule<Integer> rule = (net.minecraft.world.level.gamerules.GameRule<Integer>) DynamicGameRuleManager.getDynamicRules().get(growthRuleName);
+                        if (rule != null) {
+                            rules.set(rule, forced, server);
+                        }
+                    }
+                }
             }
+        });
+
+        // Dual lifecycle auto-save hooks
+        ServerLifecycleEvents.BEFORE_SAVE.register((server, flush, force) -> {
+            AgrarianConfig.saveIfDirty();
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            AgrarianConfig.saveIfDirty();
         });
 
         // Seed-to-grass growth interaction

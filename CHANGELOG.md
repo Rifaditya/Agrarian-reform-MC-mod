@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.7+26.2] - 2026-08-24
+
+### Added
+- **Mod Lifecycle & Persistence Hooks**:
+  - Registered `AgrarianCropRules` during mod initialization (`onInitialize()`).
+  - Added classification cache clearing on `SERVER_STARTED` to ensure clean tag cache refreshes upon world reload.
+  - Synchronized initial configuration crop multipliers to active GameRules on newly created worlds while preserving world save authority on existing saves.
+  - Added dual auto-save hooks on `BEFORE_SAVE` and `SERVER_STOPPING` to flush dirty configuration changes safely.
+
 ## [2.2.6+26.2] - 2026-08-24
 
 ### Added
