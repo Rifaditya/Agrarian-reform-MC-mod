@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.2.4+26.3] - 2026-08-24
+
+### Added
+- **Platform Expansion (Minecraft 26.3)**: Scaffolded dedicated subproject for **Minecraft 26.3** targeting open-ended bounds (`>=26.3-`), Fabric Loom 1.15+, and modern snapshot dependencies.
+
 ## [2.2.4+26.2] - 2026-08-08
 
 ### Added

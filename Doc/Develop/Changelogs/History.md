@@ -1,5 +1,10 @@
 # Changelog History
 
+## [2.2.4+26.3] - 2026-08-24
+- **Platform Expansion (Minecraft 26.3)**:
+  - Scaffolded dedicated subproject for **Minecraft 26.3** targeting open-ended bounds (`>=26.3-`), Fabric Loom 1.15+, and modern snapshot dependencies.
+  - Configured automated release archiving to `Archive Jar of all versions/MC 26.3/`.
+
 ## [2.2.1-26.2] - 2026-07-21
 - **Codebase Audit Alignment**:
   - Simplified GPLv3 license headers to single-line in all 15 Java source files to comply with repository rules.

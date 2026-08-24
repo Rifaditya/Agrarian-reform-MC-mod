@@ -8,8 +8,9 @@
     "DasikIgaijin"
   ],
   "contact": {
-    "homepage": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform",
-    "sources": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform"
+    "homepage": "https://modrinth.com/mod/agrarian-reform",
+    "sources": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform",
+    "issues": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform/issues"
   },
   "license": "GPL-3.0-or-later",
   "icon": "assets/agrarian_reform/icon.png",
@@ -34,7 +35,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.16.9",
-    "minecraft": ">=26.2-",
+    "minecraft": ">=26.3-",
     "java": ">=25",
     "fabric-api": "*",
     "dasik-library": "*"
