@@ -4,6 +4,7 @@ package net.instantgratification.agrarianreform.util;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,27 +43,17 @@ public class GrowthHelper {
             return false; // Let inner random ticks run vanilla logic directly without recursion
         }
 
-        // Check if the block is a plant/crop
-        boolean isPlant = block instanceof CropBlock
-                || block instanceof net.minecraft.world.level.block.SugarCaneBlock
-                || block instanceof net.minecraft.world.level.block.CactusBlock
-                || block instanceof net.minecraft.world.level.block.NetherWartBlock
-                || block instanceof net.minecraft.world.level.block.CocoaBlock
-                || block instanceof net.minecraft.world.level.block.VineBlock
-                || block instanceof net.minecraft.world.level.block.SaplingBlock
-                || block instanceof net.minecraft.world.level.block.SweetBerryBushBlock
-                || block instanceof net.minecraft.world.level.block.BushBlock;
-
-        if (!isPlant) {
+        // Fast O(1) fail-fast rejection for non-crop blocks
+        if (!AgrarianCropRules.isCropBlock(block)) {
             return false; // Let vanilla randomTick proceed normally
         }
 
-        int multiplier = DynamicGameRuleManager.getInt(level, AgrarianGameRules.GLOBAL_GROWTH_MULTIPLIER);
+        int multiplier = AgrarianCropRules.getEffectiveGrowthMultiplier(level, block);
         if (multiplier == 100) {
             return false; // Let vanilla randomTick proceed normally
         }
 
-        // Cancel entirely if growth is disabled (0%)
+        // Cancel entirely if growth is disabled (0% / frozen)
         if (multiplier <= 0) {
             return true; // Cancel vanilla randomTick
         }
@@ -88,9 +79,13 @@ public class GrowthHelper {
             try {
                 for (int i = 0; i < extraRuns; i++) {
                     BlockState currentState = level.getBlockState(pos);
-                    if (currentState.is(block)) {
-                        currentState.randomTick(level, pos, random);
+                    if (!currentState.is(block)) {
+                        break; // State changed, terminate early
                     }
+                    if (block instanceof CropBlock crop && crop.isMaxAge(currentState)) {
+                        break; // Reached max growth stage, terminate early
+                    }
+                    currentState.randomTick(level, pos, random);
                 }
             } finally {
                 IN_GROWTH_TICK.set(false);

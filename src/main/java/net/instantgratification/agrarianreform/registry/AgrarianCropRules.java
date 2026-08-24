@@ -133,7 +133,7 @@ public class AgrarianCropRules {
 
         DynamicGameRuleManager.integerRule(growthRuleName, AgrarianGameRules.AGRARIAN_REFORM, defaultGrowth)
             .name(DynamicGameRuleManager.generateReadableName(id.getPath()) + " Growth Multiplier")
-            .description("Growth speed multiplier percentage for " + id + " (0 = inherit global multiplier, 100 = 1x vanilla, 200 = 2x, -1 = frozen / 0%)")
+            .description("Growth speed multiplier percentage for " + id + " (0 = inherit global multiplier, 100 = 1x vanilla, 200 = 2x, -1 = frozen / 0%). Warning: Extremely high values increase CPU load per tick.")
             .min(-1)
             .register();
     }
