@@ -8,15 +8,20 @@ import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
@@ -35,6 +40,11 @@ import net.minecraft.world.level.block.state.BlockState;
  * Verified against: BlockBehaviour.java (26.2+)
  */
 public class GrowthHelper {
+
+    public static final TagKey<Item> SOFT_STEP_BOOTS = TagKey.create(Registries.ITEM,
+            Identifier.fromNamespaceAndPath("agrarian_reform", "soft_step_boots"));
+    public static final TagKey<Item> CONVENTIONAL_SOFT_BOOTS = TagKey.create(Registries.ITEM,
+            Identifier.fromNamespaceAndPath("c", "boots/soft"));
 
     private static final ThreadLocal<Boolean> IN_GROWTH_TICK = ThreadLocal.withInitial(() -> false);
 
@@ -198,15 +208,19 @@ public class GrowthHelper {
     }
 
     private static boolean hasSoftStep(LivingEntity entity) {
-        if (entity.getItemBySlot(EquipmentSlot.FEET).is(Items.LEATHER_BOOTS)) {
+        ItemStack feet = entity.getItemBySlot(EquipmentSlot.FEET);
+        if (feet.isEmpty()) {
+            return false;
+        }
+        if (feet.is(Items.LEATHER_BOOTS) || feet.is(SOFT_STEP_BOOTS) || feet.is(CONVENTIONAL_SOFT_BOOTS)) {
             return true;
         }
         var enchantmentRegistry = entity.level().registryAccess()
-                .lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
+                .lookupOrThrow(Registries.ENCHANTMENT);
         var featherFallingOpt = enchantmentRegistry
                 .get(net.minecraft.world.item.enchantment.Enchantments.FEATHER_FALLING);
         if (featherFallingOpt.isPresent()) {
-            return EnchantmentHelper.getEnchantmentLevel(featherFallingOpt.get(), entity) > 0;
+            return EnchantmentHelper.getItemEnchantmentLevel(featherFallingOpt.get(), feet) > 0;
         }
         return false;
     }

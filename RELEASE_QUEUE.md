@@ -41,4 +41,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [x] **`2.2.8+26.3`** (2026-08-24) - - **Real-Time Ticking Integration**: Connected `AgrarianCropRules` to random tick handler with $O(1)$ fast-fail rejection, per-crop multiplier scaling, and smart maturity early-break.
 - [x] **`2.2.9+26.3`** (2026-08-24) - - **Concentric Farmland Hydration Sweep**: Refactored `customFarmlandWaterRange` to concentric Chebyshev perimeter search with $y \in [-1, 1]$ 3D support, zero allocations, and optional `pure_water_hydration_only` GameRule.
 - [x] **`2.2.10+26.3`** (2026-08-24) - - **Trample Immunity Entity Gating**: Added `trample_immunity_players_only` GameRule & config setting, restricting farmland trample immunity strictly to players and tamed pets.
+- [x] **`2.2.11+26.3`** (2026-08-24) - - **Soft-Step Equipment & Tag Optimization**: Optimized `hasSoftStep` with bare-foot fast-fail, `#agrarian_reform:soft_step_boots` and `#c:boots/soft` data tags, and boots-specific enchantment checks.
 
