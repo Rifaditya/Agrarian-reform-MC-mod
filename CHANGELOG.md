@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.11+26.2] - 2026-08-24
+
+### Added
+- **Soft-Step Equipment & Datapack Tag Optimization**:
+  - Implemented bare-foot fast-fail in `GrowthHelper.hasSoftStep`, short-circuiting bare-footed entities instantly without registry queries.
+  - Added `#agrarian_reform:soft_step_boots` and `#c:boots/soft` item tags for data-driven modded boot compatibility alongside hardcoded `Items.LEATHER_BOOTS`.
+  - Scoped feather falling enchantment level check strictly to the footwear slot via `EnchantmentHelper.getItemEnchantmentLevel`.
+
 ## [2.2.10+26.2] - 2026-08-24
 
 ### Added
