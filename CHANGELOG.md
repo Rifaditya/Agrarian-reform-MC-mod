@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.2.19+26.3] - 2026-08-25
+### Added
+- **German Localization (`de_de.json`)**: Added complete, idiomatic in-game German translations covering all 15 static GameRules, dynamic crop category descriptions, tooltips, warnings, and YACL ModMenu configuration screens.
+
 ## [2.2.18+26.3] - 2026-08-25
 
 ### Added
