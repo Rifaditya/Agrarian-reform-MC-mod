@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.15+26.2] - 2026-08-25
+
+### Added
+- **6-Dimensional Interaction Guard**:
+  - Fortified `UseBlockCallback` event handlers with main-hand priority, sneak/secondary-use placement bypass (`isSecondaryUseActive`), off-hand duplicate item debouncing, and client-sided animation/sound parity (`InteractionResult.sidedSuccess`).
+
 ## [2.2.14+26.2] - 2026-08-25
 
 ### Added
