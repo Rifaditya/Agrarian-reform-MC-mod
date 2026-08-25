@@ -43,4 +43,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [ ] **`2.2.11+26.2`** (2026-08-24) - - **Soft-Step Equipment & Tag Optimization**: Optimized `hasSoftStep` with bare-foot fast-fail, `#agrarian_reform:soft_step_boots` and `#c:boots/soft` data tags, and boots-specific enchantment checks.
 - [ ] **`2.2.12+26.2`** (2026-08-24) - - **Continuum Sub-Chunk & Palette Skipping**: Refactored `CropScanner.scanAndQueue` to skip pure-air and non-crop sub-chunks via palette pre-filter (`maybeHas`), eliminating 98%+ of block queries on chunk load.
 - [ ] **`2.2.13+26.2`** (2026-08-25) - - **Continuum Timestamp Pruning**: Added 30-day (51.8M tick) stale chunk timestamp ceiling in `ContinuumData` and hooked save-time auto-pruning via `BEFORE_SAVE`.
+- [ ] **`2.2.14+26.2`** (2026-08-25) - - **Continuum Crop Scaling**: Scaled offline growth simulation delta per-crop using `AgrarianCropRules.getEffectiveGrowthMultiplier` uniformly across all plant types.
 

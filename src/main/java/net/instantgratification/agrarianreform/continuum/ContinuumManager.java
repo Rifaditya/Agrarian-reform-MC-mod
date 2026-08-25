@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.instantgratification.agrarianreform.AgrarianReformFabric;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -84,14 +85,7 @@ public class ContinuumManager {
             long timeDelta = serverLevel.getGameTime() - unloadTime;
             data.remove(chunk.getPos());
             if (timeDelta > 0) {
-                int multiplier = DynamicGameRuleManager.getInt(serverLevel, AgrarianGameRules.GLOBAL_GROWTH_MULTIPLIER);
-                if (multiplier <= 0) {
-                    return; // Dynamic growth is disabled, skip simulation
-                }
-                long scaledTimeDelta = (timeDelta * multiplier) / 100L;
-                if (scaledTimeDelta > 0) {
-                    CropScanner.scanAndQueue(serverLevel, chunk, scaledTimeDelta);
-                }
+                CropScanner.scanAndQueue(serverLevel, chunk, timeDelta);
             }
         }
     }
@@ -104,10 +98,20 @@ public class ContinuumManager {
         BlockState currentState = task.level.getBlockState(task.pos);
         Block block = currentState.getBlock();
 
+        int multiplier = AgrarianCropRules.getEffectiveGrowthMultiplier(task.level, block);
+        if (multiplier <= 0) {
+            return; // Growth disabled or frozen for this specific crop
+        }
+
+        long effectiveDelta = (task.timeDelta * multiplier) / 100L;
+        if (effectiveDelta <= 0) {
+            return;
+        }
+
         if (block instanceof CropBlock cropBlock) {
             float growthSpeed = CropScanner.getSpeed(cropBlock, task.level, task.pos);
             long averageTicksPerStage = (long) (((25.0f / growthSpeed) + 1.0f) * 4096.0f / 3.0f);
-            int stagesToGrow = (int) (task.timeDelta / averageTicksPerStage);
+            int stagesToGrow = (int) (effectiveDelta / averageTicksPerStage);
 
             if (stagesToGrow > 0) {
                 int currentAge = cropBlock.getAge(currentState);
@@ -143,7 +147,7 @@ public class ContinuumManager {
 
             int currentAge = currentState.getValue(BlockStateProperties.AGE_15);
             // Sugar cane/cactus ticks: average 1,365 game ticks per age stage (1/16 chance per random tick)
-            int stages = (int) (task.timeDelta / 1365L);
+            int stages = (int) (effectiveDelta / 1365L);
             if (stages > 0) {
                 int newAge = currentAge + stages;
                 int blocksToAdd = newAge / 16;
@@ -167,7 +171,7 @@ public class ContinuumManager {
         } else if (block instanceof NetherWartBlock) {
             int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
             // Nether wart ticks: average 13,650 game ticks per age stage (10% chance per random tick)
-            int stages = (int) (task.timeDelta / 13650L);
+            int stages = (int) (effectiveDelta / 13650L);
             if (stages > 0) {
                 int newAge = Math.min(3, currentAge + stages);
                 if (newAge > currentAge) {
@@ -177,7 +181,7 @@ public class ContinuumManager {
         } else if (block instanceof CocoaBlock) {
             int currentAge = currentState.getValue(BlockStateProperties.AGE_2);
             // Cocoa ticks: average 6,825 game ticks per age stage (20% chance per random tick)
-            int stages = (int) (task.timeDelta / 6825L);
+            int stages = (int) (effectiveDelta / 6825L);
             if (stages > 0) {
                 int newAge = Math.min(2, currentAge + stages);
                 if (newAge > currentAge) {
@@ -187,7 +191,7 @@ public class ContinuumManager {
         } else if (block instanceof SweetBerryBushBlock) {
             int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
             // Sweet berry ticks: average 6,825 game ticks per age stage (20% chance per random tick)
-            int stages = (int) (task.timeDelta / 6825L);
+            int stages = (int) (effectiveDelta / 6825L);
             if (stages > 0) {
                 int newAge = Math.min(3, currentAge + stages);
                 if (newAge > currentAge) {
@@ -196,7 +200,7 @@ public class ContinuumManager {
             }
         } else if (block instanceof VineBlock) {
             // Vines grow downwards. Ticks: average 13,650 game ticks (10% chance)
-            if (task.timeDelta >= 13650L) {
+            if (effectiveDelta >= 13650L) {
                 BlockPos belowPos = task.pos.below();
                 if (task.level.isEmptyBlock(belowPos)) {
                     // Place vine below, copying the direction properties of the current vine
@@ -220,7 +224,7 @@ public class ContinuumManager {
         } else if (block instanceof SaplingBlock saplingBlock) {
             int currentStage = currentState.getValue(BlockStateProperties.STAGE);
             // Sapling stages: average 95,550 game ticks per stage (about 1.4% chance per random tick)
-            int stages = (int) (task.timeDelta / 95550L);
+            int stages = (int) (effectiveDelta / 95550L);
             if (stages > 0) {
                 int newStage = currentStage + stages;
                 if (newStage >= 2) {
