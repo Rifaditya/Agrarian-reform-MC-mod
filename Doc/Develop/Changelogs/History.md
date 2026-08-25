@@ -1,5 +1,9 @@
 # Changelog History
 
+## [2.2.15+26.3] - 2026-08-25
+- **6-Dimensional Interaction Guard**:
+  - Fortified `UseBlockCallback` event handlers with main-hand priority, sneak/secondary-use placement bypass (`isSecondaryUseActive`), off-hand duplicate item debouncing, and client-sided animation/sound parity (`InteractionResult.sidedSuccess`).
+
 ## [2.2.14+26.3] - 2026-08-25
 - **Continuum Per-Crop Growth Multiplier Scaling**:
   - Connected `AgrarianCropRules.getEffectiveGrowthMultiplier` into offline catch-up simulation in `ContinuumManager.processCropUpdate`.

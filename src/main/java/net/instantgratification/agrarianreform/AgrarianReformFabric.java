@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -115,7 +116,11 @@ public class AgrarianReformFabric implements ModInitializer {
 
         // Seed-to-grass growth interaction
         UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
-            if (!DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.SEEDS_GROW_GRASS)) {
+            if (player.isSecondaryUseActive() || !DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.SEEDS_GROW_GRASS)) {
+                return InteractionResult.PASS;
+            }
+
+            if (hand == InteractionHand.OFF_HAND && player.getMainHandItem().is(ItemTags.CHICKEN_FOOD)) {
                 return InteractionResult.PASS;
             }
 
@@ -145,6 +150,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 if (!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
+                player.swing(hand, true);
             }
 
             return InteractionResult.SUCCESS;
@@ -152,7 +158,7 @@ public class AgrarianReformFabric implements ModInitializer {
 
         // Right-click harvest and replant interaction
         UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
-            if (!DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.RIGHT_CLICK_HARVEST)) {
+            if (hand != InteractionHand.MAIN_HAND || player.isSecondaryUseActive() || !DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.RIGHT_CLICK_HARVEST)) {
                 return InteractionResult.PASS;
             }
 
@@ -255,7 +261,11 @@ public class AgrarianReformFabric implements ModInitializer {
 
         // Universal Bone Meal interaction
         UseBlockCallback.EVENT.register((player, level, hand, hitResult) -> {
-            if (!DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.UNIVERSAL_BONEMEAL)) {
+            if (player.isSecondaryUseActive() || !DynamicGameRuleManager.getBoolean(level, AgrarianGameRules.UNIVERSAL_BONEMEAL)) {
+                return InteractionResult.PASS;
+            }
+
+            if (hand == InteractionHand.OFF_HAND && player.getMainHandItem().is(Items.BONE_MEAL)) {
                 return InteractionResult.PASS;
             }
 
