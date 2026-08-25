@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.17+26.3] - 2026-08-25
+
+### Added
+- **YACL / ModMenu GUI Dynamic Crop Multipliers**:
+  - Added dedicated "Crop Multipliers" category tab dynamically populated with integer sliders for all discovered and registered modded crops.
+  - Added missing GUI controls for `pureWaterHydrationOnly` (General) and `trampleImmunityPlayersOnly` (Immersion).
+
 ## [2.2.16+26.3] - 2026-08-25
 
 ### Added
