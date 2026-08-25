@@ -43,4 +43,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [ ] **`2.2.10+26.3`** (2026-08-24) - - **Trample Immunity Entity Gating**: Added `trample_immunity_players_only` GameRule & config setting, restricting farmland trample immunity strictly to players and tamed pets.
 - [ ] **`2.2.11+26.3`** (2026-08-24) - - **Soft-Step Equipment & Tag Optimization**: Optimized `hasSoftStep` with bare-foot fast-fail, `#agrarian_reform:soft_step_boots` and `#c:boots/soft` data tags, and boots-specific enchantment checks.
 - [ ] **`2.2.12+26.3`** (2026-08-24) - - **Continuum Sub-Chunk & Palette Skipping**: Refactored `CropScanner.scanAndQueue` to skip pure-air and non-crop sub-chunks via palette pre-filter (`maybeHas`), eliminating 98%+ of block queries on chunk load.
+- [ ] **`2.2.13+26.3`** (2026-08-25) - - **Continuum Timestamp Pruning**: Added 30-day (51.8M tick) stale chunk timestamp ceiling in `ContinuumData` and hooked save-time auto-pruning via `BEFORE_SAVE`.
 

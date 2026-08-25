@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.13+26.3] - 2026-08-25
+
+### Added
+- **Continuum Unload Timestamp Pruning**:
+  - Implemented a 30 in-game day (51,840,000 game tick) retention ceiling for chunk unload timestamps in `ContinuumData`.
+  - Added `ServerLifecycleEvents.BEFORE_SAVE` hook in `ContinuumManager` to automatically prune stale timestamps across all world dimensions, preventing memory bloat and unbounded disk growth.
+
 ## [2.2.12+26.3] - 2026-08-24
 
 ### Added

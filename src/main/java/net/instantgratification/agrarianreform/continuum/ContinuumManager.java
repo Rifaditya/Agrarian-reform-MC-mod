@@ -4,6 +4,7 @@ package net.instantgratification.agrarianreform.continuum;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.instantgratification.agrarianreform.AgrarianReformFabric;
@@ -52,6 +53,13 @@ public class ContinuumManager {
         });
 
         ServerChunkEvents.CHUNK_LOAD.register(ContinuumManager::onChunkLoad);
+
+        ServerLifecycleEvents.BEFORE_SAVE.register((server, flush, force) -> {
+            for (ServerLevel level : server.getAllLevels()) {
+                ContinuumData data = getOrCreateData(level);
+                data.pruneStaleEntries(level.getGameTime());
+            }
+        });
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             int updates = 0;
