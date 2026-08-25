@@ -30,6 +30,9 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.registries.BuiltInRegistries;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * GrowthHelper: Dynamic tick calculations
@@ -40,6 +43,15 @@ import net.minecraft.world.level.block.state.BlockState;
  * Verified against: BlockBehaviour.java (26.2+)
  */
 public class GrowthHelper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GrowthHelper.class);
+
+    public static boolean isDebug(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.DEBUG_MODE);
+        }
+        return LOGGER.isDebugEnabled();
+    }
 
     public static final TagKey<Item> SOFT_STEP_BOOTS = TagKey.create(Registries.ITEM,
             Identifier.fromNamespaceAndPath("agrarian_reform", "soft_step_boots"));
@@ -100,6 +112,11 @@ public class GrowthHelper {
             } finally {
                 IN_GROWTH_TICK.set(false);
             }
+        }
+
+        if (isDebug(level) && random.nextInt(50) == 0) {
+            LOGGER.debug("[AgrarianReform:GrowthHelper] Crop {} at {} evaluated with multiplier {}% (extra runs: {})",
+                    BuiltInRegistries.BLOCK.getKey(block), pos, multiplier, extraRuns);
         }
 
         return false; // Let vanilla run the final randomTick
@@ -201,6 +218,10 @@ public class GrowthHelper {
         }
 
         if (immune || softStep) {
+            if (isDebug(serverLevel)) {
+                LOGGER.debug("[AgrarianReform:GrowthHelper] Farmland trample at {} by {}: immune={}, softStep={}",
+                        pos, entity.getType().toShortString(), immune, softStep);
+            }
             entity.causeFallDamage((float) fallDistance, 1.0F, level.damageSources().fall());
             return true; // Cancel trample
         }

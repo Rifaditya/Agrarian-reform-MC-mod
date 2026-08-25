@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.16+26.2] - 2026-08-25
+
+### Added
+- **Per-Feature Debug Logging & Diagnostics**:
+  - Registered `agrarian_reform:debug_mode` GameRule defaulting to `false` and auto-resetting on server start.
+  - Added dedicated class-level SLF4J loggers with throttled random tick sampling and discrete event tracing across `GrowthHelper`, `ContinuumManager`, `CropScanner`, and `AgrarianCropRules`.
+
 ## [2.2.15+26.2] - 2026-08-25
 
 ### Added

@@ -66,6 +66,11 @@ public class AgrarianReformFabric implements ModInitializer {
             SoundHelper.purgeEntity(entity.getId());
         });
 
+        // Reset transient debug mode on server starting
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            server.getGameRules().set(AgrarianGameRules.DEBUG_MODE, false, server);
+        });
+
         // Initialize/update active limits on server starting
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             // Reload config baseline template to fetch main-menu updates

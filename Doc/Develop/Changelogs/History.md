@@ -1,5 +1,10 @@
 # Changelog History
 
+## [2.2.16+26.2] - 2026-08-25
+- **Per-Feature Debug Logging & Diagnostics**:
+  - Registered `agrarian_reform:debug_mode` GameRule defaulting to `false` and auto-resetting on server start.
+  - Added dedicated class-level SLF4J loggers with throttled random tick sampling and discrete event tracing across `GrowthHelper`, `ContinuumManager`, `CropScanner`, and `AgrarianCropRules`.
+
 ## [2.2.15+26.2] - 2026-08-25
 - **6-Dimensional Interaction Guard**:
   - Fortified `UseBlockCallback` event handlers with main-hand priority, sneak/secondary-use placement bypass (`isSecondaryUseActive`), off-hand duplicate item debouncing, and client-sided animation/sound parity (`InteractionResult.sidedSuccess`).
