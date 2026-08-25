@@ -2,7 +2,7 @@
 
 > **"The world should not wait for you to watch it."**
 
-Welcome to the official **Agrarian Reform** wiki. **Agrarian Reform** is a pastoral immersion mod that transforms Minecraft's agriculture from a proximity-based machine into a living, breathing ecosystem. It ensures that your crops persist and grow even when chunks are unloaded or during offline server time, while introducing deep soil management, realistic hydro-dynamics, and polyculture biodiversity bonuses.
+Welcome to the official **Agrarian Reform** wiki. **Agrarian Reform** is an agricultural simulation and immersion mod that transforms Minecraft farming from a proximity-based machine into a living, persistent ecosystem. It introduces **The Continuum** (sub-chunk palette-optimized offline growth catch-up), **Universal Crop Auto-Population** (automatic discovery and per-crop multiplier tuning for any modded crop), deep soil management with selective player/pet trample protection, realistic concentric hydro-dynamics, and polyculture biodiversity bonuses.
 
 > 📌 **Repository Source Disclaimer**: The documentation in this Wiki reflects the **current source code state in the repository**, which may include recent unreleased commits or developmental features ahead of public release builds on CurseForge and Modrinth.
 
@@ -13,8 +13,8 @@ Welcome to the official **Agrarian Reform** wiki. **Agrarian Reform** is a pasto
 | Parameter | Specification |
 | :--- | :--- |
 | **Mod Identifier** | `agrarian_reform` |
-| **Current Target** | Minecraft 26.2 (Stable) |
-| **Mod Version** | `2.2.4+26.2` |
+| **Supported Game Versions** | Minecraft 26.2 (`>=26.2-`), Minecraft 26.3 (`>=26.3-` / `26.3-snapshot-6`) |
+| **Current Mod Version** | `2.2.18+26.2` / `2.2.18+26.3` |
 | **Mod Loader** | Fabric Loader (`>=0.16.9`) |
 | **Language Target** | Java 25 (Strict) |
 | **Primary Dependencies** | Fabric API (`*`), DasikLibrary (`>=1.8.3`) |
@@ -26,36 +26,36 @@ Welcome to the official **Agrarian Reform** wiki. **Agrarian Reform** is a pasto
 
 ## 📦 Minecraft Versions Directory
 
-* [[MC 26.2 Guide|Minecraft-26.2-Guide]] — Official guide for stable Minecraft 26.2 release builds.
-* [[Version Compatibility|Version-Compatibility]] — Version support matrix, open-ended lower bounds, and version guards.
+* [[MC 26.2 & 26.3 Guide|Minecraft-26.2-Guide]] — Comprehensive guide for modern Minecraft 26.2 and 26.3 release builds.
+* [[Version Compatibility|Version-Compatibility]] — Version support matrix, open-ended lower bounds, and Knot classloader safety guards.
 
 ---
 
 ## 🎮 Player & Feature Guides Directory
 
-* [[The Continuum (Offline Growth)|The-Continuum-Offline-Persistence]] — Chunk unload timestamping, time delta catch-up calculation, queued simulation, and zero-disk-write chunk preservation.
-* [[Soil Resilience & Trample Logic|Soil-Resilience-and-Trample-Logic]] — Soft Step protection with Leather Boots/Feather Falling, velocity limits, and Ravager impact.
-* [[Hydro-Dynamics & Irrigation|Hydro-Dynamics-and-Irrigation]] — 8-block water source capillary irrigation, 4-block flowing water, and pluviophile rain hydration.
+* [[The Continuum (Offline Growth)|The-Continuum-Offline-Persistence]] — Sub-chunk palette filtering, unload timestamping, 30-day stale pruning ceiling, queued simulation, and zero-disk-write chunk preservation.
+* [[Plant Registry & Universal Crops|Plant-Registry-and-Crop-Types]] — O(1) dynamic crop discovery engine, property inspection, `#c:crops` tag indexing, and per-crop multiplier scaling.
+* [[Hydro-Dynamics & Irrigation|Hydro-Dynamics-and-Irrigation]] — Concentric Chebyshev square ring capillary hydration (8 source, 4 flowing), 3D elevation ($y \in [-1, 1]$), and pure water gating.
+* [[Soil Resilience & Trample Logic|Soil-Resilience-and-Trample-Logic]] — Soft Step protection with Leather Boots/Feather Falling, bare-foot fast-fail, and player/pet selective entity gating.
+* [[Right-Click Harvest & Replant|Right-Click-Harvest-and-Replanting]] — 6-Dimensional interaction guard, main-hand debouncing, sneak placement bypass, and surplus item drops.
 * [[Polyculture & Biodiversity|Polyculture-and-Biodiversity]] — Mixed crop planting incentives and 10% growth probability acceleration.
-* [[Right-Click Harvest & Replant|Right-Click-Harvest-and-Replanting]] — One-click harvesting, age-0 automatic replanting, and surplus item drops.
-* [[Seed Sowing & Grass Cultivation|Seed-Sowing-and-Grass-Cultivation]] — Sowing seeds on dirt to restore grass blocks naturally.
-* [[Universal Bone Meal|Universal-Bone-Meal]] — Accelerating growth on non-standard and non-natively bonemealable plants.
-* [[Global Growth Multiplier|Global-Growth-Multiplier]] — Server-wide growth speed tuning from 0% to >100%.
-* [[Plant Registry & Crop Types|Plant-Registry-and-Crop-Types]] — Index of supported crops, saplings, vines, and berries.
-* [[Performance & Queue Throttling|Performance-and-Queue-Throttling]] — Server tick budget preservation (`CROPS_PER_TICK = 5`), lock-free task queues, and zero-disk-write guarantees.
-* [[Advancements & Progression|Advancements]] — Native integration with vanilla Husbandry advancements.
-* [[GameRules|GameRules]] — Complete listing of namespaced `agrarian_reform:*` rules and default parameters.
+* [[Seed Sowing & Grass Cultivation|Seed-Sowing-and-Grass-Cultivation]] — Sowing seeds on dirt blocks to restore natural grass blocks.
+* [[Universal Bone Meal|Universal-Bone-Meal]] — Accelerating growth on non-standard and non-natively bonemealable plants (Cactus, Sugar Cane, Nether Wart, Vines).
+* [[Global Growth Multiplier|Global-Growth-Multiplier]] — Server-wide and per-crop speed tuning from 0% (disabled), -1 (frozen), 100% (vanilla), to accelerated (>100%).
+* [[Performance & Queue Throttling|Performance-and-Queue-Throttling]] — Server tick budget preservation (`CROPS_PER_TICK = 5`), palette pre-filtering, and lock-free task queues.
+* [[GameRules|GameRules]] — Complete listing of 15 namespaced `agrarian_reform:*` rules, dynamic crop rules, and transient debug toggles.
 * [[Commands|Commands]] — Brigadier command administration and dynamic configuration overrides.
-* [[Configuration|Configuration]] — Global JSON template configuration and client GUI integration.
+* [[Configuration|Configuration]] — Schema v2 JSON template configuration, dirty-tracking auto-save, and 3-tab YACL GUI integration.
 * [[Aesthetics & Ambient Feedback|Aesthetics-and-Ambient-Feedback]] — Crop rustle audio dynamics, vitality particle sparkles, and morning moisture.
+* [[Advancements & Progression|Advancements]] — Native integration with vanilla Husbandry advancements.
 
 ---
 
 ## 💻 Developer Reference Directory
 
-* [[Developer Setup & Building|Developer-Setup-and-Building]] — Building with JDK 25, Gradle 9.3+, Loom 1.15+, and GameTest verification.
+* [[Developer Setup & Building|Developer-Setup-and-Building]] — Building with JDK 25, Gradle 9.3+, Loom 1.15+, and headless JUnit 5 unit tests (`ContinuumMathTest`, `AgrarianConfigTest`).
 * [[Architecture & Mixins|Architecture-and-Mixins]] — Package hierarchy trees and Mixin target class breakdown tables.
-* [[API & Addon Integration|API-and-Addon-Integration]] — DasikLibrary API integration, custom tags, and extension hooks.
+* [[API & Addon Integration|API-and-Addon-Integration]] — DasikLibrary API integration, custom datapack tags (`#agrarian_reform:soft_step_boots`), and extension hooks.
 
 ---
 

@@ -1,6 +1,6 @@
 # 🌾 Right-Click Harvest & Auto-Replanting
 
-**Agrarian Reform** includes Instant Gratification Quality-of-Life (QoL) harvesting. Players can harvest mature crops with a single right-click without destroying the block or manually replanting seeds.
+**Agrarian Reform** includes Instant Gratification Quality-of-Life (QoL) harvesting. Players can harvest mature crops with a single right-click without destroying the block or manually replanting seeds, fortified by a strict **6-Dimensional Interaction Guard**.
 
 ---
 
@@ -9,42 +9,56 @@
 | Property | Value |
 | :--- | :--- |
 | **Handler Class** | `net.instantgratification.agrarianreform.AgrarianReformFabric` |
-| **Trigger Action** | Right-click (Use) on mature crop block |
+| **Event Target** | `UseBlockCallback.EVENT` |
+| **Trigger Action** | Right-click (Use) on mature crop block with Main Hand |
 | **Effect** | Spawns crop drops, resets crop to Age 0, plays harvest sound |
+| **Crouch Bypass** | Sneak + Right Click (`player.isSecondaryUseActive()`) bypasses harvest to allow block placement |
+| **Debounce Guard**| Main-Hand only (`hand != InteractionHand.MAIN_HAND` fast-fails with `PASS`) |
 | **GameRule Toggle** | `agrarian_reform:right_click_harvest` (Default: `true`) |
 
 ---
 
-## ⚙️ Harvest Workflow
+## ⚙️ 6-Dimensional Interaction Guard Workflow
 
 ```
-                  PLAYER RIGHT-CLICKS CROP BLOCK
-                                │
-                                ▼
-               Is right_click_harvest GameRule true?
-                              ┌─┴─┐
-                           YES│   │NO
-                              ▼   ▼
-               Is crop block at maximum age (isMaxAge)?
-                              ┌─┴─┐
-                           YES│   │NO
-                              ▼   ▼
-               1. Calculate crop drops via Loot Table
-               2. Spawn items into world
-               3. Reset block state to Age 0
-               4. Play harvest & rustle sound
+                        PLAYER RIGHT-CLICKS CROP BLOCK
+                                       │
+                                       ▼
+                   1. Is Hand MAIN_HAND? (Off-Hand Debounce)
+                                  ┌────┴────┐
+                               YES│         │NO
+                                  ▼         ▼
+                   2. Is Player Sneaking? (Secondary Use Bypass)
+                   (player.isSecondaryUseActive())
+                                  ┌────┴────┐
+                                NO│         │YES
+                                  ▼         ▼
+                   3. Is right_click_harvest GameRule true?
+                                  ┌────┴────┐
+                               YES│         │NO
+                                  ▼         ▼
+                   4. Is crop at maximum age (isMaxAge)?
+                                  ┌────┴────┐
+                               YES│         │NO
+                                  ▼         ▼
+                   5. Sided Execution & Item Drops
+                   - Query loot table on server side (!level.isClientSide)
+                   - Spawn drops into world
+                   - Reset block state to Age 0
+                   - Play harvest & crop rustle sound
+                   - Return InteractionResult.SUCCESS
 ```
 
 ---
 
 ## 🌾 Supported Crops for Right-Click Harvest
 
-Right-click harvesting automatically supports all standard crops:
+Right-click harvesting automatically supports all standard and modded agricultural crops:
 * **Wheat** (`minecraft:wheat`)
 * **Carrots** (`minecraft:carrots`)
 * **Potatoes** (`minecraft:potatoes`)
 * **Beetroots** (`minecraft:beetroots`)
-* Custom third-party mod crops extending `CropBlock`.
+* **Modded Agriculture**: Any crop extending `CropBlock` or registered with `#c:crops`.
 
 ---
 
@@ -58,4 +72,4 @@ Disable right-click harvesting across your world:
 
 ---
 
-*See also: [[Seed Sowing & Grass Cultivation|Seed-Sowing-and-Grass-Cultivation]] and [[Universal Bone Meal|Universal-Bone-Meal]]*.
+*See also: [[Seed Sowing & Grass Cultivation|Seed-Sowing-and-Grass-Cultivation]], [[Plant Registry & Universal Crops|Plant-Registry-and-Crop-Types]], and [[Universal Bone Meal|Universal-Bone-Meal]]*.
