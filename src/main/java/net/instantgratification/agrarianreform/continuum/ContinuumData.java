@@ -46,6 +46,8 @@ public class ContinuumData extends SavedData {
             DataFixTypes.SAVED_DATA_MAP_DATA
     );
 
+    public static final long MAX_UNLOAD_AGE_TICKS = 20L * 60 * 60 * 24 * 30; // 30 game days (51,840,000 ticks)
+
     private final Map<Long, Long> chunkUnloadTimes;
 
     public ContinuumData() {
@@ -75,6 +77,17 @@ public class ContinuumData extends SavedData {
 
     public void remove(final ChunkPos pos) {
         if (this.chunkUnloadTimes.remove(pos.pack()) != null) {
+            this.setDirty();
+        }
+    }
+
+    public void pruneStaleEntries(long currentGametime) {
+        long cutoff = currentGametime - MAX_UNLOAD_AGE_TICKS;
+        if (cutoff <= 0) {
+            return;
+        }
+        boolean changed = this.chunkUnloadTimes.values().removeIf(time -> time < cutoff);
+        if (changed) {
             this.setDirty();
         }
     }
