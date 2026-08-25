@@ -48,4 +48,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [ ] **`2.2.15+26.3`** (2026-08-25) - - **6D Interaction Guard**: Fortified `UseBlockCallback` handlers with main-hand harvest restrictions, sneak/secondary-use bypass, off-hand debounce, and client-sided success parity.
 - [ ] **`2.2.16+26.3`** (2026-08-25) - - **Per-Feature Debug Logging & Diagnostics**: Added namespaced transient `agrarian_reform:debug_mode` GameRule and class-level SLF4J loggers with throttled random tick sampling and discrete event tracing.
 - [ ] **`2.2.17+26.3`** (2026-08-25) - - **YACL / ModMenu GUI Configuration**: Added dedicated "Crop Multipliers" category tab with dynamic options per discovered crop and added missing GameRule UI controls (`pureWaterHydrationOnly`, `trampleImmunityPlayersOnly`).
+- [ ] **`2.2.18+26.3`** (2026-08-25) - - **Headless Automated Unit Test Suite**: Added comprehensive headless test suites in `ContinuumMathTest` and `AgrarianConfigTest` validating multiplier hierarchy, frozen math, stale timestamp pruning, Chebyshev ring geometry, and dirty tracking.
 

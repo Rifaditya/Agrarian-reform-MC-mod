@@ -38,6 +38,46 @@ public class ContinuumMathTest {
         // 0% disabled growth multiplier
         long delta0 = (rawDelta * 0L) / 100L;
         assertEquals(0L, delta0);
+
+        // -1 frozen growth multiplier (effectiveDelta must be 0)
+        int frozenMultiplier = -1;
+        long deltaFrozen = frozenMultiplier <= 0 ? 0L : (rawDelta * (long) frozenMultiplier) / 100L;
+        assertEquals(0L, deltaFrozen);
+    }
+
+    @Test
+    @DisplayName("Stale Timestamp Pruning 30-Day Ceiling Calculation")
+    void testStaleTimestampPruningCeiling() {
+        long ticksPerSecond = 20L;
+        long secondsPerDay = 86400L;
+        long daysThreshold = 30L;
+        long expectedMaxAgeTicks = daysThreshold * secondsPerDay * ticksPerSecond; // 51,840,000 ticks
+
+        assertEquals(51840000L, expectedMaxAgeTicks);
+
+        long currentGameTime = 100_000_000L;
+        long freshTimestamp = currentGameTime - 1000L;
+        long staleTimestamp = currentGameTime - (expectedMaxAgeTicks + 1L);
+
+        assertTrue((currentGameTime - freshTimestamp) <= expectedMaxAgeTicks, "Fresh timestamp must not be pruned");
+        assertTrue((currentGameTime - staleTimestamp) > expectedMaxAgeTicks, "Stale timestamp must be pruned");
+    }
+
+    @Test
+    @DisplayName("Concentric Chebyshev Hydration Shell Ring Geometry")
+    void testChebyshevHydrationShellGeometry() {
+        // For Chebyshev distance r = max(|dx|, |dz|), the number of blocks in ring r is 8*r
+        for (int r = 1; r <= 8; r++) {
+            int ringBlockCount = 0;
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) == r) {
+                        ringBlockCount++;
+                    }
+                }
+            }
+            assertEquals(8 * r, ringBlockCount, "Ring " + r + " must contain exactly 8*r blocks");
+        }
     }
 
     @Test

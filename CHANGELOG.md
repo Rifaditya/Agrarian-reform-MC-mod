@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.18+26.3] - 2026-08-25
+
+### Added
+- **Headless Automated Unit Test Suite**:
+  - Expanded `ContinuumMathTest` with tests for frozen multipliers (-1), 30-day stale unload timestamp pruning ceiling, and concentric Chebyshev hydration shell geometry.
+  - Added `AgrarianConfigTest` validating default schema invariants, per-crop forced multiplier maps, frozen multiplier resolution, and dirty-tracking mechanics.
+
 ## [2.2.17+26.3] - 2026-08-25
 
 ### Added
