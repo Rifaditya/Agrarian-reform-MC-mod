@@ -66,6 +66,17 @@ public static int getEffectiveGrowthMultiplier(Level level, Block block) {
 }
 ```
 
+### 🔄 Runtime Discovery & Mod Removal Resilience
+
+1. **Mid-Game Dynamic Discovery**:
+   - `AgrarianCropRules` hooks into random ticks, Continuum chunk loading sweeps, and block interaction events.
+   - When a previously unregistered modded crop is loaded or interacted with mid-session, it is discovered on-the-fly, registered into the $O(1)$ block cache, and given a dynamic GameRule with zero reload latency.
+
+2. **Mod Removal & Zero-Crash Safety**:
+   - Dynamic crop rules and caches rely strictly on standard Minecraft `Identifier` strings (`namespace:path`) rather than direct compiled class types.
+   - When a crop mod is uninstalled, `AgrarianCropRules.isCropBlock` safely ignores missing blocks, producing **0 `ClassNotFoundException` or `NoClassDefFoundError` crashes**.
+   - If missing blocks exist in saved chunk palettes, Vanilla replaces them with air/fallback blocks, while the corresponding GameRule remains dormant until the mod is re-added.
+
 ---
 
 ## 🏷️ Datapack Tag Integration (`AgrarianTags`)

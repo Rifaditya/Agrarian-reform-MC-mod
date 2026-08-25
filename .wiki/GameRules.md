@@ -30,7 +30,7 @@ All configuration parameters in **Agrarian Reform** are registered as native Min
 
 Whenever a new modded or vanilla crop is discovered in the world or registered via data packs, **Agrarian Reform** dynamically registers a dedicated GameRule formatted as:
 
-$$\text{GameRule Key} = \text{agrarian\_reform:crop\_growth\_multiplier\_}\langle \text{sanitized\_path} \rangle$$
+$$\text{GameRule Key} = \text{agrarian\_reform:growth\_}\langle \text{namespace} \rangle\text{\_}\langle \text{path} \rangle$$
 
 ### Resolution Hierarchy:
 1. **Specific Crop Override ($> 0$)**: If set to a positive integer (e.g. `200`), the crop grows at that exact rate (200% = 2x speed), bypassing the global multiplier.
@@ -39,14 +39,24 @@ $$\text{GameRule Key} = \text{agrarian\_reform:crop\_growth\_multiplier\_}\langl
 
 ```bash
 # Set wheat to grow at 3x speed
-/gamerule agrarian_reform:crop_growth_multiplier_wheat 300
+/gamerule agrarian_reform:growth_minecraft_wheat 300
 
 # Freeze sugar cane growth completely
-/gamerule agrarian_reform:crop_growth_multiplier_sugar_cane -1
+/gamerule agrarian_reform:growth_minecraft_sugar_cane -1
 
 # Reset carrots to inherit the global multiplier
-/gamerule agrarian_reform:crop_growth_multiplier_carrots 0
+/gamerule agrarian_reform:growth_minecraft_carrots 0
 ```
+
+### ⚡ Mid-Game Dynamic Registration (Zero Restart Required)
+* **On-Demand Instantiation**: When a player explores a new area, encounters a newly loaded modded chunk, or plants a modded seed mid-game, `AgrarianCropRules` detects the crop and instantiates its `GameRule` immediately on-the-fly.
+* **Instant Command Availability**: The new GameRule is instantly queryable and editable via `/gamerule` with full tab-completion without requiring a server reboot or game restart.
+* **Datapack Reload Parity**: Executing `/reload` mid-game triggers `DynamicRegistryScanner` to re-scan `BuiltInRegistries.BLOCK` and register any newly added datapack crop tags automatically.
+
+### 🛡️ Mod Removal & Zero-Crash Dormancy Lifecycle
+* **100% Crash-Proof Decoupling**: Dynamic GameRules are identified purely using standard Strings and Vanilla `Identifier` keys (`"farmersdelight:tomatoes"`), with zero hardcoded class dependencies.
+* **Dormant / Passive State**: If a mod is uninstalled, Minecraft removes its in-world blocks. The corresponding GameRule becomes completely **dormant (idle)**—it executes zero queries, consumes zero CPU cycles, and will **never crash the game or corrupt chunk data**.
+* **Seamless Re-Installation Recovery**: If the player re-installs the mod later, the saved GameRule multiplier in `level.dat` and `config/agrarian-reform.json` is instantly recognized and restored.
 
 ---
 

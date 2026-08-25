@@ -27,8 +27,9 @@ The global JSON file stores default values applied when **NEW** worlds are gener
 ### 2. Live World GameRules (`agrarian_reform:*`)
 Active worlds manage runtime settings directly through native Minecraft GameRules. Changes made via the ModMenu GUI or `/gamerule` update the live world state instantly without requiring a server reboot.
 
-### 3. Thread-Safe Dirty-Tracking Persistence
-When modded crops are discovered during gameplay, `AgrarianConfig` automatically marks its memory state as `dirty = true` without performing immediate disk writes. The configuration is safely written to disk only during natural chunk save points (`ServerLifecycleEvents.BEFORE_SAVE`) and server shutdown (`ServerLifecycleEvents.SERVER_STOPPING`).
+### 3. Thread-Safe Dirty-Tracking Persistence & Mod Removal Resilience
+* **Asynchronous Save Throttling**: When modded crops are discovered during gameplay, `AgrarianConfig` automatically marks its memory state as `dirty = true` without performing immediate disk writes. The configuration is safely written to disk only during natural chunk save points (`ServerLifecycleEvents.BEFORE_SAVE`) and server shutdown (`ServerLifecycleEvents.SERVER_STOPPING`).
+* **Uninstalled Mod Safety**: Discovered crops are stored as raw String identifiers (`"farmersdelight:tomatoes"`) in `forcedCrops` and `forcedGrowthMultipliers`. If a mod is uninstalled, these entries remain harmlessly stored in the JSON config and `level.dat` without causing parsing crashes, and are seamlessly re-activated if the mod is re-installed in the future.
 
 ---
 
