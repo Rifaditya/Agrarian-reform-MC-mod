@@ -12,6 +12,7 @@ import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
@@ -24,6 +25,8 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -41,6 +44,15 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Verified against: ServerChunkEvents.java (Fabric API)
  */
 public class ContinuumManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContinuumManager.class);
+
+    public static boolean isDebug(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.DEBUG_MODE);
+        }
+        return LOGGER.isDebugEnabled();
+    }
+
     private static final String DATA_KEY = AgrarianReformFabric.MOD_ID + "_continuum";
     // Throttling config: Update only 5 crop blocks per tick globally.
     private static final int CROPS_PER_TICK = 5;
@@ -85,6 +97,10 @@ public class ContinuumManager {
             long timeDelta = serverLevel.getGameTime() - unloadTime;
             data.remove(chunk.getPos());
             if (timeDelta > 0) {
+                if (isDebug(serverLevel)) {
+                    LOGGER.debug("[AgrarianReform:ContinuumManager] Simulating offline growth for chunk {} (timeDelta: {} ticks)",
+                            chunk.getPos(), timeDelta);
+                }
                 CropScanner.scanAndQueue(serverLevel, chunk, timeDelta);
             }
         }

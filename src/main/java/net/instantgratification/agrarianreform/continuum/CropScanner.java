@@ -13,7 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
+import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.instantgratification.agrarianreform.util.AgrarianTags;
+import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CropScanner: The Chunk Auditor
@@ -24,6 +28,14 @@ import net.instantgratification.agrarianreform.util.AgrarianTags;
  * Verified against: Heightmap.java (26.2+)
  */
 public class CropScanner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CropScanner.class);
+
+    public static boolean isDebug(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.DEBUG_MODE);
+        }
+        return LOGGER.isDebugEnabled();
+    }
 
     public static void scanAndQueue(ServerLevel level, LevelChunk chunk, long timeDelta) {
         ChunkPos chunkPos = chunk.getPos();
@@ -32,10 +44,13 @@ public class CropScanner {
 
         int minX = chunkPos.getMinBlockX();
         int minZ = chunkPos.getMinBlockZ();
+        int skippedSections = 0;
+        int queuedCrops = 0;
 
         for (int sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
             LevelChunkSection section = sections[sectionIndex];
             if (section == null || section.hasOnlyAir() || !section.maybeHas(state -> AgrarianCropRules.isCropBlock(state.getBlock()))) {
+                skippedSections++;
                 continue; // Skip entire empty or non-crop sub-chunk via palette pre-filter
             }
 
@@ -50,10 +65,16 @@ public class CropScanner {
                             ContinuumManager.UPDATE_QUEUE.offer(
                                 new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta)
                             );
+                            queuedCrops++;
                         }
                     }
                 }
             }
+        }
+
+        if (isDebug(level)) {
+            LOGGER.debug("[AgrarianReform:CropScanner] Scanned chunk {}: skipped {}/{} sections, queued {} crops",
+                    chunkPos, skippedSections, sections.length, queuedCrops);
         }
     }
 

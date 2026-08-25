@@ -122,6 +122,7 @@ public class AgrarianCropRules {
                 if (!DYNAMIC_CROPS.contains(id)) {
                     DYNAMIC_CROPS.add(id);
                 }
+                LOGGER.info("[AgrarianReform:CropRules] Discovered agricultural block: {}", id);
             }
         );
     }
@@ -136,6 +137,7 @@ public class AgrarianCropRules {
             .description("Growth speed multiplier percentage for " + id + " (0 = inherit global multiplier, 100 = 1x vanilla, 200 = 2x, -1 = frozen / 0%). Warning: Extremely high values increase CPU load per tick.")
             .min(-1)
             .register();
+        LOGGER.debug("[AgrarianReform:CropRules] Registered dynamic GameRule for crop: {}", id);
     }
 
     public static int getEffectiveGrowthMultiplier(Level level, Block block) {

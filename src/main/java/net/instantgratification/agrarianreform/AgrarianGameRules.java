@@ -65,6 +65,10 @@ public class AgrarianGameRules {
     public static final GameRule<Integer> GLOBAL_GROWTH_MULTIPLIER = DynamicGameRuleManager.registerInteger(
             "agrarian_reform:global_growth_multiplier", AGRARIAN_REFORM, AgrarianConfig.get().globalGrowthMultiplier);
 
+    // Diagnostics
+    public static final GameRule<Boolean> DEBUG_MODE = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:debug_mode", AGRARIAN_REFORM, false);
+
     public static void register() {
         AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
     }
