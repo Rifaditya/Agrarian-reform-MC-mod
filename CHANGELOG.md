@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.14+26.3] - 2026-08-25
+
+### Added
+- **Continuum Per-Crop Growth Multiplier Scaling**:
+  - Connected `AgrarianCropRules.getEffectiveGrowthMultiplier` into offline catch-up simulation in `ContinuumManager.processCropUpdate`.
+  - Scaled elapsed simulation time per crop type, maintaining full parity between real-time random ticks and offline catch-up across both vanilla and modded crops.
+
 ## [2.2.13+26.3] - 2026-08-25
 
 ### Added
