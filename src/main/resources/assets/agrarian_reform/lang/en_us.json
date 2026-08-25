@@ -23,10 +23,18 @@
   "gamerule.agrarian_reform.universal_bonemeal.description": "When enabled, bone meal can be used to accelerate the growth of non-natively bonemealable plants. Default: true.",
   "gamerule.agrarian_reform.global_growth_multiplier": "Global Growth Multiplier",
   "gamerule.agrarian_reform.global_growth_multiplier.description": "Global speed multiplier for plant growth ticks (0 = disabled, 100 = vanilla, >100 = accelerated). WARNING: Values excessively high (e.g., >1000) will cause massive server lag or watchdog crashes. Use at your own risk. Default: 100.",
+  "gamerule.agrarian_reform.pure_water_hydration_only": "Pure Water Hydration Only",
+  "gamerule.agrarian_reform.pure_water_hydration_only.description": "When enabled, waterlogged blocks and non-water fluids will not hydrate farmland, only pure water blocks. Default: false.",
+  "gamerule.agrarian_reform.trample_immunity_players_only": "Trample Immunity Players Only",
+  "gamerule.agrarian_reform.trample_immunity_players_only.description": "When enabled along with Total Trample Immunity, only players and tamed pets receive trample protection, while hostile/wild mobs still trample farmland. Default: false.",
+  "gamerule.agrarian_reform.debug_mode": "Agrarian Reform Debug Mode",
+  "gamerule.agrarian_reform.debug_mode.description": "Enables verbose diagnostic logging in server logs for crop ticks and continuum catch-up. Transient: auto-resets to false on restart. Default: false.",
   "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform",
 
   "config.agrarian_reform.title": "Agrarian Reform Config",
   "config.agrarian_reform.warning": "⚠️ Note: Changing these options only sets the default values for NEW worlds. To change settings for existing worlds, use the in-game GameRules screen or /gamerule command.",
   "config.agrarian_reform.category.general": "General Options",
-  "config.agrarian_reform.category.immersion": "Immersion & Aesthetics"
+  "config.agrarian_reform.category.immersion": "Immersion & Aesthetics",
+  "config.agrarian_reform.category.crops": "Crop Multipliers",
+  "config.agrarian_reform.category.crops.description": "Individual crop growth speed overrides. Set to 0 to inherit global multiplier, -1 to freeze/disable."
 }

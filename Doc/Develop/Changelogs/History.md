@@ -1,5 +1,10 @@
 # Changelog History
 
+## [2.2.17+26.2] - 2026-08-25
+- **YACL / ModMenu GUI Dynamic Crop Multipliers**:
+  - Added dedicated "Crop Multipliers" category tab dynamically populated with integer sliders for all discovered and registered modded crops.
+  - Added missing GUI controls for `pureWaterHydrationOnly` (General) and `trampleImmunityPlayersOnly` (Immersion).
+
 ## [2.2.16+26.2] - 2026-08-25
 - **Per-Feature Debug Logging & Diagnostics**:
   - Registered `agrarian_reform:debug_mode` GameRule defaulting to `false` and auto-resetting on server start.
