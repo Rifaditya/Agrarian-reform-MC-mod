@@ -37,17 +37,17 @@ public class YaclScreenHelper {
         AgrarianConfig config = AgrarianConfig.get();
 
         // 1. General Category
-        OptionGroup.Builder warningGroup = OptionGroup.createBuilder()
-            .name(Component.translatable("config.agrarian_reform.warning"));
+        OptionGroup.Builder generalGroup = OptionGroup.createBuilder()
+            .name(Component.translatable("config.agrarian_reform.category.general"));
 
         Option<?> supportButton = (Option<?>) DasikSupportHelper.createYaclButton();
         if (supportButton != null) {
-            warningGroup.option(supportButton);
+            generalGroup.option(supportButton);
         }
 
         ConfigCategory.Builder generalCategory = ConfigCategory.createBuilder()
             .name(Component.translatable("config.agrarian_reform.category.general"))
-            .group(warningGroup
+            .group(generalGroup
                 // Hydration Source Range
                 .option(Option.<Integer>createBuilder()
                     .name(Component.translatable("gamerule.agrarian_reform.hydration_source_range"))
@@ -172,11 +172,17 @@ public class YaclScreenHelper {
             );
 
         // 2. Immersion Category
+        OptionGroup.Builder immersionGroup = OptionGroup.createBuilder()
+            .name(Component.translatable("config.agrarian_reform.category.immersion"));
+
+        Option<?> immersionSupportButton = (Option<?>) DasikSupportHelper.createYaclButton();
+        if (immersionSupportButton != null) {
+            immersionGroup.option(immersionSupportButton);
+        }
+
         ConfigCategory.Builder immersionCategory = ConfigCategory.createBuilder()
             .name(Component.translatable("config.agrarian_reform.category.immersion"))
-            .group(OptionGroup.createBuilder()
-                .name(Component.translatable("config.agrarian_reform.warning"))
-
+            .group(immersionGroup
                 // Total Trample Immunity
                 .option(Option.<Boolean>createBuilder()
                     .name(Component.translatable("gamerule.agrarian_reform.total_trample_immunity"))
@@ -250,7 +256,12 @@ public class YaclScreenHelper {
             .name(Component.translatable("config.agrarian_reform.category.crops"));
 
         OptionGroup.Builder cropsGroup = OptionGroup.createBuilder()
-            .name(Component.translatable("config.agrarian_reform.category.crops.description"));
+            .name(Component.translatable("config.agrarian_reform.category.crops"));
+
+        Option<?> cropsSupportButton = (Option<?>) DasikSupportHelper.createYaclButton();
+        if (cropsSupportButton != null) {
+            cropsGroup.option(cropsSupportButton);
+        }
 
         Set<String> allCrops = new TreeSet<>();
         for (Identifier id : AgrarianCropRules.DYNAMIC_CROPS) {

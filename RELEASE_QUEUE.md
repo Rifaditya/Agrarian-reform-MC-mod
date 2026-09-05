@@ -50,4 +50,5 @@ Open this file in your editor and change `[ ]` to `[x]` when you publish a versi
 - [ ] **`2.2.17+26.3`** (2026-08-25) - - **YACL / ModMenu GUI Configuration**: Added dedicated "Crop Multipliers" category tab with dynamic options per discovered crop and added missing GameRule UI controls (`pureWaterHydrationOnly`, `trampleImmunityPlayersOnly`).
 - [ ] **`2.2.18+26.3`** (2026-08-25) - - **Headless Automated Unit Test Suite**: Added comprehensive headless test suites in `ContinuumMathTest` and `AgrarianConfigTest` validating multiplier hierarchy, frozen math, stale timestamp pruning, Chebyshev ring geometry, and dirty tracking.
 - [ ] **`2.2.19+26.3`** (2026-08-25) - - **German Localization**: Added complete, idiomatic German (`de_de.json`) translation for all 15 GameRules, tooltips, warnings, and YACL ModMenu configuration screens.
-
+- [ ] **`2.2.20+26.3`** (2026-09-05) - - **Ko-fi Creator Support Button**: Added top-pinned Ko-fi creator support button in YACL configuration screen and aligned toolchain to DasikLibrary v1.8.38.
+- [ ] **`2.2.21+26.3`** (2026-09-05) - - **Multi-Category Ko-fi Support & Config UI Polish**: Injected Ko-fi support button across all 3 configuration categories (General, Immersion, Crops), reframed warning strings to clean descriptions, and updated group headers.
