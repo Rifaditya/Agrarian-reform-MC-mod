@@ -32,7 +32,7 @@
   "gamerule.category.agrarian_reform.agrarian_reform": "Agrarian Reform",
 
   "config.agrarian_reform.title": "Agrarian Reform Konfiguration",
-  "config.agrarian_reform.warning": "⚠️ Hinweis: Das Ändern dieser Optionen legt nur die Standardwerte für NEUE Welten fest. Um Einstellungen für bestehende Welten anzupassen, nutze das Spielregeln-Menü oder den Befehl /gamerule.",
+  "config.agrarian_reform.warning": "Globale Standardeinstellungen konfigurieren. Aktive Welten können im Spiel über Spielregeln angepasst werden.",
   "config.agrarian_reform.category.general": "Allgemeine Optionen",
   "config.agrarian_reform.category.immersion": "Immersion & Ästhetik",
   "config.agrarian_reform.category.crops": "Pflanzen-Multiplikatoren",
