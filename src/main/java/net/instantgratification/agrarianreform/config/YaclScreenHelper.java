@@ -11,6 +11,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder;
 import dev.isxander.yacl3.gui.controllers.slider.IntegerSliderController;
+import net.dasik.social.api.config.DasikSupportHelper;
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,11 +37,17 @@ public class YaclScreenHelper {
         AgrarianConfig config = AgrarianConfig.get();
 
         // 1. General Category
+        OptionGroup.Builder warningGroup = OptionGroup.createBuilder()
+            .name(Component.translatable("config.agrarian_reform.warning"));
+
+        Option<?> supportButton = (Option<?>) DasikSupportHelper.createYaclButton();
+        if (supportButton != null) {
+            warningGroup.option(supportButton);
+        }
+
         ConfigCategory.Builder generalCategory = ConfigCategory.createBuilder()
             .name(Component.translatable("config.agrarian_reform.category.general"))
-            .group(OptionGroup.createBuilder()
-                .name(Component.translatable("config.agrarian_reform.warning"))
-
+            .group(warningGroup
                 // Hydration Source Range
                 .option(Option.<Integer>createBuilder()
                     .name(Component.translatable("gamerule.agrarian_reform.hydration_source_range"))
