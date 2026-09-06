@@ -21,14 +21,20 @@ public class AgrarianGameRules {
             .registerCategory(Identifier.fromNamespaceAndPath(AgrarianReformFabric.MOD_ID, "agrarian_reform"));
 
     // Hydro-Dynamics
-    public static final GameRule<Integer> HYDRATION_SOURCE_RANGE = DynamicGameRuleManager.registerInteger(
-            "agrarian_reform:hydration_source_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationSourceRange);
+    public static final GameRule<Integer> HYDRATION_SOURCE_RANGE = DynamicGameRuleManager
+            .integerRule("agrarian_reform:hydration_source_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationSourceRange)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
-    public static final GameRule<Integer> HYDRATION_FLOWING_RANGE = DynamicGameRuleManager.registerInteger(
-            "agrarian_reform:hydration_flowing_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationFlowingRange);
+    public static final GameRule<Integer> HYDRATION_FLOWING_RANGE = DynamicGameRuleManager
+            .integerRule("agrarian_reform:hydration_flowing_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationFlowingRange)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
-    public static final GameRule<Integer> RAIN_GROWTH_ACCELERATION = DynamicGameRuleManager.registerInteger(
-            "agrarian_reform:rain_growth_acceleration", AGRARIAN_REFORM, AgrarianConfig.get().rainGrowthAcceleration);
+    public static final GameRule<Integer> RAIN_GROWTH_ACCELERATION = DynamicGameRuleManager
+            .integerRule("agrarian_reform:rain_growth_acceleration", AGRARIAN_REFORM, AgrarianConfig.get().rainGrowthAcceleration)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
     public static final GameRule<Boolean> PURE_WATER_HYDRATION_ONLY = DynamicGameRuleManager.registerBoolean(
             "agrarian_reform:pure_water_hydration_only", AGRARIAN_REFORM, AgrarianConfig.get().pureWaterHydrationOnly);
@@ -62,8 +68,10 @@ public class AgrarianGameRules {
     public static final GameRule<Boolean> UNIVERSAL_BONEMEAL = DynamicGameRuleManager.registerBoolean(
             "agrarian_reform:universal_bonemeal", AGRARIAN_REFORM, AgrarianConfig.get().universalBonemeal);
 
-    public static final GameRule<Integer> GLOBAL_GROWTH_MULTIPLIER = DynamicGameRuleManager.registerInteger(
-            "agrarian_reform:global_growth_multiplier", AGRARIAN_REFORM, AgrarianConfig.get().globalGrowthMultiplier);
+    public static final GameRule<Integer> GLOBAL_GROWTH_MULTIPLIER = DynamicGameRuleManager
+            .integerRule("agrarian_reform:global_growth_multiplier", AGRARIAN_REFORM, AgrarianConfig.get().globalGrowthMultiplier)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
     // Diagnostics
     public static final GameRule<Boolean> DEBUG_MODE = DynamicGameRuleManager.registerBoolean(

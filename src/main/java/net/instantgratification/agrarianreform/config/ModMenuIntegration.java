@@ -4,6 +4,8 @@ package net.instantgratification.agrarianreform.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.dasik.social.api.config.GuiHelper;
 
 /**
@@ -13,6 +15,7 @@ import net.dasik.social.api.config.GuiHelper;
  *
  * Verified against: ModMenuApi.java (ModMenu 26.2+)
  */
+@Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
