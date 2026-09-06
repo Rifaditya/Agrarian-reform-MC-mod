@@ -3,6 +3,8 @@
 package net.instantgratification.agrarianreform.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.instantgratification.agrarianreform.AgrarianReformFabric;
 
 /**
@@ -12,6 +14,7 @@ import net.instantgratification.agrarianreform.AgrarianReformFabric;
  *
  * Verified against: ClientModInitializer.java (Fabric API)
  */
+@Environment(EnvType.CLIENT)
 public class AgrarianReformClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.2.25+26.3] - 2026-09-05
+
+### Changed
+- **DasikLibrary 1.8.39 Alignment**: Upgraded to DasikLibrary 1.8.39, adopting formal `@DasikApiStatus` / `@APIDasikStatus` API governance and client side-safety architecture.
+- **License Normalization**: Standardized single-line GPLv3 headers across all source files.
+
+## [2.2.24+26.3] - 2026-09-05
+
+### Fixed
+- **Client Side-Safety Annotations**: Annotated `YaclScreenHelper`, `ModMenuIntegration`, `AgrarianReformClient`, and `BlockColorsMixin` with `@Environment(EnvType.CLIENT)`, eliminating dedicated server classloading hazards and aligning with the Client Side-Safety Standard.
+
+## [2.2.23+26.3] - 2026-09-05
+
+### Changed
+- **Player Agency & True Sandbox Freedom Restoration**: Removed artificial caps (`0..32` and `0..1000`) across all hydration and crop growth GameRules (`HYDRATION_SOURCE_RANGE`, `HYDRATION_FLOWING_RANGE`, `RAIN_GROWTH_ACCELERATION`, `GLOBAL_GROWTH_MULTIPLIER`, and dynamic crop multipliers), unlocking values from `Integer.MIN_VALUE` to `Integer.MAX_VALUE` in accordance with the Player Agency & Anti-Nanny Invariant. Negative values cleanly skip hydration loops or freeze growth at 0% without JVM or engine crashes.
+
+## [2.2.22]
+
+### Fixed
+- **Thread Stall / DOS Prevention in Farmland Hydration**: Added strict `.range(0, 32)` bounds to `HYDRATION_SOURCE_RANGE` and `HYDRATION_FLOWING_RANGE`, preventing server tick thread hangs from extreme concentric Chebyshev search radii.
+- **GameRule Bounds Clamping**: Added `.range(0, 1000)` clamping to `RAIN_GROWTH_ACCELERATION` and `GLOBAL_GROWTH_MULTIPLIER`.
+- **API Modernization**: Migrated all integer GameRule declarations to `DynamicGameRuleManager` builder syntax.
+
+
 ## [2.2.19+26.3] - 2026-08-25
 ### Added
 - **German Localization (`de_de.json`)**: Added complete, idiomatic in-game German translations covering all 15 static GameRules, dynamic crop category descriptions, tooltips, warnings, and YACL ModMenu configuration screens.

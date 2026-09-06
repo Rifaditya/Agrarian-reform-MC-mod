@@ -17,6 +17,8 @@ import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -28,6 +30,7 @@ import java.util.TreeSet;
  *
  * Verified against: YaclScreenHelper.java (YACL 3.9.5+)
  */
+@Environment(EnvType.CLIENT)
 public class YaclScreenHelper {
     public static ConfigScreenFactory<?> createScreen() {
         return YaclScreenHelper::buildScreen;
