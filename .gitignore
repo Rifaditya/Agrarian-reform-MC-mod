@@ -72,10 +72,10 @@ hs_err_*.log
 replay_*.log
 *.hprof
 
-# Zenith Archives (Mandatory Storage)
-!/Archive/
-!/Archive/builds/
-!/Archive/builds/*.jar
+# Binary & Archive Exclusion Policy (Git Binary Exclusion Law)
+Archive/
+Archive Jar of all versions/
+*.jar
 
 # Logging and archives (Standard)
 *.log
