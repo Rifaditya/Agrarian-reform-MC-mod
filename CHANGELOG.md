@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.26+26.3] - 2026-09-16
+
+### Changed
+- Updated `#agrarianreform:continuum_plants` tag reference from legacy single block ID to `#minecraft:saplings` tag.
+
+---
+
 ## [2.2.25+26.3] - 2026-09-05
 
 ### Changed

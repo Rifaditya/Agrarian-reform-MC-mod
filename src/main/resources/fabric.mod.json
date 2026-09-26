@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "agrarian_reform",
-    "version": "${version}",
+    "version": "2.2.26+26.3",
     "name": "Agrarian Reform",
     "description": "Agrarian Reform: The Living Earth. A pastoral immersion mod featuring persistent offline crop growth (The Continuum), advanced soil resilience (Leather Boot/Feather Falling trample protection), dynamic hydro-dynamics (extended source irrigation / rain hydration), and polyculture biodiversity growth bonuses. Part of the Instant Gratification collection.",
     "authors": [
@@ -34,11 +34,11 @@
         }
     ],
     "depends": {
-        "fabricloader": ">=0.16.9",
+        "fabricloader": ">=0.19.5",
         "minecraft": ">=26.3-",
         "java": ">=25",
         "fabric-api": "*",
-        "dasik-library": "*"
+        "dasik-library": ">=1.9.0"
     },
     "suggests": {
         "yet-another-config-lib": "*",
