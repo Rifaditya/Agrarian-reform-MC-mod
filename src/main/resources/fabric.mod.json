@@ -50,6 +50,10 @@
                 "modmenu.donate": "https://ko-fi.com/dasikigaijin",
                 "modmenu.kofi": "https://ko-fi.com/dasikigaijin"
             }
+        },
+        "modrinth": {
+            "projectId": "nqQyDogh",
+            "slug": "vanilla-outsider-agrarian-reform"
         }
     }
 }
