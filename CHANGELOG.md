@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.26+26.2] - 2026-09-16
+
+### Changed
+- Updated `#agrarianreform:continuum_plants` tag reference from legacy single block ID to `#minecraft:saplings` tag.
+
+---
+
 ## [2.2.25+26.2] - 2026-09-05
 
 ### Changed
@@ -16,7 +23,7 @@
 ### Changed
 - **Player Agency & True Sandbox Freedom Restoration**: Removed artificial caps (`0..32` and `0..1000`) across all hydration and crop growth GameRules (`HYDRATION_SOURCE_RANGE`, `HYDRATION_FLOWING_RANGE`, `RAIN_GROWTH_ACCELERATION`, `GLOBAL_GROWTH_MULTIPLIER`, and dynamic crop multipliers), unlocking values from `Integer.MIN_VALUE` to `Integer.MAX_VALUE` in accordance with the Player Agency & Anti-Nanny Invariant. Negative values cleanly skip hydration loops or freeze growth at 0% without JVM or engine crashes.
 
-## [2.2.22]
+## [2.2.22+26.2] - 2026-09-05
 
 ### Fixed
 - **Thread Stall / DOS Prevention in Farmland Hydration**: Added strict `.range(0, 32)` bounds to `HYDRATION_SOURCE_RANGE` and `HYDRATION_FLOWING_RANGE`, preventing server tick thread hangs from extreme concentric Chebyshev search radii.
