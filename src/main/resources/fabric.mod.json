@@ -31,5 +31,11 @@
         "java": ">=25",
         "fabric-api": "*",
         "dasik-library": "*"
+    },
+    "custom": {
+        "modrinth": {
+            "projectId": "nqQyDogh",
+            "slug": "vanilla-outsider-agrarian-reform"
+        }
     }
 }
