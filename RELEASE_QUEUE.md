@@ -8,7 +8,7 @@ This file tracks which built versions (from `/Archive/builds/`) have been upload
 - [ ] **`2.2.25+26.3`** (2026-09-19) - Maintenance update and toolchain polish.
 - [ ] **`2.2.24+26.3`** (2026-09-05) - Ko-fi support banner & translation cleanup.
 - [ ] **`2.2.23+26.3`** (2026-09-05) - YACL v3 configuration GUI refinement.
-- [ ] **`2.2.22+26.3`** (2026-09-05) - Forward compatibility and version guard.
+- [x] **`2.2.22+26.3`** (2026-09-05) - Forward compatibility and version guard.
 - [x] **`2.2.21+26.3`** (2026-09-05) - Multi-category Ko-fi support & config UI polish.
 - [x] **`2.2.20+26.3`** (2026-09-05) - Ko-fi creator support button in YACL configuration screen.
 - [x] **`2.2.19+26.3`** (2026-08-25) - German localization for GameRules and config screens.
