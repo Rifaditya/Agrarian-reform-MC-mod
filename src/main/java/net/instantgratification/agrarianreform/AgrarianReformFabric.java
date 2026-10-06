@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
@@ -155,7 +156,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 if (!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
-                player.swing(hand, true);
+                player.swing(hand, SwingAnimation.DEFAULT, true);
             }
 
             return InteractionResult.SUCCESS;
@@ -203,7 +204,7 @@ public class AgrarianReformFabric implements ModInitializer {
 
                     SoundType soundType = state.getSoundType();
                     level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
-                    player.swing(hand, true);
+                    player.swing(hand, SwingAnimation.DEFAULT, true);
                 }
 
                 return InteractionResult.SUCCESS;
@@ -258,7 +259,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
 
                 // Swing player hand
-                player.swing(hand, true);
+                player.swing(hand, SwingAnimation.DEFAULT, true);
             }
 
             return InteractionResult.SUCCESS;
@@ -379,7 +380,7 @@ public class AgrarianReformFabric implements ModInitializer {
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
                     }
-                    player.swing(hand, true);
+                    player.swing(hand, SwingAnimation.DEFAULT, true);
                 }
                 return InteractionResult.SUCCESS;
             }
