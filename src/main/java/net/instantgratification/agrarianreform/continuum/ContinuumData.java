@@ -82,6 +82,9 @@ public class ContinuumData extends SavedData {
     }
 
     public void pruneStaleEntries(long currentGametime) {
+        if (currentGametime <= MAX_UNLOAD_AGE_TICKS) {
+            return;
+        }
         long cutoff = currentGametime - MAX_UNLOAD_AGE_TICKS;
         if (cutoff <= 0) {
             return;

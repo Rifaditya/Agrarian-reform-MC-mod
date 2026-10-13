@@ -58,21 +58,21 @@ public class AgrarianConfig {
         return dirty;
     }
 
-    public Set<String> getAllForcedCropIds() {
+    public synchronized Set<String> getAllForcedCropIds() {
         Set<String> ids = new LinkedHashSet<>();
         if (forcedCrops != null) ids.addAll(forcedCrops);
         if (forcedGrowthMultipliers != null) ids.addAll(forcedGrowthMultipliers.keySet());
         return ids;
     }
 
-    public int getForcedGrowthMultiplier(String cropId) {
+    public synchronized int getForcedGrowthMultiplier(String cropId) {
         if (forcedGrowthMultipliers != null && forcedGrowthMultipliers.containsKey(cropId)) {
             return forcedGrowthMultipliers.get(cropId);
         }
         return 0;
     }
 
-    public boolean isForcedCrop(String cropId) {
+    public synchronized boolean isForcedCrop(String cropId) {
         return getAllForcedCropIds().contains(cropId);
     }
 

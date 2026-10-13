@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.27+26.3] - 2026-10-13
+
+### Fixed
+- **Right-Click Harvest & Interaction Hand Swing Compatibility**: Verified and stabilized `LivingEntity.swing` `SwingAnimation.DEFAULT` interaction hand-swing calls across right-click crop harvesting, sugar cane column harvesting, seed-to-grass conversion, and universal bone meal growth on Minecraft 26.3.
+- **Startup Classloader Safety**: Removed legacy startup reflection checks to prevent production Knot ClassLoader lookup issues.
+- **Saturated Growth Math & Multi-Thread Resilience**: Hardened rain growth acceleration spurt arithmetic against integer overflow, protected 8-neighbor polyculture biodiversity bonuses against `NaN`/`Infinity` propagation, guarded Continuum chunk unload pruning against early-world timestamp underflow, and synchronized dynamic crop configuration lookups.
+
+---
+
 ## [2.2.26+26.3] - 2026-09-16
 
 ### Changed

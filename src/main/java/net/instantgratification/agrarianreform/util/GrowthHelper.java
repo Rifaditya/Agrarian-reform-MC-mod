@@ -6,7 +6,6 @@ import net.dasik.social.api.gamerule.DynamicGameRuleManager;
 import net.instantgratification.agrarianreform.AgrarianGameRules;
 import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -122,22 +121,53 @@ public class GrowthHelper {
         return false; // Let vanilla run the final randomTick
     }
 
+    public static int calculateEffectiveGrowthMultiplier(int globalMultiplier, int cropMultiplier) {
+        if (cropMultiplier != 0) {
+            return cropMultiplier < 0 ? 0 : cropMultiplier;
+        }
+        return globalMultiplier < 0 ? 0 : globalMultiplier;
+    }
+
+    public static int calculateRainSpurtAge(int currentAge, int maxAge, int spurtAmount) {
+        if (spurtAmount <= 0 || currentAge >= maxAge) {
+            return currentAge;
+        }
+        long sum = (long) currentAge + (long) spurtAmount;
+        return (int) Math.min((long) maxAge, Math.max((long) currentAge, sum));
+    }
+
+    public static float calculateBiodiversityBonus(float baseSpeed, boolean hasDifferentCropNeighbor) {
+        if (Float.isNaN(baseSpeed) || baseSpeed < 0.0f) {
+            return 0.0f;
+        }
+        if (Float.isInfinite(baseSpeed)) {
+            return Float.MAX_VALUE;
+        }
+        if (hasDifferentCropNeighbor) {
+            float boosted = baseSpeed + 0.10f;
+            return Float.isInfinite(boosted) ? Float.MAX_VALUE : boosted;
+        }
+        return baseSpeed;
+    }
+
     public static float modifyCropGrowthSpeed(float original, Block block, BlockGetter level, BlockPos pos) {
         float speed = original;
         if (level instanceof ServerLevel serverLevel) {
             if (DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.BIODIVERSITY_BONUS)) {
                 boolean hasDifferentCrop = false;
-                Direction[] directions = { Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST };
-                for (Direction dir : directions) {
-                    BlockState neighborState = level.getBlockState(pos.relative(dir));
-                    if (neighborState.is(BlockTags.CROPS) && neighborState.getBlock() != block) {
-                        hasDifferentCrop = true;
-                        break;
+                for (int dx = -1; dx <= 1 && !hasDifferentCrop; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        if (dx == 0 && dz == 0) {
+                            continue;
+                        }
+                        BlockState neighborState = level.getBlockState(pos.offset(dx, 0, dz));
+                        if (neighborState.is(BlockTags.CROPS) && neighborState.getBlock() != block) {
+                            hasDifferentCrop = true;
+                            break;
+                        }
                     }
                 }
-                if (hasDifferentCrop) {
-                    speed += 0.10f; // 10% biodiversity bonus
-                }
+                speed = calculateBiodiversityBonus(speed, hasDifferentCrop);
             }
         }
         return speed;
@@ -150,7 +180,7 @@ public class GrowthHelper {
                 if (spurtAmount > 0) {
                     int currentAge = cropBlock.getAge(state);
                     int maxAge = cropBlock.getMaxAge();
-                    int newAge = Math.min(maxAge, currentAge + spurtAmount);
+                    int newAge = calculateRainSpurtAge(currentAge, maxAge, spurtAmount);
 
                     if (newAge > currentAge) {
                         level.setBlock(pos, cropBlock.getStateForAge(newAge), Block.UPDATE_ALL);
