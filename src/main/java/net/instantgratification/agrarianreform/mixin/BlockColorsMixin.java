@@ -1,3 +1,5 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
 package net.instantgratification.agrarianreform.mixin;
 
 import net.minecraft.client.color.block.BlockColors;
@@ -9,17 +11,27 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 import java.util.List;
 
+/**
+ * BlockColorsMixin: Client-Side Dew Visuals
+ *
+ * Verified against: BlockColors.java (26.2+)
+ */
+@Environment(EnvType.CLIENT)
 @Mixin(BlockColors.class)
 public abstract class BlockColorsMixin {
 
+    @Unique
     @Inject(method = "createDefault", at = @At("RETURN"))
-    private static void agrarianreform$registerFarmlandColor(CallbackInfoReturnable<BlockColors> cir) {
+    private static void agrarian_reform$registerFarmlandColor(CallbackInfoReturnable<BlockColors> cir) {
         cir.getReturnValue().register(List.of(new BlockTintSource() {
             @Override
             public int color(BlockState state) {
@@ -35,7 +47,7 @@ public abstract class BlockColorsMixin {
                         // Darken the farmland slightly to simulate moisture.
                         int baseMoisture = state.getValue(FarmlandBlock.MOISTURE);
                         if (baseMoisture < 7) {
-                            return 0x73553C; // Example damp soil tint.
+                            return 0x73553C; // Damp soil tint.
                         }
                     }
                 }

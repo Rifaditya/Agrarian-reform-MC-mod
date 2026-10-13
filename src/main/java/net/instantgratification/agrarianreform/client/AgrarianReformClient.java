@@ -1,21 +1,25 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
 package net.instantgratification.agrarianreform.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.instantgratification.agrarianreform.AgrarianReformFabric;
-import net.minecraft.client.color.block.BlockTintSource;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmlandBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.BlockPos;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.world.level.Level;
 
+/**
+ * AgrarianReformClient: Client-Side Initializer
+ *
+ * Handles client-only registrations and initializations.
+ *
+ * Verified against: ClientModInitializer.java (Fabric API)
+ */
+@Environment(EnvType.CLIENT)
 public class AgrarianReformClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        AgrarianReformFabric.LOGGER.info("Initializing Agrarian Reform Client-Side Features (Snapshot 26.x)");
+        AgrarianReformFabric.LOGGER.info("Initializing Agrarian Reform Client-Side Features");
 
-        // Logic handled via BlockColorsMixin for Snapshot 11 compatibility
+        // Color logic is handled via BlockColorsMixin
     }
 }

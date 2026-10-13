@@ -1,70 +1,85 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
 package net.instantgratification.agrarianreform.continuum;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+
+import net.instantgratification.agrarianreform.AgrarianGameRules;
+import net.instantgratification.agrarianreform.util.AgrarianTags;
+import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CropScanner: The Chunk Auditor
  * 
  * Provides utility methods to scan loaded chunks for agricultural blocks and
  * perform high-precision growth speed approximations.
- * - Scan & Queue: Iterates through chunk surface columns to find crops.
- * - Mathematical Approximation: Recreates vanilla growth probability logic
- * in a static context to calculate theoretical 'ticks per stage'.
+ *
+ * Verified against: Heightmap.java (26.2+)
  */
 public class CropScanner {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CropScanner.class);
+
+    public static boolean isDebug(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.DEBUG_MODE);
+        }
+        return LOGGER.isDebugEnabled();
+    }
 
     public static void scanAndQueue(ServerLevel level, LevelChunk chunk, long timeDelta) {
         ChunkPos chunkPos = chunk.getPos();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        LevelChunkSection[] sections = chunk.getSections();
 
-        // Scan the surface of the chunk
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                int worldX = chunkPos.getMinBlockX() + x;
-                int worldZ = chunkPos.getMinBlockZ() + z;
+        int minX = chunkPos.getMinBlockX();
+        int minZ = chunkPos.getMinBlockZ();
+        int skippedSections = 0;
+        int queuedCrops = 0;
 
-                // Better scanning: Iterate the entire vertical column for the chunk,
-                // but only in sections that contain blocks (skip air).
-                // Or use a more specific scan if WORLD_SURFACE fails to detect greenhouse
-                // levels.
-                // For performance, we'll check from the heights recorded down to min height,
-                // but we only really care about layers that have farmland.
-                int yMax = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x, z);
-                for (int dy = yMax; dy >= level.getMinY(); dy--) {
-                    BlockPos pos = new BlockPos(worldX, dy, worldZ);
-                    BlockState state = chunk.getBlockState(pos);
+        for (int sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+            LevelChunkSection section = sections[sectionIndex];
+            if (section == null || section.hasOnlyAir() || !section.maybeHas(state -> AgrarianCropRules.isCropBlock(state.getBlock()))) {
+                skippedSections++;
+                continue; // Skip entire empty or non-crop sub-chunk via palette pre-filter
+            }
 
-                    if (state.getBlock() instanceof CropBlock) {
-                        // Found a crop! Queue it for update.
-                        ContinuumManager.UPDATE_QUEUE.offer(new ContinuumManager.CropUpdateTask(level, pos, timeDelta));
-                        // If it's a standard crop, it's likely on farmland.
-                        // We check further down in case it's a vertical farm.
-                    } else if (dy < yMax - 64 && state.isAir()) {
-                        // Optimization: if we're deep and hit air, we might skip sections.
-                        // In a real mod, we'd check if the chunk section has crops at all.
+            int sectionBaseY = chunk.getSectionYFromSectionIndex(sectionIndex) * 16;
+
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 16; y++) {
+                        BlockState state = section.getBlockState(x, y, z);
+                        if (AgrarianCropRules.isCropBlock(state.getBlock())) {
+                            pos.set(minX + x, sectionBaseY + y, minZ + z);
+                            ContinuumManager.UPDATE_QUEUE.offer(
+                                new ContinuumManager.CropUpdateTask(level, pos.immutable(), timeDelta)
+                            );
+                            queuedCrops++;
+                        }
                     }
                 }
             }
         }
+
+        if (isDebug(level)) {
+            LOGGER.debug("[AgrarianReform:CropScanner] Scanned chunk {}: skipped {}/{} sections, queued {} crops",
+                    chunkPos, skippedSections, sections.length, queuedCrops);
+        }
     }
 
-    // Helper to estimate growth speed without invoking the full random mixin
-    // intercept
+    // Helper to estimate growth speed without invoking the full random mixin intercept
     public static float getSpeed(CropBlock cropBlock, ServerLevel level, BlockPos pos) {
-        // Vanilla speed calc has protected access but we can invoke or recreate it
-        // carefully.
-        // It's technically protected in CropBlock. Let's create a proxy accessor via
-        // Mixin,
-        // or just recreate the logic here safely to avoid Invoker mixins for
-        // simplicity.
-        // For Zenith limits, rebuilding the mathematical probability is acceptable.
-
         float speed = 1.0F;
         BlockPos below = pos.below();
 

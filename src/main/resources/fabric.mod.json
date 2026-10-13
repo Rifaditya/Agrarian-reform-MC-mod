@@ -8,8 +8,9 @@
         "DasikIgaijin"
     ],
     "contact": {
-        "homepage": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform",
-        "sources": "https://github.com/Rifaditya/Instant-Gratification-agrarian-reform"
+        "homepage": "https://modrinth.com/mod/agrarian-reform",
+        "sources": "https://github.com/Rifaditya/Agrarian-reform-MC-mod",
+        "issues": "https://github.com/Rifaditya/Agrarian-reform-MC-mod/issues"
     },
     "license": "GPL-3.0-or-later",
     "icon": "assets/agrarian_reform/icon.png",
@@ -20,17 +21,28 @@
         ],
         "client": [
             "net.instantgratification.agrarianreform.client.AgrarianReformClient"
+        ],
+        "modmenu": [
+            "net.instantgratification.agrarianreform.config.ModMenuIntegration"
         ]
     },
     "mixins": [
-        "agrarian_reform.mixins.json"
+        "agrarian_reform.mixins.json",
+        {
+            "config": "agrarian_reform.client.mixins.json",
+            "environment": "client"
+        }
     ],
     "depends": {
         "fabricloader": ">=0.16.9",
-        "minecraft": "*",
+        "minecraft": ">=26.1.2-",
         "java": ">=25",
         "fabric-api": "*",
-        "dasik-library": "*"
+        "dasik-library": ">=1.9.0"
+    },
+    "suggests": {
+        "yet-another-config-lib": "*",
+        "modmenu": "*"
     },
     "custom": {
         "modmenu": {
@@ -38,6 +50,10 @@
                 "modmenu.donate": "https://ko-fi.com/dasikigaijin",
                 "modmenu.kofi": "https://ko-fi.com/dasikigaijin"
             }
+        },
+        "modrinth": {
+            "projectId": "nqQyDogh",
+            "slug": "vanilla-outsider-agrarian-reform"
         }
     }
 }

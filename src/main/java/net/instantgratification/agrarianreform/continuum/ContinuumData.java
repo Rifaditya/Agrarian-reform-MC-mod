@@ -1,3 +1,5 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
 package net.instantgratification.agrarianreform.continuum;
 
 import com.mojang.serialization.Codec;
@@ -15,8 +17,9 @@ import java.util.Map;
  * ContinuumData: The Persistent Memory
  * 
  * Manages the serialization and deserialization of chunk unload timestamps.
- * This ensures that 'The Continuum' persists across server restarts and
- * long periods of downtime.
+ * This ensures that 'The Continuum' persists across server restarts.
+ *
+ * Verified against: SavedData.java (26.2+)
  */
 public class ContinuumData extends SavedData {
 
@@ -40,9 +43,10 @@ public class ContinuumData extends SavedData {
                         data.getChunkUnloadTimes().forEach((k, v) -> encodedMap.put(k.toString(), v));
                         return encodedMap;
                     }),
-            DataFixTypes.SAVED_DATA_MAP_DATA // Use an existing data fix type to avoid crashes if we don't have a custom
-                                             // one
+            DataFixTypes.SAVED_DATA_MAP_DATA
     );
+
+    public static final long MAX_UNLOAD_AGE_TICKS = 20L * 60 * 60 * 24 * 30; // 30 game days (51,840,000 ticks)
 
     private final Map<Long, Long> chunkUnloadTimes;
 
@@ -51,7 +55,6 @@ public class ContinuumData extends SavedData {
     }
 
     public ContinuumData(Map<Long, Long> times) {
-        // Ensure mutable map
         this.chunkUnloadTimes = new HashMap<>(times);
     }
 
@@ -74,6 +77,20 @@ public class ContinuumData extends SavedData {
 
     public void remove(final ChunkPos pos) {
         if (this.chunkUnloadTimes.remove(pos.pack()) != null) {
+            this.setDirty();
+        }
+    }
+
+    public void pruneStaleEntries(long currentGametime) {
+        if (currentGametime <= MAX_UNLOAD_AGE_TICKS) {
+            return;
+        }
+        long cutoff = currentGametime - MAX_UNLOAD_AGE_TICKS;
+        if (cutoff <= 0) {
+            return;
+        }
+        boolean changed = this.chunkUnloadTimes.values().removeIf(time -> time < cutoff);
+        if (changed) {
             this.setDirty();
         }
     }

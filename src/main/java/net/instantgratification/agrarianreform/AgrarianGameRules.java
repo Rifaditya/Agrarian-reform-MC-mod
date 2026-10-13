@@ -1,6 +1,9 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
 package net.instantgratification.agrarianreform;
 
 import net.dasik.social.api.gamerule.DynamicGameRuleManager;
+import net.instantgratification.agrarianreform.config.AgrarianConfig;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.gamerules.GameRule;
 import net.minecraft.world.level.gamerules.GameRuleCategory;
@@ -9,61 +12,72 @@ import net.minecraft.world.level.gamerules.GameRuleCategory;
  * AgrarianGameRules: The Registry of Laws
  *
  * Manages the registration and retrieval of custom GameRules for Agrarian
- * Reform. Uses the native Mojang registry system introduced in Snapshot 26.1
- * (Snapshot 10 API).
+ * Reform. All custom GameRules are properly namespaced to prevent clashes.
  *
- * IMPORTANT: All registry IDs MUST use snake_case (a-z0-9/._- only).
- * camelCase characters are illegal in Minecraft Identifiers and will throw
- * IdentifierException at class initialisation time, crashing the game.
- *
- * Available Rules:
- * - hydration_source_range:    Irrigation radius for source blocks.
- * - hydration_flowing_range:   Irrigation radius for flowing water.
- * - rain_growth_acceleration:  Extra growth ticks during rain.
- * - growth_biodiversity_bonus: Toggle for biodiversity growth bonuses.
- * - ambient_crop_rustle:       Toggle for crop rustle sounds.
- * - ambient_vitality_particles: Toggle for crop water particles.
- * - total_trample_immunity:    Emergency toggle for absolute crop protection (IG Mode).
- * - always_wet_farmland:       Forces farmland to remain hydrated regardless of water proximity.
+ * Verified against: GameRules.java (26.2+)
  */
 public class AgrarianGameRules {
-        public static final GameRuleCategory AGRARIAN_REFORM = DynamicGameRuleManager
-                        .registerCategory(Identifier.fromNamespaceAndPath(AgrarianReformFabric.MOD_ID, "agrarian_reform"));
+    public static final GameRuleCategory AGRARIAN_REFORM = DynamicGameRuleManager
+            .registerCategory(Identifier.fromNamespaceAndPath(AgrarianReformFabric.MOD_ID, "agrarian_reform"));
 
-        // Hydro-Dynamics
-        public static final GameRule<Integer> HYDRATION_SOURCE_RANGE = DynamicGameRuleManager.registerInteger(
-                        "hydration_source_range", AGRARIAN_REFORM, 8);
+    // Hydro-Dynamics
+    public static final GameRule<Integer> HYDRATION_SOURCE_RANGE = DynamicGameRuleManager
+            .integerRule("agrarian_reform:hydration_source_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationSourceRange)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
-        public static final GameRule<Integer> HYDRATION_FLOWING_RANGE = DynamicGameRuleManager.registerInteger(
-                        "hydration_flowing_range", AGRARIAN_REFORM, 4);
+    public static final GameRule<Integer> HYDRATION_FLOWING_RANGE = DynamicGameRuleManager
+            .integerRule("agrarian_reform:hydration_flowing_range", AGRARIAN_REFORM, AgrarianConfig.get().hydrationFlowingRange)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
-        public static final GameRule<Integer> RAIN_GROWTH_ACCELERATION = DynamicGameRuleManager.registerInteger(
-                        "rain_growth_acceleration", AGRARIAN_REFORM, 1);
+    public static final GameRule<Integer> RAIN_GROWTH_ACCELERATION = DynamicGameRuleManager
+            .integerRule("agrarian_reform:rain_growth_acceleration", AGRARIAN_REFORM, AgrarianConfig.get().rainGrowthAcceleration)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
 
-        public static final GameRule<Boolean> BIODIVERSITY_BONUS = DynamicGameRuleManager.registerBoolean(
-                        "growth_biodiversity_bonus", AGRARIAN_REFORM, true);
+    public static final GameRule<Boolean> PURE_WATER_HYDRATION_ONLY = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:pure_water_hydration_only", AGRARIAN_REFORM, AgrarianConfig.get().pureWaterHydrationOnly);
 
-        // Aesthetics & Feedback
-        public static final GameRule<Boolean> AMBIENT_CROP_RUSTLE = DynamicGameRuleManager.registerBoolean(
-                        "ambient_crop_rustle", AGRARIAN_REFORM, true);
+    public static final GameRule<Boolean> BIODIVERSITY_BONUS = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:growth_biodiversity_bonus", AGRARIAN_REFORM, AgrarianConfig.get().growthBiodiversityBonus);
 
-        public static final GameRule<Boolean> AMBIENT_VITALITY_PARTICLES = DynamicGameRuleManager.registerBoolean(
-                        "ambient_vitality_particles", AGRARIAN_REFORM, true);
+    // Aesthetics & Feedback
+    public static final GameRule<Boolean> AMBIENT_CROP_RUSTLE = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:ambient_crop_rustle", AGRARIAN_REFORM, AgrarianConfig.get().ambientCropRustle);
 
-        // Instant Gratification Toggles
-        public static final GameRule<Boolean> TOTAL_TRAMPLE_IMMUNITY = DynamicGameRuleManager.registerBoolean(
-                        "total_trample_immunity", AGRARIAN_REFORM, false);
+    public static final GameRule<Boolean> AMBIENT_VITALITY_PARTICLES = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:ambient_vitality_particles", AGRARIAN_REFORM, AgrarianConfig.get().ambientVitalityParticles);
 
-        public static final GameRule<Boolean> ALWAYS_WET_FARMLAND = DynamicGameRuleManager.registerBoolean(
-                        "always_wet_farmland", AGRARIAN_REFORM, false);
+    // Instant Gratification Toggles
+    public static final GameRule<Boolean> TOTAL_TRAMPLE_IMMUNITY = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:total_trample_immunity", AGRARIAN_REFORM, AgrarianConfig.get().totalTrampleImmunity);
 
-        public static final GameRule<Boolean> SEEDS_GROW_GRASS = DynamicGameRuleManager.registerBoolean(
-                        "seeds_grow_grass", AGRARIAN_REFORM, true);
+    public static final GameRule<Boolean> TRAMPLE_IMMUNITY_PLAYERS_ONLY = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:trample_immunity_players_only", AGRARIAN_REFORM, AgrarianConfig.get().trampleImmunityPlayersOnly);
 
-        public static final GameRule<Boolean> RIGHT_CLICK_HARVEST = DynamicGameRuleManager.registerBoolean(
-                        "right_click_harvest", AGRARIAN_REFORM, true);
+    public static final GameRule<Boolean> ALWAYS_WET_FARMLAND = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:always_wet_farmland", AGRARIAN_REFORM, AgrarianConfig.get().alwaysWetFarmland);
 
-        public static void register() {
-                AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
-        }
+    public static final GameRule<Boolean> SEEDS_GROW_GRASS = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:seeds_grow_grass", AGRARIAN_REFORM, AgrarianConfig.get().seedsGrowGrass);
+
+    public static final GameRule<Boolean> RIGHT_CLICK_HARVEST = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:right_click_harvest", AGRARIAN_REFORM, AgrarianConfig.get().rightClickHarvest);
+
+    public static final GameRule<Boolean> UNIVERSAL_BONEMEAL = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:universal_bonemeal", AGRARIAN_REFORM, AgrarianConfig.get().universalBonemeal);
+
+    public static final GameRule<Integer> GLOBAL_GROWTH_MULTIPLIER = DynamicGameRuleManager
+            .integerRule("agrarian_reform:global_growth_multiplier", AGRARIAN_REFORM, AgrarianConfig.get().globalGrowthMultiplier)
+            .range(Integer.MIN_VALUE, Integer.MAX_VALUE)
+            .register();
+
+    // Diagnostics
+    public static final GameRule<Boolean> DEBUG_MODE = DynamicGameRuleManager.registerBoolean(
+            "agrarian_reform:debug_mode", AGRARIAN_REFORM, false);
+
+    public static void register() {
+        AgrarianReformFabric.LOGGER.info("Registering GameRules for " + AgrarianReformFabric.MOD_ID);
+    }
 }

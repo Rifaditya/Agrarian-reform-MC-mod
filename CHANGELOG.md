@@ -1,5 +1,17 @@
 # Changelog - Agrarian Reform
 
+## [2.2.27+26.1.2] - 2026-10-13
+
+### Added
+- **Full v2.2.27 Parity Alignment**: Upgraded MC 26.1.2 to complete feature and architectural parity with the v2.2.27 lead, including Dynamic Crop Multipliers (`agrarian_reform:growth_<namespace>_<path>`), Universal Bone Meal mechanics (Sugar Cane, Cactus, Nether Wart, Cocoa, Vines), YACL v3 / ModMenu configuration screen with dynamic crop tab and Ko-fi support integration, German localization (`de_de.json`), data-driven `#agrarian_reform:soft_step_boots` and `#c:boots/soft` tags, and concentric Chebyshev farmland hydration sweeps.
+- **30-Day Continuum Pruning & Sub-Chunk Palette Skipping**: Added automatic 30-day stale chunk unload timestamp pruning with early-world underflow protection and section-aware sub-chunk palette skipping during offline crop catch-up.
+
+### Fixed
+- **Startup Reflection Guard Removal**: Removed legacy reflection startup guards to guarantee Knot ClassLoader safety across dedicated servers and clients.
+- **Thread-Safe Configuration & Saturated Growth Math**: Synchronized concurrent accessors on `AgrarianConfig` and added saturated arithmetic and 8-neighbor 3x3 polyculture checks in `GrowthHelper`.
+
+---
+
 ## [1.2.7+R-26.1.2] - 2026-06-12
 ### Added
 - **Right-Click Harvest**: Capability to right-click fully grown crops to harvest and automatically replant them. Gated by `right_click_harvest` GameRule.
