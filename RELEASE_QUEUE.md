@@ -4,6 +4,7 @@ This file tracks which built versions (from `/Archive/builds/`) have been upload
 
 ## 🚀 Published & Backlog Queue
 
+- [ ] **`2.2.27+26.2`** (2026-10-13) - Startup reflection guard removal, thread-safe config synchronization, and 5-pillar verification suite.
 - [ ] **`2.2.26+26.2`** (2026-09-28) - Multi-era parity alignment.
 - [ ] **`2.2.25+26.2`** (2026-09-19) - Maintenance update and toolchain polish.
 - [ ] **`2.2.24+26.2`** (2026-09-05) - Ko-fi support banner & translation cleanup.

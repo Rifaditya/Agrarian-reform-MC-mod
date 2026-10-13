@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.2.27+26.2] - 2026-10-13
+
+### Fixed
+- **Startup Reflection Guard Removal**: Removed the legacy `ModVersionGuard` reflection check from mod initialization to prevent `ClassNotFoundException` on production Knot ClassLoader environments.
+- **Configuration & Continuum Resilience**: Synchronized concurrent accessors on `AgrarianConfig`, added early-world underflow protection when pruning stale chunk timestamps in `ContinuumData`, and added saturated arithmetic and 8-neighbor 3x3 polyculture checks in `GrowthHelper`.
+
+### Changed
+- **DasikLibrary 1.9.2 Alignment**: Updated `dasik-library` dependency and expanded automated test verification across all 5 testing pillars.
+
+---
+
 ## [2.2.26+26.2] - 2026-09-16
 
 ### Changed

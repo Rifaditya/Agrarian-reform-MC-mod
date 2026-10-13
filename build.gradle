@@ -120,48 +120,6 @@ afterEvaluate {
                             if (f.name.startsWith(project.archives_base_name) && f.name.endsWith(".jar") && f.name != jarFile.name) {
                                 f.delete()
                                 println "[MODRINTH-SYNC] Purged old version from launcher profile: ${f.name}"
-            // Central Release Hub Archives Sync
-            File hubCandidate = projectDir
-            File hubDir = null
-            while (hubCandidate != null) {
-                File checkDir = new File(hubCandidate, "minecraft-mod-release-hub")
-                if (checkDir.exists()) {
-                    hubDir = checkDir
-                    break
-                }
-                hubCandidate = hubCandidate.parentFile
-            }
-            if (hubDir == null) {
-                File fallback = new File("E:/Minecraft Project/minecraft-mod-release-hub")
-                if (fallback.exists()) hubDir = fallback
-            }
-            if (hubDir != null && hubDir.exists()) {
-                File hubConfigFile = new File(hubDir, "config/platform_projects.json")
-                if (hubConfigFile.exists()) {
-                    try {
-                        def hubJson = new groovy.json.JsonSlurper().parse(hubConfigFile)
-                        def curPath = projectDir.canonicalPath.replace('\\', '/').toLowerCase()
-                        def matchedMod = hubJson.find { name, data ->
-                            data.root_dir && curPath.contains(data.root_dir.replace('\\', '/').toLowerCase())
-                        }?.key
-                        if (matchedMod) {
-                            File targetArchiveDir = new File(hubDir, "archives/${matchedMod}")
-                            if (!targetArchiveDir.exists()) {
-                                targetArchiveDir.mkdirs()
-                            }
-                            def targetFileToCopy = (tasks.findByName('remapJar') ?: tasks.findByName('jar')).archiveFile.get().asFile
-                            copy {
-                                from targetFileToCopy
-                                into targetArchiveDir
-                            }
-                            println "[HUB-ARCHIVE] Successfully copied ${targetFileToCopy.name} to release hub archives: ${targetArchiveDir.canonicalPath}"
-                        }
-                    } catch (Exception e) {
-                        println "[HUB-ARCHIVE] Note: Could not copy to release hub: ${e.message}"
-                    }
-                }
-            }
-
                             }
                         }
                         copy {
@@ -184,6 +142,46 @@ afterEvaluate {
                             into modrinthProfileMods2
                         }
                         println "[MODRINTH-SYNC] Deployed ${jarFile.name} to Modrinth profile 26.x test latest mods folder."
+                    }
+
+                    // 3. Central Release Hub Archives Sync
+                    File hubCandidate = projectDir
+                    File hubDir = null
+                    while (hubCandidate != null) {
+                        File checkDir = new File(hubCandidate, "minecraft-mod-release-hub")
+                        if (checkDir.exists()) {
+                            hubDir = checkDir
+                            break
+                        }
+                        hubCandidate = hubCandidate.parentFile
+                    }
+                    if (hubDir == null) {
+                        File fallback = new File("E:/Minecraft Project/minecraft-mod-release-hub")
+                        if (fallback.exists()) hubDir = fallback
+                    }
+                    if (hubDir != null && hubDir.exists()) {
+                        File targetArchiveDir = new File(hubDir, "archives/Agrarian Reform")
+                        if (!targetArchiveDir.exists()) {
+                            targetArchiveDir.mkdirs()
+                        }
+                        copy {
+                            from jarFile
+                            into targetArchiveDir
+                        }
+                        println "[HUB-ARCHIVE] Successfully copied ${jarFile.name} to release hub archives: ${targetArchiveDir.canonicalPath}"
+                    }
+
+                    // 4. External Vault (D: Drive) Sync
+                    def externalVaultDir = file("D:/Minecraft Mod Archive Jars/Agrarian Reform")
+                    if (externalVaultDir.exists() || file("D:/").exists()) {
+                        if (!externalVaultDir.exists()) {
+                            externalVaultDir.mkdirs()
+                        }
+                        copy {
+                            from jarFile
+                            into externalVaultDir
+                        }
+                        println "[VAULT-ARCHIVE] Successfully copied ${jarFile.name} to External Vault: ${externalVaultDir.canonicalPath}"
                     }
                 }
             }

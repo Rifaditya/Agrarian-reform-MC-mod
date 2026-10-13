@@ -51,7 +51,6 @@ public class AgrarianReformFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        net.instantgratification.agrarianreform.util.ModVersionGuard.checkClass("Agrarian Reform", "net.minecraft.world.entity.EntityTypes");
         LOGGER.info("Instant Gratification: Agrarian Reform Initialized");
 
         // Load config baseline template first
@@ -155,6 +154,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 if (!player.getAbilities().instabuild) {
                     stack.shrink(1);
                 }
+                // Verified against: LivingEntity.java (26.2)
                 player.swing(hand, true);
             }
 
@@ -203,6 +203,7 @@ public class AgrarianReformFabric implements ModInitializer {
 
                     SoundType soundType = state.getSoundType();
                     level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
+                    // Verified against: LivingEntity.java (26.2)
                     player.swing(hand, true);
                 }
 
@@ -258,6 +259,7 @@ public class AgrarianReformFabric implements ModInitializer {
                 level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 2.0f, soundType.getPitch() * 0.8f);
 
                 // Swing player hand
+                // Verified against: LivingEntity.java (26.2)
                 player.swing(hand, true);
             }
 
@@ -379,6 +381,7 @@ public class AgrarianReformFabric implements ModInitializer {
                     if (!player.getAbilities().instabuild) {
                         stack.shrink(1);
                     }
+                    // Verified against: LivingEntity.java (26.2)
                     player.swing(hand, true);
                 }
                 return InteractionResult.SUCCESS;
