@@ -2,6 +2,8 @@
 
 package net.instantgratification.agrarianreform.config;
 
+import java.lang.reflect.Field;
+import net.dasik.social.api.config.ConfigOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,5 +113,17 @@ public class AgrarianConfigTest {
         // Setter dirty mark
         config.setForcedGrowthMultiplier("minecraft:potatoes", 180);
         assertTrue(AgrarianConfig.isDirty());
+    }
+
+    @Test
+    @DisplayName("Pillar 1: ConfigOption annotations are present on all configuration fields")
+    void testConfigAnnotationsPresent() throws Exception {
+        Field hydrationField = AgrarianConfig.class.getField("hydrationSourceRange");
+        assertTrue(hydrationField.isAnnotationPresent(ConfigOption.class));
+        ConfigOption opt = hydrationField.getAnnotation(ConfigOption.class);
+        assertEquals("general", opt.category());
+        assertEquals("agrarian_reform:hydration_source_range", opt.gameRuleName());
+        assertTrue(opt.syncGameRule());
+        assertTrue(opt.slider());
     }
 }
