@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.2.28+26.2] - 2026-10-25
+
+### Changed
+- **UniversalConfigScreen Integration**: Migrated client configuration GUI to DasikLibrary's centralized `UniversalConfigScreen`, eliminating legacy screen boilerplate while preserving full category and option fidelity.
+- **Creator & Community Support**: Integrated direct Ko-fi creator support and Discord community buttons directly into the in-game configuration categories.
+- **Dynamic Singleplayer GameRule Synchronization**: Adjusting settings in singleplayer worlds now synchronizes directly with active GameRules in real time.
+
+---
+
 ## [2.2.27+26.2] - 2026-10-13
 
 ### Fixed
