@@ -4,6 +4,7 @@ This file tracks which built versions (from `/Archive/builds/`) have been upload
 
 ## 🚀 Published & Backlog Queue
 
+- [ ] **`2.2.28+26.3`** (2026-10-25) - Migrate client config GUI to UniversalConfigScreen with Ko-fi & Discord support buttons and singleplayer GameRule sync.
 - [ ] **`2.2.27+26.3`** (2026-10-13) - Fix right-click harvest LivingEntity.swing crash on MC 26.3, purge ModVersionGuard, and adopt 5-Pillar verification harness.
 - [ ] **`2.2.26+26.3`** (2026-09-28) - Multi-era parity alignment.
 - [ ] **`2.2.25+26.3`** (2026-09-19) - Maintenance update and toolchain polish.
