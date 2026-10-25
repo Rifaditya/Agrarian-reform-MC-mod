@@ -2,6 +2,7 @@
 
 package net.instantgratification.agrarianreform.config;
 
+import net.dasik.social.api.config.ConfigOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,24 +25,168 @@ public class AgrarianConfig {
     public static final int VERSION = 2;
     public int configVersion = VERSION;
 
-    // Hydration
+    // ==========================================
+    // Category: General Options
+    // ==========================================
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.hydration_source_range",
+        descriptionKey = "gamerule.agrarian_reform.hydration_source_range.description",
+        min = 0,
+        max = 32,
+        step = 1,
+        slider = true,
+        order = 1,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:hydration_source_range"
+    )
     public int hydrationSourceRange = 8;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.hydration_flowing_range",
+        descriptionKey = "gamerule.agrarian_reform.hydration_flowing_range.description",
+        min = 0,
+        max = 32,
+        step = 1,
+        slider = true,
+        order = 2,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:hydration_flowing_range"
+    )
     public int hydrationFlowingRange = 4;
-    public int rainGrowthAcceleration = 1;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.pure_water_hydration_only",
+        descriptionKey = "gamerule.agrarian_reform.pure_water_hydration_only.description",
+        order = 3,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:pure_water_hydration_only"
+    )
     public boolean pureWaterHydrationOnly = false;
 
-    // Crop rules
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.rain_growth_acceleration",
+        descriptionKey = "gamerule.agrarian_reform.rain_growth_acceleration.description",
+        min = 0,
+        max = 10,
+        step = 1,
+        slider = true,
+        order = 4,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:rain_growth_acceleration"
+    )
+    public int rainGrowthAcceleration = 1;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.growth_biodiversity_bonus",
+        descriptionKey = "gamerule.agrarian_reform.growth_biodiversity_bonus.description",
+        order = 5,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:growth_biodiversity_bonus"
+    )
     public boolean growthBiodiversityBonus = true;
-    public boolean totalTrampleImmunity = false;
-    public boolean trampleImmunityPlayersOnly = false;
-    public boolean alwaysWetFarmland = false;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.seeds_grow_grass",
+        descriptionKey = "gamerule.agrarian_reform.seeds_grow_grass.description",
+        order = 6,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:seeds_grow_grass"
+    )
     public boolean seedsGrowGrass = true;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.right_click_harvest",
+        descriptionKey = "gamerule.agrarian_reform.right_click_harvest.description",
+        order = 7,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:right_click_harvest"
+    )
     public boolean rightClickHarvest = true;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.universal_bonemeal",
+        descriptionKey = "gamerule.agrarian_reform.universal_bonemeal.description",
+        order = 8,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:universal_bonemeal"
+    )
     public boolean universalBonemeal = true;
+
+    @ConfigOption(
+        category = "general",
+        nameKey = "gamerule.agrarian_reform.global_growth_multiplier",
+        descriptionKey = "gamerule.agrarian_reform.global_growth_multiplier.description",
+        min = 0,
+        max = 10000,
+        step = 1,
+        slider = false,
+        order = 9,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:global_growth_multiplier"
+    )
     public int globalGrowthMultiplier = 100;
 
-    // Ambient/Aesthetics
+    // ==========================================
+    // Category: Immersion & Aesthetics
+    // ==========================================
+
+    @ConfigOption(
+        category = "immersion",
+        nameKey = "gamerule.agrarian_reform.total_trample_immunity",
+        descriptionKey = "gamerule.agrarian_reform.total_trample_immunity.description",
+        order = 1,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:total_trample_immunity"
+    )
+    public boolean totalTrampleImmunity = false;
+
+    @ConfigOption(
+        category = "immersion",
+        nameKey = "gamerule.agrarian_reform.trample_immunity_players_only",
+        descriptionKey = "gamerule.agrarian_reform.trample_immunity_players_only.description",
+        order = 2,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:trample_immunity_players_only"
+    )
+    public boolean trampleImmunityPlayersOnly = false;
+
+    @ConfigOption(
+        category = "immersion",
+        nameKey = "gamerule.agrarian_reform.always_wet_farmland",
+        descriptionKey = "gamerule.agrarian_reform.always_wet_farmland.description",
+        order = 3,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:always_wet_farmland"
+    )
+    public boolean alwaysWetFarmland = false;
+
+    @ConfigOption(
+        category = "immersion",
+        nameKey = "gamerule.agrarian_reform.ambient_crop_rustle",
+        descriptionKey = "gamerule.agrarian_reform.ambient_crop_rustle.description",
+        order = 4,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:ambient_crop_rustle"
+    )
     public boolean ambientCropRustle = true;
+
+    @ConfigOption(
+        category = "immersion",
+        nameKey = "gamerule.agrarian_reform.ambient_vitality_particles",
+        descriptionKey = "gamerule.agrarian_reform.ambient_vitality_particles.description",
+        order = 5,
+        syncGameRule = true,
+        gameRuleName = "agrarian_reform:ambient_vitality_particles"
+    )
     public boolean ambientVitalityParticles = true;
 
     // Forced & Dynamic Modded/Universal Crops
