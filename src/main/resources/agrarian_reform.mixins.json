@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.instantgratification.agrarianreform.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "FarmlandBlockMixin",
+    "CropBlockMixin",
+    "BlockStateBaseMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
