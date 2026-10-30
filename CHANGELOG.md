@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.29+26.2] - 2026-10-30
+
+### Fixed
+- **Mixin Bytecode Cleanliness**: Purged redundant `@Unique` annotations on injector methods (`@Inject`, `@ModifyReturnValue`) across `BlockColorsMixin`, `BlockStateBaseMixin`, `CropBlockMixin`, and `FarmlandBlockMixin`, eliminating Mixin annotation processor compiler warnings and ensuring standard injector bytecode generation.
+
+---
+
 ## [2.2.28+26.2] - 2026-10-25
 
 ### Changed
@@ -53,7 +60,7 @@
 
 ## [2.2.19+26.2] - 2026-08-25
 ### Added
-- **German Localization (`de_de.json`)**: Added complete, idiomatic in-game German translations covering all 15 static GameRules, dynamic crop category descriptions, tooltips, warnings, and YACL ModMenu configuration screens.
+- **German Localization** (`de_de.json`): Added complete, idiomatic in-game German translations covering all 15 static GameRules, dynamic crop category descriptions, tooltips, warnings, and YACL ModMenu configuration screens.
 
 ## [2.2.18+26.2] - 2026-08-25
 
@@ -123,16 +130,16 @@
 
 ### Added
 - **Concentric Chebyshev Farmland Hydration Sweep**:
-  - Replaced the 578-block cube scan in `GrowthHelper.customFarmlandWaterRange` with an outward expanding Chebyshev concentric perimeter search ($r = 1 \to \text{maxRange}$).
-  - Short-circuits immediately at $r=1$ (checking only 8 blocks instead of 578) for adjacent water sources.
-  - Added extended $y \in [-1, 1]$ vertical 3D water detection when custom range is active.
+  - Replaced the 578-block cube scan in `GrowthHelper.customFarmlandWaterRange` with an outward expanding Chebyshev concentric perimeter search (r = 1 → maxRange).
+  - Short-circuits immediately at r=1 (checking only 8 blocks instead of 578) for adjacent water sources.
+  - Added extended y in [-1, 1] vertical 3D water detection when custom range is active.
   - Added `pure_water_hydration_only` GameRule and configuration setting (default `false`) to optionally restrict irrigation to pure `Blocks.WATER`.
 
 ## [2.2.8+26.2] - 2026-08-24
 
 ### Added
 - **Real-Time Random Tick Growth Integration**:
-  - Replaced the multi-tier `instanceof` chain in `GrowthHelper.handleRandomTick` with $O(1)$ fast-fail identity caching (`AgrarianCropRules.isCropBlock`), eliminating overhead on non-crop block ticks.
+  - Replaced the multi-tier `instanceof` chain in `GrowthHelper.handleRandomTick` with O(1) fast-fail identity caching (`AgrarianCropRules.isCropBlock`), eliminating overhead on non-crop block ticks.
   - Connected per-crop multiplier resolution (`AgrarianCropRules.getEffectiveGrowthMultiplier`), supporting individual custom speeds, frozen rates (0%), and global fallbacks.
   - Implemented smart maturity early-break in the accelerated tick loop to terminate iterations as soon as crops reach maximum growth or change state.
 
@@ -148,8 +155,8 @@
 ## [2.2.6+26.2] - 2026-08-24
 
 ### Added
-- **Dynamic Crop Rules & O(1) Rejection Cache (`AgrarianCropRules`)**:
-  - Implemented dedicated `AgrarianCropRules` helper with $O(1)$ fast-fail identity caching (`CROP_BLOCK_CACHE`) and server reload cache clearing (`clearCropCache()`).
+- **Dynamic Crop Rules & O(1) Rejection Cache** (`AgrarianCropRules`):
+  - Implemented dedicated `AgrarianCropRules` helper with O(1) fast-fail identity caching (`CROP_BLOCK_CACHE`) and server reload cache clearing (`clearCropCache()`).
   - Added smart crop scanner detecting standard Mojang plant classes (`CropBlock`, `BushBlock`, `SugarCaneBlock`, `CactusBlock`, `NetherWartBlock`, `CocoaBlock`, `VineBlock`, `SaplingBlock`, `SweetBerryBushBlock`, `StemBlock`), custom growth properties (`age`, `growth`, `stage`, `level`), and tags (`#c:crops`, `#minecraft:crops`, `#agrarianreform:continuum_plants`).
   - Implemented dynamic integer GameRule generator (`agrarian_reform:growth_<namespace>_<path>`) and dynamic registry discovery subscription.
   - Implemented multiplier resolution hierarchy (`Per-Crop GameRule -> Per-Crop Config -> Global Multiplier -> 100%`).
@@ -162,7 +169,7 @@
 ## [2.2.4+26.2] - 2026-08-08
 
 ### Added
-- **Data-Driven Plant Tag (`#agrarianreform:continuum_plants`)**: Added data-driven block tag system allowing datapack and modpack authors to register custom mod crops to the offline Continuum growth engine without code edits.
+- **Data-Driven Plant Tag** (`#agrarianreform:continuum_plants`): Added data-driven block tag system allowing datapack and modpack authors to register custom mod crops to the offline Continuum growth engine without code edits.
 - **Automated Math Test Suite**: Integrated headless JUnit 5 unit test suite (`ContinuumMathTest`) verifying time-delta calculations and crop growth stage formulas under `./gradlew test`.
 
 ## [2.2.3+26.2] - 2026-07-22
