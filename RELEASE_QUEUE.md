@@ -4,28 +4,29 @@ This file tracks which built versions (from `/Archive/builds/`) have been upload
 
 ## 🚀 Published & Backlog Queue
 
+- [ ] **`2.2.29+26.3`** (2026-10-30) - Purge redundant @Unique annotations on injector methods across all mixin classes [BL-AR-009].
 - [ ] **`2.2.28+26.3`** (2026-10-25) - Migrate client config GUI to UniversalConfigScreen with Ko-fi & Discord support buttons and singleplayer GameRule sync.
 - [ ] **`2.2.27+26.3`** (2026-10-13) - Fix right-click harvest LivingEntity.swing crash on MC 26.3, purge ModVersionGuard, and adopt 5-Pillar verification harness.
 - [ ] **`2.2.26+26.3`** (2026-09-28) - Multi-era parity alignment.
 - [ ] **`2.2.25+26.3`** (2026-09-19) - Maintenance update and toolchain polish.
 - [ ] **`2.2.24+26.3`** (2026-09-05) - Ko-fi support banner & translation cleanup.
 - [ ] **`2.2.23+26.3`** (2026-09-05) - YACL v3 configuration GUI refinement.
-- [x] **`2.2.22+26.3`** (2026-09-05) - Forward compatibility and version guard.
-- [x] **`2.2.21+26.3`** (2026-09-05) - Multi-category Ko-fi support & config UI polish.
-- [x] **`2.2.20+26.3`** (2026-09-05) - Ko-fi creator support button in YACL configuration screen.
-- [x] **`2.2.19+26.3`** (2026-08-25) - German localization for GameRules and config screens.
-- [x] **`2.2.18+26.3`** (2026-08-25) - Headless automated unit test suite.
-- [x] **`2.2.17+26.3`** (2026-08-25) - YACL / ModMenu GUI configuration with dynamic crop tab.
-- [x] **`2.2.16+26.3`** (2026-08-25) - Per-feature debug logging and diagnostics.
-- [x] **`2.2.15+26.3`** (2026-08-25) - 6D interaction guard for UseBlockCallback.
-- [x] **`2.2.14+26.3`** (2026-08-25) - Continuum crop scaling.
-- [x] **`2.2.13+26.3`** (2026-08-25) - Continuum timestamp pruning.
+- [ ] **`2.2.22+26.3`** (2026-09-05) - Forward compatibility and version guard.
+- [ ] **`2.2.21+26.3`** (2026-09-05) - Multi-category Ko-fi support & config UI polish.
+- [ ] **`2.2.20+26.3`** (2026-09-05) - Ko-fi creator support button in YACL configuration screen.
+- [ ] **`2.2.19+26.3`** (2026-08-25) - German localization for GameRules and config screens.
+- [ ] **`2.2.18+26.3`** (2026-08-25) - Headless automated unit test suite.
+- [ ] **`2.2.17+26.3`** (2026-08-25) - YACL / ModMenu GUI configuration with dynamic crop tab.
+- [ ] **`2.2.16+26.3`** (2026-08-25) - Per-feature debug logging and diagnostics.
+- [ ] **`2.2.15+26.3`** (2026-08-25) - 6D interaction guard for UseBlockCallback.
+- [ ] **`2.2.14+26.3`** (2026-08-25) - Continuum crop scaling.
+- [ ] **`2.2.13+26.3`** (2026-08-25) - Continuum timestamp pruning.
 - [x] **`2.2.12+26.3`** (2026-08-24) - Continuum sub-chunk palette skipping.
-- [x] **`2.2.11+26.3`** (2026-08-24) - Soft-step equipment and tag optimization.
-- [x] **`2.2.10+26.3`** (2026-08-24) - Trample immunity entity gating.
-- [x] **`2.2.9+26.3`** (2026-08-24) - Concentric farmland hydration sweep.
-- [x] **`2.2.8+26.3`** (2026-08-24) - Real-time ticking integration with O(1) cache.
-- [x] **`2.2.7+26.3`** (2026-08-24) - Lifecycle integration and dirty persistence.
-- [x] **`2.2.6+26.3`** (2026-08-24) - Dynamic crop rules & O(1) cache.
-- [x] **`2.2.5+26.3`** (2026-08-24) - Configuration schema V2 with dynamic crop tracking.
-- [x] **`2.2.4+26.3`** (2026-08-24) - Initial Minecraft 26.3 port.
+- [ ] **`2.2.11+26.3`** (2026-08-24) - Soft-step equipment and tag optimization.
+- [ ] **`2.2.10+26.3`** (2026-08-24) - Trample immunity entity gating.
+- [ ] **`2.2.9+26.3`** (2026-08-24) - Concentric farmland hydration sweep.
+- [ ] **`2.2.8+26.3`** (2026-08-24) - Real-time ticking integration with O(1) cache.
+- [ ] **`2.2.7+26.3`** (2026-08-24) - Lifecycle integration and dirty persistence.
+- [ ] **`2.2.6+26.3`** (2026-08-24) - Dynamic crop rules & O(1) cache.
+- [ ] **`2.2.5+26.3`** (2026-08-24) - Configuration schema V2 with dynamic crop tracking.
+- [ ] **`2.2.4+26.3`** (2026-08-24) - Initial Minecraft 26.3 port.
