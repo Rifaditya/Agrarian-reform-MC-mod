@@ -1,5 +1,12 @@
 # Changelog - Agrarian Reform
 
+## [2.2.29+26.1.2] - 2026-10-30
+
+### Fixed
+- **Mixin Bytecode Cleanliness**: Purged redundant `@Unique` annotations on injector methods (`@Inject`, `@ModifyReturnValue`) across `BlockColorsMixin`, `BlockStateBaseMixin`, `CropBlockMixin`, and `FarmlandBlockMixin`, eliminating Mixin annotation processor compiler warnings and ensuring standard injector bytecode generation.
+
+---
+
 ## [2.2.28+26.1.2] - 2026-10-25
 
 ### Changed

@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -28,8 +27,6 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 @Mixin(BlockColors.class)
 public abstract class BlockColorsMixin {
-
-    @Unique
     @Inject(method = "createDefault", at = @At("RETURN"))
     private static void agrarian_reform$registerFarmlandColor(CallbackInfoReturnable<BlockColors> cir) {
         cir.getReturnValue().register(List.of(new BlockTintSource() {

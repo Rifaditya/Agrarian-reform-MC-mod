@@ -10,7 +10,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,8 +25,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(FarmlandBlock.class)
 public abstract class FarmlandBlockMixin {
-
-    @Unique
     @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true)
     private void agrarian_reform$handleTrample(Level level, BlockState state, BlockPos pos, Entity entity,
             double fallDistance, CallbackInfo ci) {
@@ -35,8 +32,6 @@ public abstract class FarmlandBlockMixin {
             ci.cancel();
         }
     }
-
-    @Unique
     @Inject(method = "isNearWater", at = @At("HEAD"), cancellable = true)
     private static void agrarian_reform$customWaterRange(LevelReader level, BlockPos pos,
             CallbackInfoReturnable<Boolean> cir) {
