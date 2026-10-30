@@ -1,0 +1,55 @@
+# gradle
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+*.launch
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+*.DS_Store
+
+# fabric
+run/
+logs/
+
+# java
+hs_err_*.log
+replay_*.log
+*.hprof
+
+# Binary & Archive Exclusion Policy (Git Binary Exclusion Law)
+Archive/
+Archive Jar of all versions/
+*.jar
+*.log
+*.log.gz
+*.log.zip
+build_log*.txt
+
+# Hype & Marketing Exclusion Policy
+Doc/Marketing/
+
+# Platform Publisher API Token Security Vault
+*platform_tokens.json
+.agents/config/platform_tokens.json
+
+# Studio Manifest Whitelist
+!CHANGELOG.md
+!History.md
+!BACKLOG.md
+!RELEASE_QUEUE.md

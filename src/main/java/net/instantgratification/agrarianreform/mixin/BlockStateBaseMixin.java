@@ -1,0 +1,36 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
+package net.instantgratification.agrarianreform.mixin;
+
+import net.instantgratification.agrarianreform.util.GrowthHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+/**
+ * BlockStateBaseMixin: Global random tick hook (MC 1.21.1)
+ *
+ * Intercepts random ticks of plant blocks to scale growth dynamically.
+ *
+ * Verified against: BlockBehaviour.java (1.21.1)
+ */
+@Mixin(BlockBehaviour.BlockStateBase.class)
+public abstract class BlockStateBaseMixin {
+
+    @Shadow
+    public abstract Block getBlock();
+    @Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
+    private void agrarian_reform$modifyRandomTickSpeed(ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+        if (GrowthHelper.handleRandomTick(this.getBlock(), (BlockState) (Object) this, level, pos, random)) {
+            ci.cancel();
+        }
+    }
+}

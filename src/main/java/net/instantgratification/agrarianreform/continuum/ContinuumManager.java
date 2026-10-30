@@ -1,0 +1,262 @@
+// Copyright (C) 2026 Dasik (Rifaditya) | GNU GPLv3
+
+package net.instantgratification.agrarianreform.continuum;
+
+import net.dasik.social.api.gamerule.DynamicGameRuleManager;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.instantgratification.agrarianreform.AgrarianGameRules;
+import net.instantgratification.agrarianreform.registry.AgrarianCropRules;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.CocoaBlock;
+import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.LevelChunk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+/**
+ * ContinuumManager: The Offline Simulator (MC 1.21.1)
+ * 
+ * Orchestrates the persistence and catch-up growth of crops in unloaded chunks.
+ * - Persistence: Listens for CHUNK_UNLOAD events to timestamp chunk state.
+ * - Catch-up: Listens for CHUNK_LOAD to calculate time deltas and trigger scans.
+ * - Performance: Implements a throttled UPDATE_QUEUE that processes only a
+ * small number of crop blocks per tick to prevent server-side lag spikes.
+ *
+ * Verified against: ServerChunkEvents.java (1.21.1)
+ */
+public class ContinuumManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContinuumManager.class);
+
+    public static boolean isDebug(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return DynamicGameRuleManager.getBoolean(serverLevel, AgrarianGameRules.DEBUG_MODE);
+        }
+        return LOGGER.isDebugEnabled();
+    }
+
+    // Throttling config: Update only 5 crop blocks per tick globally.
+    private static final int CROPS_PER_TICK = 5;
+
+    public static final Queue<CropUpdateTask> UPDATE_QUEUE = new ConcurrentLinkedQueue<>();
+
+    public static void initialize() {
+        ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> {
+            ContinuumData data = getOrCreateData(serverLevel);
+            data.setUnloadTime(chunk.getPos(), serverLevel.getGameTime());
+        });
+
+        ServerChunkEvents.CHUNK_LOAD.register(ContinuumManager::onChunkLoad);
+
+        ServerLifecycleEvents.BEFORE_SAVE.register((server, flush, force) -> {
+            for (ServerLevel level : server.getAllLevels()) {
+                ContinuumData data = getOrCreateData(level);
+                data.pruneStaleEntries(level.getGameTime());
+            }
+        });
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            int updates = 0;
+            while (updates < CROPS_PER_TICK && !UPDATE_QUEUE.isEmpty()) {
+                CropUpdateTask task = UPDATE_QUEUE.poll();
+                if (task != null) {
+                    processCropUpdate(task);
+                    updates++;
+                }
+            }
+        });
+    }
+
+    private static ContinuumData getOrCreateData(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(ContinuumData.FACTORY, ContinuumData.DATA_KEY);
+    }
+
+    private static void onChunkLoad(ServerLevel serverLevel, LevelChunk chunk) {
+        ContinuumData data = getOrCreateData(serverLevel);
+        long unloadTime = data.getUnloadTime(chunk.getPos());
+        if (unloadTime != -1L) {
+            long timeDelta = serverLevel.getGameTime() - unloadTime;
+            data.remove(chunk.getPos());
+            if (timeDelta > 0) {
+                if (isDebug(serverLevel)) {
+                    LOGGER.debug("[AgrarianReform:ContinuumManager] Simulating offline growth for chunk {} (timeDelta: {} ticks)",
+                            chunk.getPos(), timeDelta);
+                }
+                CropScanner.scanAndQueue(serverLevel, chunk, timeDelta);
+            }
+        }
+    }
+
+    private static void processCropUpdate(CropUpdateTask task) {
+        if (!task.level.isLoaded(task.pos)) {
+            return;
+        }
+
+        BlockState currentState = task.level.getBlockState(task.pos);
+        Block block = currentState.getBlock();
+
+        int multiplier = AgrarianCropRules.getEffectiveGrowthMultiplier(task.level, block);
+        if (multiplier <= 0) {
+            return; // Growth disabled or frozen for this specific crop
+        }
+
+        long effectiveDelta = (task.timeDelta * multiplier) / 100L;
+        if (effectiveDelta <= 0) {
+            return;
+        }
+
+        if (block instanceof CropBlock cropBlock) {
+            float growthSpeed = CropScanner.getSpeed(cropBlock, task.level, task.pos);
+            long averageTicksPerStage = (long) (((25.0f / growthSpeed) + 1.0f) * 4096.0f / 3.0f);
+            int stagesToGrow = (int) (effectiveDelta / averageTicksPerStage);
+
+            if (stagesToGrow > 0) {
+                int currentAge = cropBlock.getAge(currentState);
+                int maxAge = cropBlock.getMaxAge();
+                int newAge = Math.min(maxAge, currentAge + stagesToGrow);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, cropBlock.getStateForAge(newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof SugarCaneBlock || block instanceof CactusBlock) {
+            // Find base of the column to determine height
+            BlockPos basePos = task.pos;
+            while (task.level.getBlockState(basePos.below()).is(block)) {
+                basePos = basePos.below();
+            }
+
+            // Find current height going up
+            int currentHeight = 1;
+            BlockPos topPos = basePos;
+            while (task.level.getBlockState(topPos.above()).is(block)) {
+                topPos = topPos.above();
+                currentHeight++;
+            }
+
+            // If the pos is not the top block, do not grow it to avoid duplicate calculations in columns
+            if (!task.pos.equals(topPos)) {
+                return;
+            }
+
+            if (currentHeight >= 3) {
+                return; // Height limit reached
+            }
+
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_15);
+            // Sugar cane/cactus ticks: average 1,365 game ticks per age stage (1/16 chance per random tick)
+            int stages = (int) (effectiveDelta / 1365L);
+            if (stages > 0) {
+                int newAge = currentAge + stages;
+                int blocksToAdd = newAge / 16;
+                int finalAge = newAge % 16;
+                int finalHeight = Math.min(3, currentHeight + blocksToAdd);
+
+                if (finalHeight > currentHeight) {
+                    BlockPos buildPos = topPos;
+                    for (int i = 0; i < finalHeight - currentHeight; i++) {
+                        buildPos = buildPos.above();
+                        if (task.level.isEmptyBlock(buildPos)) {
+                            task.level.setBlockAndUpdate(buildPos, block.defaultBlockState().setValue(BlockStateProperties.AGE_15, finalAge));
+                        }
+                    }
+                    // Reset the old top block's age to 0 when grown
+                    task.level.setBlockAndUpdate(topPos, currentState.setValue(BlockStateProperties.AGE_15, 0));
+                } else {
+                    task.level.setBlockAndUpdate(topPos, currentState.setValue(BlockStateProperties.AGE_15, finalAge));
+                }
+            }
+        } else if (block instanceof NetherWartBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
+            // Nether wart ticks: average 13,650 game ticks per age stage (10% chance per random tick)
+            int stages = (int) (effectiveDelta / 13650L);
+            if (stages > 0) {
+                int newAge = Math.min(3, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_3, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof CocoaBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_2);
+            // Cocoa ticks: average 6,825 game ticks per age stage (20% chance per random tick)
+            int stages = (int) (effectiveDelta / 6825L);
+            if (stages > 0) {
+                int newAge = Math.min(2, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_2, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof SweetBerryBushBlock) {
+            int currentAge = currentState.getValue(BlockStateProperties.AGE_3);
+            // Sweet berry ticks: average 6,825 game ticks per age stage (20% chance per random tick)
+            int stages = (int) (effectiveDelta / 6825L);
+            if (stages > 0) {
+                int newAge = Math.min(3, currentAge + stages);
+                if (newAge > currentAge) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.AGE_3, newAge), Block.UPDATE_ALL);
+                }
+            }
+        } else if (block instanceof VineBlock) {
+            // Vines grow downwards. Ticks: average 13,650 game ticks (10% chance)
+            if (effectiveDelta >= 13650L) {
+                BlockPos belowPos = task.pos.below();
+                if (task.level.isEmptyBlock(belowPos)) {
+                    BlockState belowState = block.defaultBlockState();
+                    boolean hasSupport = false;
+                    for (Direction dir : Direction.Plane.HORIZONTAL) {
+                        var prop = VineBlock.getPropertyForFace(dir);
+                        if (currentState.getValue(prop)) {
+                            if (VineBlock.isAcceptableNeighbour(task.level, belowPos.relative(dir), dir)) {
+                                belowState = belowState.setValue(prop, true);
+                                hasSupport = true;
+                            }
+                        }
+                    }
+                    if (hasSupport) {
+                        task.level.setBlockAndUpdate(belowPos, belowState);
+                    }
+                }
+            }
+        } else if (block instanceof SaplingBlock saplingBlock) {
+            int currentStage = currentState.getValue(BlockStateProperties.STAGE);
+            // Sapling stages: average 95,550 game ticks per stage (about 1.4% chance per random tick)
+            int stages = (int) (effectiveDelta / 95550L);
+            if (stages > 0) {
+                int newStage = currentStage + stages;
+                if (newStage >= 2) {
+                    // Grow the tree structure!
+                    saplingBlock.advanceTree(task.level, task.pos, currentState, task.level.getRandom());
+                } else if (newStage == 1 && currentStage == 0) {
+                    task.level.setBlock(task.pos, currentState.setValue(BlockStateProperties.STAGE, 1), 260);
+                }
+            }
+        }
+    }
+
+    public static class CropUpdateTask {
+        public final ServerLevel level;
+        public final BlockPos pos;
+        public final long timeDelta;
+
+        public CropUpdateTask(ServerLevel level, BlockPos pos, long timeDelta) {
+            this.level = level;
+            this.pos = pos;
+            this.timeDelta = timeDelta;
+        }
+    }
+}
