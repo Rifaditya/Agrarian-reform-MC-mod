@@ -7,7 +7,7 @@ This file tracks which built versions (from `/Archive/builds/`) have been upload
 - [ ] **`2.2.29+26.2`** (2026-10-30) - Purge redundant @Unique annotations on injector methods across all mixin classes [BL-AR-009].
 - [ ] **`2.2.28+26.2`** (2026-10-25) - Migrate client config GUI to UniversalConfigScreen with Ko-fi & Discord support buttons and singleplayer GameRule sync.
 - [ ] **`2.2.27+26.2`** (2026-10-13) - Startup reflection guard removal, thread-safe config synchronization, and 5-pillar verification suite.
-- [ ] **`2.2.26+26.2`** (2026-09-28) - Multi-era parity alignment.
+- [x] **`2.2.26+26.2`** (2026-09-28) - Multi-era parity alignment.
 - [x] **`2.2.25+26.2`** (2026-09-19) - Maintenance update and toolchain polish.
 - [x] **`2.2.24+26.2`** (2026-09-05) - Ko-fi support banner & translation cleanup.
 - [x] **`2.2.23+26.2`** (2026-09-05) - YACL v3 configuration GUI refinement.
